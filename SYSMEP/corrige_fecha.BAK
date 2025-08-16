@@ -1,0 +1,43 @@
+SET EXCLUSIVE OFF
+gcano_eje='2021'
+gcsec_ejec= '001719'
+gcorganismo = '002'
+USE siaf!expediente_documento IN 0 ORDER tag exp_sec again 
+USE siaf!expediente_secuencia IN 0 ORDER tag exp_sec again 
+USE siaf!expediente_fase	  IN 0 ORDER tag exp_fase AGAIN 
+USE sysmep!proyecto_detalle IN 0 ORDER tag sec_det AGAIN
+USE sysmep!tipo_cambio_mep  IN 0 order tag fecha   AGAIN  
+
+SELECT proyecto_detalle
+SET RELATION TO ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo INTO expediente_documento ADDITIVE 
+SET RELATION TO ano_eje+sec_ejec+expediente+ciclo+fase+secuencia INTO expediente_fase ADDITIVE 
+SELECT proyecto_detalle
+SEEK gcano_eje+gcsec_ejec
+SCAN WHILE ano_eje+sec_ejec = gcano_eje+gcsec_ejec
+	IF expediente_fase.fuente_financ = '19' AND tipo_financiamiento = 'I' THEN 
+		replace proyecto_detalle.fecha_entrega WITH expediente_documento.fecha_entrega
+		replace proyecto_detalle.fecha_entrega_siaf WITH expediente_documento.fecha_entrega
+		IF SEEK(gcorganismo+DTOS(expediente_documento.fecha_entrega),'tipo_cambio_mep','fecha') THEN 
+			REPLACE proyecto_detalle.tipo_cambio WITH tipo_cambio_mep.valor
+			REPLACE proyecto_detalle.monto_extranjero WITH monto_nacional / tipo_cambio_mep.valor
+		ENDIF 
+	ENDIF 
+ENDSCAN 
+
+SELECT proyecto_detalle
+SET RELATION TO ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo INTO expediente_secuencia ADDITIVE 
+SEEK gcano_eje+gcsec_ejec
+SCAN WHILE ano_eje+sec_ejec = gcano_eje+gcsec_ejec
+	IF monto_nacional < 0 THEN 
+		replace proyecto_detalle.fecha_entrega 		WITH expediente_secuencia.fecha_doc
+		replace proyecto_detalle.fecha_entrega_siaf WITH expediente_secuencia.fecha_doc
+*!*			IF SEEK(gcorganismo+DTOS(expediente_secuencia.fecha_doc,'tipo_cambio_mep') THEN 
+*!*				REPLACE tipo_cambio WITH tipo_cambio_mep.valor
+*!*				REPLACE monto_extranjero WITH monto_nacional / tipo_cambio_mep.valor
+*!*			ENDIF 		
+	ENDIF 
+ENDSCAN 
+
+
+
+CLOSE all

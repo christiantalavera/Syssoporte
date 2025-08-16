@@ -1,0 +1,2215 @@
+<?xml version = "1.0" encoding="Windows-1252" standalone="yes"?>
+<VFPData>
+	<xsd:schema id="VFPData" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="VFPData" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="sysmep_log" minOccurs="0" maxOccurs="unbounded">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="dfecha" type="xsd:dateTime"/>
+								<xsd:element name="cerrorinfo">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2147483647"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+				<xsd:anyAttribute namespace="http://www.w3.org/XML/1998/namespace" processContents="lax"/>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<sysmep_log>
+		<dfecha>2018-11-02T11:16:56</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-11-02T11:19:50</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 896
+  Message: No se encuentra la variable 'MOTO_CONTRATO'.
+  Procedure: beforeopentables
+  Detalles: MOTO_CONTRATO
+  StackLevel: 5
+  LineContents: __ri_delete_finalidad()
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-11-06T15:29:16</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1426
+  LineNo: 724
+  Message: Código de error OLE 0x800a03ec: Código de estado de COM desconocido.
+  Procedure: copytoexcel_ok
+  Detalles: 800a03ec: Código de estado de COM desconocido
+  StackLevel: 7
+  LineContents: __ri_delete_finalidad()
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-11-06T15:30:38</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1426
+  LineNo: 724
+  Message: OLE error code 0x800a03ec: Unknown COM status code.
+  Procedure: copytoexcel_ok
+  Detalles: 800a03ec: Unknown COM status code
+  StackLevel: 7
+  LineContents: .Range(.Cells(RECNO()+2-lnFila,1), .Cells(RECNO()+1,lnCuenta)).Value = GetArrayRef('laData')
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-11-06T16:35:38</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1426
+  LineNo: 724
+  Message: Código de error OLE 0x800a03ec: Código de estado de COM desconocido.
+  Procedure: copytoexcel_ok
+  Detalles: 800a03ec: Código de estado de COM desconocido
+  StackLevel: 7
+  LineContents: __ri_delete_finalidad()
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-11-06T16:38:00</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1426
+  LineNo: 724
+  Message: Código de error OLE 0x800a03ec: Código de estado de COM desconocido.
+  Procedure: copytoexcel_ok
+  Detalles: 800a03ec: Código de estado de COM desconocido
+  StackLevel: 7
+  LineContents: __ri_delete_finalidad()
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-11-15T08:04:32</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1
+  LineNo: 110
+  Message: El archivo 'd:\siaf\siaf_fondecyt\data\siaf.dbc' no existe.
+  Procedure: inicio
+  Detalles: d:\siaf\siaf_fondecyt\data\siaf.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-08T08:43:41</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 121
+  Message: No se encuentra la variable 'NOMBRE_MATCHING_GRANT'.
+  Procedure: procesar
+  Detalles: NOMBRE_MATCHING_GRANT
+  StackLevel: 4
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-08T12:33:13</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-08T13:13:08</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-08T18:07:33</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 13
+  LineNo: 3
+  Message: No se encuentra el alias 'PROYECTO_PRESUPUESTO'.
+  Procedure: isnewandempty
+  Detalles: PROYECTO_PRESUPUESTO
+  StackLevel: 8
+  LineContents: SELECT cur_meta
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-08T18:22:14</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 13
+  LineNo: 3
+  Message: No se encuentra el alias 'PROYECTO_PRESUPUESTO'.
+  Procedure: isnewandempty
+  Detalles: PROYECTO_PRESUPUESTO
+  StackLevel: 8
+  LineContents: SELECT cur_meta
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-08T18:25:56</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 13
+  LineNo: 1
+  Message: No se encuentra el alias 'PROY_INTF'.
+  Procedure: timer
+  Detalles: PROY_INTF
+  StackLevel: 7
+  LineContents: SELECT cur_meta
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-08T18:34:22</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 23
+  Message: Denegado d:\certificados\sysmep\data\proyecto_interfase.dbf al acceso al archivo.
+  Procedure: beforeopentables
+  Detalles: d:\certificados\sysmep\data\proyecto_interfase.dbf
+  StackLevel: 4
+  LineContents: __ri_delete_finalidad()
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-08T18:41:31</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-08T18:42:26</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 13
+  LineNo: 3
+  Message: No se encuentra el alias 'PROY_INTF'.
+  Procedure: isnewandempty
+  Detalles: PROY_INTF
+  StackLevel: 8
+  LineContents: SELECT cur_meta
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-08T18:51:06</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 13
+  LineNo: 3
+  Message: No se encuentra el alias 'PROY_INTF'.
+  Procedure: isnewandempty
+  Detalles: PROY_INTF
+  StackLevel: 8
+  LineContents: SELECT cur_meta
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-08T18:57:08</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 13
+  LineNo: 1
+  Message: No se encuentra el alias 'PROY_INTF'.
+  Procedure: isnewandempty
+  Detalles: PROY_INTF
+  StackLevel: 8
+  LineContents: SELECT cur_meta
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-08T18:59:20</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 13
+  LineNo: 1
+  Message: No se encuentra el alias 'PROY_INTF'.
+  Procedure: isnewandempty
+  Detalles: PROY_INTF
+  StackLevel: 8
+  LineContents: SELECT cur_meta
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-08T19:02:17</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 13
+  LineNo: 3
+  Message: No se encuentra el alias.
+  Procedure: restore
+  Detalles: 
+  StackLevel: 8
+  LineContents: SELECT cur_meta
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-09T10:29:27</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-11T08:04:39</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1
+  LineNo: 110
+  Message: El archivo 'd:\siaf\siaf_1590\data\siaf.dbc' no existe.
+  Procedure: inicio
+  Detalles: d:\siaf\siaf_1590\data\siaf.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-18T14:44:07</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 183
+  Message: No se encuentra la variable 'WTIPO_GASTO'.
+  Procedure: procesa_justificacion
+  Detalles: WTIPO_GASTO
+  StackLevel: 3
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-18T20:52:17</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 2005
+  LineNo: 66
+  Message: Error al cargar el archivo - número de registro 6. Bcgrid1  &lt;o uno de sus miembros&gt;.  ControlSource : No se encuentra la variable 'MONTO_13'
+  Procedure: runform
+  Detalles: Error al cargar el archivo - número de registro 6. Bcgrid1  &lt;o uno de sus miembros&gt;.  ControlSource : No se encuentra la variable 'MONTO_13'
+  StackLevel: 3
+  LineContents: "N"
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-18T21:00:50</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1924
+  LineNo: 7
+  Message: COLUMNS no es un objeto.
+  Procedure: init
+  Detalles: COLUMNS
+  StackLevel: 4
+  LineContents: SELECT cur_Tempo
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-18T22:30:22</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 27
+  Message: Denegado d:\certificados\sysmep\data\pry_ht_convenio_cab.dbf al acceso al archivo.
+  Procedure: beforeopentables
+  Detalles: d:\certificados\sysmep\data\pry_ht_convenio_cab.dbf
+  StackLevel: 4
+  LineContents: "N"
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-19T11:01:52</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 2072
+  LineNo: 2
+  Message: No se puede modificar el cursor porque contiene un registro que no se ha guardado.
+  Procedure: lostfocus
+  Detalles: 
+  StackLevel: 2
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-19T16:49:49</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 2072
+  LineNo: 2
+  Message: No se puede modificar el cursor porque contiene un registro que no se ha guardado.
+  Procedure: lostfocus
+  Detalles: 
+  StackLevel: 2
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-19T16:56:01</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 2072
+  LineNo: 2
+  Message: No se puede modificar el cursor porque contiene un registro que no se ha guardado.
+  Procedure: lostfocus
+  Detalles: 
+  StackLevel: 2
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-19T16:56:23</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 2072
+  LineNo: 2
+  Message: No se puede modificar el cursor porque contiene un registro que no se ha guardado.
+  Procedure: lostfocus
+  Detalles: 
+  StackLevel: 2
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-19T17:03:20</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 107
+  LineNo: 1
+  Message: Incompatibilidad entre el tipo de operador y el tipo de operando.
+  Procedure: lostfocus
+  Detalles: 
+  StackLevel: 2
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-19T17:03:43</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 107
+  LineNo: 1
+  Message: Incompatibilidad entre el tipo de operador y el tipo de operando.
+  Procedure: lostfocus
+  Detalles: 
+  StackLevel: 2
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-19T17:06:24</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 2072
+  LineNo: 2
+  Message: No se puede modificar el cursor porque contiene un registro que no se ha guardado.
+  Procedure: lostfocus
+  Detalles: 
+  StackLevel: 2
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-20T07:28:31</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 2072
+  LineNo: 2
+  Message: No se puede modificar el cursor porque contiene un registro que no se ha guardado.
+  Procedure: lostfocus
+  Detalles: 
+  StackLevel: 2
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-23T19:46:15</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1806
+  LineNo: 12
+  Message: SQL: no se encuentra la columna 'MES'.
+  Procedure: init
+  Detalles: MES
+  StackLevel: 6
+  LineContents: __ri_delete_ejecutora()
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-30T06:24:37</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-30T06:25:11</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-30T09:49:53</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1
+  LineNo: 0
+  Message: El archivo 'form.prg' no existe.
+  Procedure:      
+  Detalles: form.prg
+  StackLevel: 2
+  LineContents: No se encuentra la tabla de Foxcode. Puede que la versión no sea correcta o que sea incompatible.
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-30T22:19:59</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1426
+  LineNo: 724
+  Message: Código de error OLE 0x800a03ec: Código de estado de COM desconocido.
+  Procedure: copytoexcel_ok
+  Detalles: 800a03ec: Código de estado de COM desconocido
+  StackLevel: 7
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-30T22:21:07</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1426
+  LineNo: 724
+  Message: Código de error OLE 0x800a03ec: Código de estado de COM desconocido.
+  Procedure: copytoexcel_ok
+  Detalles: 800a03ec: Código de estado de COM desconocido
+  StackLevel: 7
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2018-12-31T08:12:33</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 21
+  Message: No se encuentra la variable 'XMES'.
+  Procedure: _ejecutar
+  Detalles: XMES
+  StackLevel: 5
+  LineContents: origen+fuente_financ
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-05-16T07:38:58</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-05-16T08:08:42</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-05-16T08:13:43</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-05-16T08:14:35</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1300
+  LineNo: 21
+  Message: Falta ) en el nombre de la función.
+  Procedure: _ejecutar
+  Detalles: 
+  StackLevel: 5
+  LineContents: ICASE(TEMPO01.correlativo= '0400','(3)',TEMPO01.correlativo='0103','(4)',tempo01.correlativo='0202,'(5)','')
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-05-16T08:35:07</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 7
+  Message: No se encuentra la variable 'LCPROCESO'.
+  Procedure: click
+  Detalles: LCPROCESO
+  StackLevel: 2
+  LineContents: SELECT pry_ht_convenio_cab
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-05-16T08:37:40</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 8
+  Message: No se encuentra la variable 'LCPROCESO'.
+  Procedure: click
+  Detalles: LCPROCESO
+  StackLevel: 2
+  LineContents: SELECT pry_ht_convenio_cab
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-06-18T15:35:56</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-07-03T17:46:55</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 107
+  Message: No se encuentra la variable 'APORTE_EXTERNO'.
+  Procedure: opentables
+  Detalles: APORTE_EXTERNO
+  StackLevel: 5
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-07-03T17:49:41</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 107
+  Message: No se encuentra la variable 'APORTE_EXTERNO'.
+  Procedure: opentables
+  Detalles: APORTE_EXTERNO
+  StackLevel: 5
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-07-03T17:53:11</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 107
+  Message: Variable 'APORTE_EXTERNO' is not found.
+  Procedure: opentables
+  Detalles: APORTE_EXTERNO
+  StackLevel: 5
+  LineContents: Insert into tempo (	sec_ejec, proyecto, grupo_gasto, aporte_externo, aporte_local, aporte_beneficiario, ejecucion_acumulada_externo, ejecucion_acumulada_local, ejecucion_acumulada_beneficiario ) values (gcsec_ejec		 , gcProyecto		 , m.grupo_gasto		 , 0.0				 , 0.0				 , 0.0				 , m.ejecucion_acumulada_externo, m.ejecucion_acumulada_local, m.ejecucion_acumulada_beneficiario)
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-08-25T15:55:39</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1734
+  LineNo: 4
+  Message: No se encuentra la propiedad WITH.
+  Procedure: init
+  Detalles: WITH
+  StackLevel: 4
+  LineContents: SELECT proyecto_cta_cte
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-08-29T23:43:18</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 9
+  Message: Denegado d:\certificados\sysmep\data\proyecto_monetizacion.dbf al acceso al archivo.
+  Procedure: beforeopentables
+  Detalles: d:\certificados\sysmep\data\proyecto_monetizacion.dbf
+  StackLevel: 4
+  LineContents: __ri_delete_ejecutora()
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-08-29T23:44:37</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1925
+  LineNo: 1
+  Message: GRCPROVEEDOR es un miembro desconocido.
+  Procedure: init
+  Detalles: GRCPROVEEDOR
+  StackLevel: 4
+  LineContents: SELECT proyecto_monetizacion
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-08-29T23:48:03</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1925
+  LineNo: 1
+  Message: GRCPROVEEDOR es un miembro desconocido.
+  Procedure: init
+  Detalles: GRCPROVEEDOR
+  StackLevel: 4
+  LineContents: SELECT proyecto_monetizacion
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-08-30T07:23:08</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 13
+  LineNo: 24
+  Message: No se encuentra el alias 'PROYECTO_MONETIZACIONW'.
+  Procedure: rightclick
+  Detalles: PROYECTO_MONETIZACIONW
+  StackLevel: 2
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-08-30T11:03:30</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-08-30T12:39:06</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 9
+  Message: Denegado d:\certificados\sysmep\data\proyecto_monetizacion.dbf al acceso al archivo.
+  Procedure: beforeopentables
+  Detalles: d:\certificados\sysmep\data\proyecto_monetizacion.dbf
+  StackLevel: 4
+  LineContents: __ri_delete_ejecutora()
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-08-30T12:54:29</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-08-30T20:18:49</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-08-31T10:35:18</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 2005
+  LineNo: 1
+  Message: Error al cargar el archivo - número de registro 4. Grid1  &lt;o uno de sus miembros&gt;.  ControlSource : No se encuentra la variable 'TIPO_CAMBIO'
+  Procedure: click
+  Detalles: Error al cargar el archivo - número de registro 4. Grid1  &lt;o uno de sus miembros&gt;.  ControlSource : No se encuentra la variable 'TIPO_CAMBIO'
+  StackLevel: 4
+  LineContents: SET RELATION TO ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo INTO 21 ADDITIVE
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-08-31T10:54:15</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 2005
+  LineNo: 1
+  Message: Error al cargar el archivo - número de registro 4. Grid1  &lt;o uno de sus miembros&gt;.  ControlSource : No se encuentra la variable 'TIPO_CAMBIO'
+  Procedure: click
+  Detalles: Error al cargar el archivo - número de registro 4. Grid1  &lt;o uno de sus miembros&gt;.  ControlSource : No se encuentra la variable 'TIPO_CAMBIO'
+  StackLevel: 4
+  LineContents: SET RELATION TO ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo INTO 21 ADDITIVE
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-08-31T12:06:21</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 4
+  Message: Denegado d:\certificados\sysmep\data\proyecto_detalle.dbf al acceso al archivo.
+  Procedure: beforeopentables
+  Detalles: d:\certificados\sysmep\data\proyecto_detalle.dbf
+  StackLevel: 4
+  LineContents: __ri_delete_ejecutora()
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-09-01T00:02:04</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-09-01T07:26:08</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-09-01T07:27:48</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1586
+  LineNo: 132
+  Message: La función requiere el modo de almacenamiento en búfer de filas o tablas.
+  Procedure: click
+  Detalles: 
+  StackLevel: 6
+  LineContents: SET RELATION TO ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo INTO 21 ADDITIVE
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-09-01T07:39:09</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-09-01T07:44:54</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1734
+  LineNo: 1
+  Message: No se encuentra la propiedad SWITCH.
+  Procedure: click
+  Detalles: SWITCH
+  StackLevel: 2
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-10-07T21:06:25</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-10-14T16:53:05</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2019-10-14T23:26:37</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 107
+  LineNo: 3
+  Message: Incompatibilidad entre el tipo de operador y el tipo de operando.
+  Procedure: click
+  Detalles: 
+  StackLevel: 6
+  LineContents: SELECT cur_expediente
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2020-01-11T15:16:30</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2020-01-11T15:59:34</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 52
+  LineNo: 2
+  Message: No hay ninguna tabla abierta en el área de trabajo actual.
+  Procedure: beforeopentables
+  Detalles: 
+  StackLevel: 4
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2020-01-14T07:18:33</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1925
+  LineNo: 2
+  Message: HEADER1 es un miembro desconocido.
+  Procedure: init
+  Detalles: HEADER1
+  StackLevel: 4
+  LineContents: SET RELATION TO ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo INTO 21 ADDITIVE
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2020-01-21T12:31:24</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 76
+  Message: No se encuentra la variable 'ACTVIDIAD'.
+  Procedure: load
+  Detalles: ACTVIDIAD
+  StackLevel: 3
+  LineContents: __ri_delete_fuente_financ()
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2020-01-21T12:32:23</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 13
+  LineNo: 295
+  Message: No se encuentra el alias.
+  Procedure: cargar_cursor
+  Detalles: 
+  StackLevel: 3
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2020-02-03T17:30:04</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 30
+  Message: Denegado d:\certificados\sysmep\data\justificacion_detalle.dbf al acceso al archivo.
+  Procedure: beforeopentables
+  Detalles: d:\certificados\sysmep\data\justificacion_detalle.dbf
+  StackLevel: 4
+  LineContents: __ri_update_cta_cte()
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2020-02-03T23:32:53</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1733
+  LineNo: 414
+  Message: Class definition WORD.APPLICATION is not found.
+  Procedure: declaratodo
+  Detalles: WORD.APPLICATION
+  StackLevel: 2
+  LineContents: oWord = CreateObject('Word.Application')
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2020-02-03T23:33:09</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 36
+  LineNo: 336
+  Message: Command contains unrecognized phrase/keyword.
+  Procedure: crea_menu
+  Detalles: 
+  StackLevel: 2
+  LineContents: ON SELECTION BAR  &amp;lcNumBar   of  &amp;lcNamePopup2 &amp;lcMenuOpcion
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2020-02-04T09:58:21</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 36
+  LineNo: 336
+  Message: Command contains unrecognized phrase/keyword.
+  Procedure: crea_menu
+  Detalles: 
+  StackLevel: 2
+  LineContents: ON SELECTION BAR  &amp;lcNumBar   of  &amp;lcNamePopup2 &amp;lcMenuOpcion
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2020-02-04T10:17:11</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 36
+  LineNo: 336
+  Message: El comando contiene una frase o palabra clave no reconocida.
+  Procedure: crea_menu
+  Detalles: 
+  StackLevel: 2
+  LineContents: "S"
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2020-02-04T10:23:04</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 36
+  LineNo: 336
+  Message: El comando contiene una frase o palabra clave no reconocida.
+  Procedure: crea_menu
+  Detalles: 
+  StackLevel: 2
+  LineContents: "S"
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2020-02-04T10:24:25</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 36
+  LineNo: 336
+  Message: El comando contiene una frase o palabra clave no reconocida.
+  Procedure: crea_menu
+  Detalles: 
+  StackLevel: 2
+  LineContents: "S"
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2020-02-04T10:29:21</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 36
+  LineNo: 336
+  Message: El comando contiene una frase o palabra clave no reconocida.
+  Procedure: crea_menu
+  Detalles: 
+  StackLevel: 2
+  LineContents: "S"
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2020-02-04T10:34:20</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 36
+  LineNo: 336
+  Message: El comando contiene una frase o palabra clave no reconocida.
+  Procedure: crea_menu
+  Detalles: 
+  StackLevel: 2
+  LineContents: "S"
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2020-02-04T10:36:10</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 36
+  LineNo: 336
+  Message: El comando contiene una frase o palabra clave no reconocida.
+  Procedure: crea_menu
+  Detalles: 
+  StackLevel: 2
+  LineContents: "S"
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2020-05-26T17:55:43</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1
+  LineNo: 110
+  Message: El archivo 'd:\siaf\siaf_1719\data\siaf.dbc' no existe.
+  Procedure: inicio
+  Detalles: d:\siaf\siaf_1719\data\siaf.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2020-06-29T15:01:26</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1733
+  LineNo: 414
+  Message: No se encuentra la definición de clase WORD.APPLICATION.
+  Procedure: declaratodo
+  Detalles: WORD.APPLICATION
+  StackLevel: 2
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2020-06-29T15:07:39</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1231
+  LineNo: 1307
+  Message: Falta algún operando.
+  Procedure: callreport
+  Detalles: 
+  StackLevel: 7
+  LineContents: IIF(lnSemestre=1,"SEMESTRE DEL 01/01/"+GCANO_EJE+" AL 30/06/"+GCANO_EJE,"ANUAL AL "+"31/12/"+gcano_eje)* 
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2020-06-29T15:08:38</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1231
+  LineNo: 21
+  Message: Falta algún operando.
+  Procedure: _ejecutar
+  Detalles: 
+  StackLevel: 5
+  LineContents: IIF(lnSemestre=1,"SEMESTRE DEL 01/01/"+GCANO_EJE+" AL 30/06/"+GCANO_EJE,"ANUAL AL "+"31/12/"+gcano_eje)* 
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2020-06-29T15:09:29</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1231
+  LineNo: 21
+  Message: Falta algún operando.
+  Procedure: _ejecutar
+  Detalles: 
+  StackLevel: 4
+  LineContents: IIF(lnSemestre=1,"SEMESTRE DEL 01/01/"+GCANO_EJE+" AL 30/06/"+GCANO_EJE,"ANUAL AL "+"31/12/"+gcano_eje)* 
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-02-24T15:28:49</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 99
+  Message: No se encuentra la variable 'TIPO_APORTE'.
+  Procedure: click
+  Detalles: TIPO_APORTE
+  StackLevel: 2
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-02-24T15:33:45</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 99
+  Message: No se encuentra la variable 'TIPO_APORTE'.
+  Procedure: click
+  Detalles: TIPO_APORTE
+  StackLevel: 2
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-02-24T16:34:27</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 99
+  Message: No se encuentra la variable 'KCTIPOAPORTE'.
+  Procedure: click
+  Detalles: KCTIPOAPORTE
+  StackLevel: 2
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-03-16T18:03:32</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1
+  LineNo: 0
+  Message: El archivo 'actualiza_tipo_aporte.prg' no existe.
+  Procedure:      
+  Detalles: actualiza_tipo_aporte.prg
+  StackLevel: 2
+  LineContents: No se encuentra la tabla de Foxcode. Puede que la versión no sea correcta o que sea incompatible.
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-03-16T18:04:13</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 13
+  Message: No se encuentra la variable 'TIPO_FINANCIAMIENTO'.
+  Procedure: actualiza_tipo_aporte
+  Detalles: TIPO_FINANCIAMIENTO
+  StackLevel: 3
+  LineContents: __ri_delete_expediente_fase()
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-03-17T14:49:53</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-06-17T11:01:28</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 18
+  Message: No se encuentra la variable 'DESCRIPCION_PAGO'.
+  Procedure: carga_cursoe
+  Detalles: DESCRIPCION_PAGO
+  StackLevel: 5
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-06-20T11:52:54</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 100
+  Message: No se encuentra la variable 'DESCRIPCION_PAGO'.
+  Procedure: procesar_nota
+  Detalles: DESCRIPCION_PAGO
+  StackLevel: 3
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-06-20T11:59:15</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 102
+  Message: No se encuentra la variable 'DESCRIPCION_PAGO'.
+  Procedure: procesar_nota
+  Detalles: DESCRIPCION_PAGO
+  StackLevel: 3
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-06-22T11:52:34</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1884
+  LineNo: 71
+  Message: Se infringe la unicidad del índice SUB_ESPECI.
+  Procedure: click
+  Detalles: SUB_ESPECI
+  StackLevel: 2
+  LineContents: create cursor curTmp from array _XMLArray_B8468283_C239_4DA8_B4B2_49FAD15EB656_
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-06-22T13:43:59</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-06-22T15:22:08</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1734
+  LineNo: 1
+  Message: No se encuentra la propiedad WHENVALUE.
+  Procedure: when
+  Detalles: WHENVALUE
+  StackLevel: 2
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-06-23T10:33:40</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-06-24T15:03:43</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 18
+  LineNo: 34
+  Message: La línea es demasiado larga.
+  Procedure: ejecutar
+  Detalles: 
+  StackLevel: 4
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-06-25T09:07:35</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 44
+  Message: No se encuentra la variable 'CATEG__GASTO_NOMBRE'.
+  Procedure: click
+  Detalles: CATEG__GASTO_NOMBRE
+  StackLevel: 3
+  LineContents: create cursor curTmp from array _XMLArray_B8468283_C239_4DA8_B4B2_49FAD15EB656_
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-06-25T09:09:21</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 44
+  Message: No se encuentra la variable 'CATEG__GASTO_NOMBRE'.
+  Procedure: click
+  Detalles: CATEG__GASTO_NOMBRE
+  StackLevel: 2
+  LineContents: create cursor curTmp from array _XMLArray_B8468283_C239_4DA8_B4B2_49FAD15EB656_
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-06-25T09:14:21</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1884
+  LineNo: 72
+  Message: Se infringe la unicidad del índice SUB_ESPECI.
+  Procedure: click
+  Detalles: SUB_ESPECI
+  StackLevel: 2
+  LineContents: create cursor curTmp from array _XMLArray_B8468283_C239_4DA8_B4B2_49FAD15EB656_
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-06-25T09:20:38</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1884
+  LineNo: 72
+  Message: Se infringe la unicidad del índice SUB_ESPECI.
+  Procedure: click
+  Detalles: SUB_ESPECI
+  StackLevel: 3
+  LineContents: create cursor curTmp from array _XMLArray_B8468283_C239_4DA8_B4B2_49FAD15EB656_
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-06-25T11:20:37</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 13
+  LineNo: 31
+  Message: No se encuentra el alias 'SEC_EJEC2M'.
+  Procedure: click
+  Detalles: SEC_EJEC2M
+  StackLevel: 3
+  LineContents: create cursor curTmp from array _XMLArray_B8468283_C239_4DA8_B4B2_49FAD15EB656_
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-06-25T11:22:11</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 94
+  LineNo: 31
+  Message: Debe especificar parámetros adicionales.
+  Procedure: click
+  Detalles: 
+  StackLevel: 2
+  LineContents: create cursor curTmp from array _XMLArray_B8468283_C239_4DA8_B4B2_49FAD15EB656_
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-06-30T14:40:59</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 24
+  LineNo: 8
+  Message: El nombre de alias ya está en uso.
+  Procedure: opentables
+  Detalles: 
+  StackLevel: 8
+  LineContents: __ri_update_pliego()
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-06-30T14:44:56</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 24
+  LineNo: 8
+  Message: El nombre de alias ya está en uso.
+  Procedure: opentables
+  Detalles: 
+  StackLevel: 5
+  LineContents: __ri_update_pliego()
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-06-30T14:50:11</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 24
+  LineNo: 8
+  Message: El nombre de alias ya está en uso.
+  Procedure: opentables
+  Detalles: 
+  StackLevel: 5
+  LineContents: __ri_update_pliego()
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-06-30T17:30:49</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1429
+  LineNo: 742
+  Message: Código de excepción OLE IDispatch 0 de Microsoft Excel: No se puede obtener la propiedad SaveAs de la clase Workbook..
+  Procedure: copytoexcel_ok
+  Detalles: Código de excepción OLE IDispatch 0 de Microsoft Excel: No se puede obtener la propiedad SaveAs de la clase Workbook.
+  StackLevel: 7
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-06-30T17:32:49</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1429
+  LineNo: 742
+  Message: Código de excepción OLE IDispatch 0 de Microsoft Excel: No se puede obtener la propiedad SaveAs de la clase Workbook..
+  Procedure: copytoexcel_ok
+  Detalles: Código de excepción OLE IDispatch 0 de Microsoft Excel: No se puede obtener la propiedad SaveAs de la clase Workbook.
+  StackLevel: 7
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-06-30T17:34:24</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1429
+  LineNo: 742
+  Message: Código de excepción OLE IDispatch 0 de Microsoft Excel: No se puede obtener la propiedad SaveAs de la clase Workbook..
+  Procedure: copytoexcel_ok
+  Detalles: Código de excepción OLE IDispatch 0 de Microsoft Excel: No se puede obtener la propiedad SaveAs de la clase Workbook.
+  StackLevel: 7
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-06-30T17:36:17</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1429
+  LineNo: 742
+  Message: Código de excepción OLE IDispatch 0 de Microsoft Excel: No se puede obtener la propiedad SaveAs de la clase Workbook..
+  Procedure: copytoexcel_ok
+  Detalles: Código de excepción OLE IDispatch 0 de Microsoft Excel: No se puede obtener la propiedad SaveAs de la clase Workbook.
+  StackLevel: 7
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-07-21T19:57:01</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-08-08T15:58:38</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-08-08T16:40:43</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-08-11T10:33:43</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-08-11T10:42:25</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 96
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-08-19T21:11:18</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 13
+  LineNo: 10
+  Message: No se encuentra el alias.
+  Procedure: opentables
+  Detalles: 
+  StackLevel: 5
+  LineContents: __ri_update_pliego()
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-09-07T00:41:50</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1903
+  LineNo: 24
+  Message: Cadena demasiado larga.
+  Procedure: _ejecutar
+  Detalles: 
+  StackLevel: 4
+  LineContents: cur_gen.sub_especifica_gasto
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-09-07T09:46:31</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1903
+  LineNo: 24
+  Message: Cadena demasiado larga.
+  Procedure: _ejecutar
+  Detalles: 
+  StackLevel: 4
+  LineContents: cur_gen.sub_especifica_gasto
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-10-20T15:41:15</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 94
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-10-20T15:46:11</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 94
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-10-20T16:54:07</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 94
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-10-20T16:57:21</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 94
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-10-21T09:50:08</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 94
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-11-17T09:14:54</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 152
+  LineNo: 32
+  Message: Falta alguna expresión.
+  Procedure: procesar
+  Detalles: 
+  StackLevel: 4
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2021-12-28T20:05:04</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 39
+  LineNo: 5
+  Message: Desbordamiento numérico (se han perdido datos).
+  Procedure: lostfocus
+  Detalles: 
+  StackLevel: 2
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2022-01-06T15:54:54</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1734
+  LineNo: 1
+  Message: No se encuentra la propiedad SWITCH.
+  Procedure: click
+  Detalles: SWITCH
+  StackLevel: 2
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2022-01-16T18:02:59</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 94
+  Message: No se encuentra la variable 'XMTOMN'.
+  Procedure: procesar_nota
+  Detalles: XMTOMN
+  StackLevel: 4
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2022-01-17T10:31:02</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 94
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2022-01-17T11:20:18</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 2005
+  LineNo: 66
+  Message: Error al cargar el archivo - número de registro 84. grdNota  &lt;o uno de sus miembros&gt;.  ControlSource : No se encuentra el alias 'P_SUB_ESPECIFICA_GASTO'
+  Procedure: runform
+  Detalles: Error al cargar el archivo - número de registro 84. grdNota  &lt;o uno de sus miembros&gt;.  ControlSource : No se encuentra el alias 'P_SUB_ESPECIFICA_GASTO'
+  StackLevel: 3
+  LineContents: "A"
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2022-01-17T11:21:30</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 13
+  LineNo: 6
+  Message: No se encuentra el alias.
+  Procedure: refresh
+  Detalles: 
+  StackLevel: 3
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2022-01-17T11:28:03</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 13
+  LineNo: 6
+  Message: No se encuentra el alias.
+  Procedure: refresh
+  Detalles: 
+  StackLevel: 4
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2022-01-17T11:38:49</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 13
+  LineNo: 6
+  Message: No se encuentra el alias.
+  Procedure: refresh
+  Detalles: 
+  StackLevel: 4
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2022-04-27T18:09:12</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1429
+  LineNo: 90
+  Message: Código de excepción OLE IDispatch 0 de Nodes: Key is not unique in collection.
+  Procedure: m_load_tree
+  Detalles: Código de excepción OLE IDispatch 0 de Nodes: Key is not unique in collection
+  StackLevel: 4
+  LineContents: SELECT users
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2022-07-26T09:31:12</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 94
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2022-07-27T11:29:07</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 94
+  Message: Denegado d:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO d:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2022-10-27T12:13:35</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 9
+  LineNo: 1
+  Message: No coinciden los tipos de datos.
+  Procedure: refresh
+  Detalles: 
+  StackLevel: 6
+  LineContents: SET RELATION TO ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo INTO 21 ADDITIVE
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2022-12-06T12:28:20</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1
+  LineNo: 94
+  Message: El archivo 'c:\certificados\sysmep_1590\data\sysmep.dbc' no existe.
+  Procedure: inicio
+  Detalles: c:\certificados\sysmep_1590\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO c:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2022-12-06T14:05:05</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 62
+  Message: No se encuentra la variable 'FECHA_ENTREGA'.
+  Procedure: click
+  Detalles: FECHA_ENTREGA
+  StackLevel: 2
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-06-13T20:19:57</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 94
+  Message: Denegado c:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: c:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO c:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-07-08T08:59:58</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1
+  LineNo: 108
+  Message: El archivo 'd:\siaf\siaf_1085\data\siaf.dbc' no existe.
+  Procedure: inicio
+  Detalles: d:\siaf\siaf_1085\data\siaf.dbc
+  StackLevel: 1
+  LineContents: DO c:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-07-08T09:26:13</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 94
+  Message: Denegado c:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: c:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO c:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-07-08T18:37:05</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 94
+  Message: Denegado c:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: c:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO c:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-07-08T18:53:11</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 94
+  Message: Denegado c:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: c:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO c:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-07-08T19:04:12</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 94
+  Message: Denegado c:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: c:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO c:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-07-16T13:17:18</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1
+  LineNo: 108
+  Message: El archivo 'c:\siaf\siaf_1085\data\siaf.dbc' no existe.
+  Procedure: inicio
+  Detalles: c:\siaf\siaf_1085\data\siaf.dbc
+  StackLevel: 1
+  LineContents: DO c:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-07-21T10:52:47</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 94
+  Message: Denegado c:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: c:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO c:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-07-21T10:58:19</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 94
+  Message: Denegado c:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: c:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO c:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-07-21T11:20:53</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 94
+  Message: Denegado c:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: c:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO c:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-08-10T16:56:45</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1
+  LineNo: 94
+  Message: El archivo 'd:\certificados\sysmep\data\sysmep.dbc' no existe.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO c:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-08-10T16:57:05</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1
+  LineNo: 94
+  Message: El archivo 'd:\certificados\sysmep\data\sysmep.dbc' no existe.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO c:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-08-10T16:57:17</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1
+  LineNo: 94
+  Message: El archivo 'd:\certificados\sysmep\data\sysmep.dbc' no existe.
+  Procedure: inicio
+  Detalles: d:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO c:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-08-11T14:32:54</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1925
+  LineNo: 2
+  Message: TXTMONTO_DOLAR es un miembro desconocido.
+  Procedure: activate
+  Detalles: TXTMONTO_DOLAR
+  StackLevel: 4
+  LineContents: SET RELATION TO 2022001215220 INTO 22 ADDITIVE
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-08-14T08:57:14</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 2005
+  LineNo: 66
+  Message: Error al cargar el archivo - número de registro 8. Grid1  &lt;o uno de sus miembros&gt;.  ControlSource : No se encuentra la variable 'TIPO_RECURSO'
+  Procedure: runform
+  Detalles: Error al cargar el archivo - número de registro 8. Grid1  &lt;o uno de sus miembros&gt;.  ControlSource : No se encuentra la variable 'TIPO_RECURSO'
+  StackLevel: 3
+  LineContents: "A"
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-09-09T19:07:04</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 13
+  LineNo: 35
+  Message: No se encuentra el alias.
+  Procedure: nuevo
+  Detalles: 
+  StackLevel: 9
+  LineContents: SET RELATION TO ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo INTO 21 ADDITIVE
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-09-13T10:09:46</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 13
+  LineNo: 35
+  Message: No se encuentra el alias.
+  Procedure: nuevo
+  Detalles: 
+  StackLevel: 9
+  LineContents: SET RELATION TO ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo INTO 23 ADDITIVE
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-09-23T10:12:54</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 100
+  Message: No se encuentra la variable 'NUMERO'.
+  Procedure: load
+  Detalles: NUMERO
+  StackLevel: 3
+  LineContents: __ri_delete_persona()
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-09-23T11:54:18</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 100
+  Message: No se encuentra la variable 'NUMERO'.
+  Procedure: load
+  Detalles: NUMERO
+  StackLevel: 3
+  LineContents: __ri_delete_persona()
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-09-23T11:54:58</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 100
+  Message: No se encuentra la variable 'NUMERO'.
+  Procedure: load
+  Detalles: NUMERO
+  StackLevel: 3
+  LineContents: __ri_delete_persona()
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-09-23T11:57:38</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 27
+  Message: No se encuentra la variable 'JUSTIFICACION_NUMERO'.
+  Procedure: _ejecutar
+  Detalles: JUSTIFICACION_NUMERO
+  StackLevel: 4
+  LineContents: secuencia_det
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-09-23T12:01:23</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 27
+  Message: No se encuentra la variable 'NUMERO'.
+  Procedure: _ejecutar
+  Detalles: NUMERO
+  StackLevel: 4
+  LineContents: secuencia_det
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-09-23T12:05:25</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 94
+  LineNo: 69
+  Message: Debe especificar parámetros adicionales.
+  Procedure: carga_cursor_resumen
+  Detalles: 
+  StackLevel: 5
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-09-23T12:11:28</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 94
+  LineNo: 69
+  Message: Debe especificar parámetros adicionales.
+  Procedure: carga_cursor_resumen
+  Detalles: 
+  StackLevel: 5
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-09-23T13:23:28</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 207
+  Message: No se encuentra la variable 'MONTO_NACIONAL'.
+  Procedure: carga_cursor
+  Detalles: MONTO_NACIONAL
+  StackLevel: 5
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-09-23T17:36:48</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 207
+  Message: No se encuentra la variable 'MONTO_NACIONAL'.
+  Procedure: carga_cursor
+  Detalles: MONTO_NACIONAL
+  StackLevel: 5
+  LineContents: 
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2023-11-13T18:49:22</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1001
+  LineNo: 67
+  Message: Característica no disponible.
+  Procedure: opentables
+  Detalles: 
+  StackLevel: 5
+  LineContents: __ri_delete_expediente_fase()
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2024-01-19T09:28:14</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1705
+  LineNo: 94
+  Message: Denegado c:\certificados\sysmep\data\sysmep.dbc al acceso al archivo.
+  Procedure: inicio
+  Detalles: c:\certificados\sysmep\data\sysmep.dbc
+  StackLevel: 1
+  LineContents: DO c:\certificados\sysmep\sysmep.exe
+
+  Comments:</cerrorinfo>
+	</sysmep_log>
+	<sysmep_log>
+		<dfecha>2024-02-16T16:23:00</dfecha>
+		<cerrorinfo>Exception Object 0:  ErrorNo: 1435  LineNo: 9  Message: Error de análisis de XML: Se encontró un carácter no válido en el contenido del texto.
+ línea 28929, posición 21.   		&lt;descripcion_pago&gt;POR LA DETRACCION A LA FACTURA F005  -127162  EMPRESA PERUANA DE SERVICIOS EDITORIALES S.A. - EDITORA PERU                                                                                                                                               &lt;/descripcion_pago&gt;  Procedure: cargar_cursor  Detalles: Error de análisis de XML: Se encontró un carácter no válido en el contenido del texto.
+ línea 28929, posición 21.   		&lt;descripcion_pago&gt;POR LA DETRACCION A LA FACTURA F005  -127162  EMPRESA PERUANA DE SERVICIOS EDITORIALES S.A. - EDITORA PERU                                                                                                                                               &lt;/descripcion_pago&gt;  StackLevel: 3  LineContents:   Comments: </cerrorinfo>
+	</sysmep_log>
+</VFPData>

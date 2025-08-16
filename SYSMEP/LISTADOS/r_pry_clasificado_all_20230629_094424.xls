@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+<Styles>
+  <Style ss:ID="s21">
+   <Alignment ss:Vertical="Bottom" />
+   <Borders/>
+   <Font ss:FontName="Courier New" ss:Size="10"/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+</Styles>
+<Worksheet ss:Name="Sheet">
+
+<Table ss:ExpandedColumnCount=".NULL." ss:ExpandedRowCount=".NULL." x:FullColumns="1"
+ x:FullRows="1" ss:StyleID="s21"> 
+</Row>
+</Table>
+
+ </Worksheet>
+
+</Workbook>
+

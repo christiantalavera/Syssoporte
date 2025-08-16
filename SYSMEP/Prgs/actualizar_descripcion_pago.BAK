@@ -1,0 +1,25 @@
+USE sysmep!proyecto_detalle 		IN 0 ORDER tag sec_det
+USE siaf!expediente_nota			IN 0 ORDER tag exp_nota
+USE sysmep!justificacion_detalle	IN 0 ORDER tag sec_det
+WAIT WINDOW 'Iniciando Proceso' NOWAIT 
+SELECT proyecto_detalle
+SET RELATION TO ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo+secuencia_det INTO justificacion_detalle ADDITIVE 
+
+SELECT proyecto_detalle
+SEEK gcano_eje+gcsec_ejec
+SCAN WHILE ano_eje+sec_ejec = gcano_eje+gcsec_ejec
+	SCATTER MEMVAR 
+	lcNota = ''
+	SELECT expediente_nota
+	SEEK gcano_eje+gcsec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia
+	SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia = gcano_eje+gcsec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia
+		lcNota = lcNota + expediente_nota.notas
+	ENDSCAN 
+	REPLACE proyecto_detalle.descripcion_pago 		WITH lcNota
+	REPLACE justificacion_detalle.descripcion_pago 	WITH lcNota
+ENDSCAN 
+
+USE IN proyecto_detalle
+USE IN expediente_nota
+USE IN justificacion_detalle
+WAIT WINDOW 'Proceso Terminado' NOWAIT 

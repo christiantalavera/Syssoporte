@@ -1,0 +1,129 @@
+	*** INSERTAR USUARIO 
+SET EXCLUSIVE ON 	
+*SUSPEND 
+IF FILE('menu_niv01.xml') AND FILE('menu_niv02.xml') AND FILE('menu_niv03.xml') THEN 
+	XMLTOCURSOR('menu_niv01.xml','cur_menu01',512)
+	XMLTOCURSOR('menu_niv02.xml','cur_menu02',512)
+	XMLTOCURSOR('menu_niv03.xml','cur_menu03',512)	
+
+	USE SYSMEP!menu_niv01   	IN 0 
+	USE SYSMEP!menu_niv02		IN 0
+	USE SYSMEP!menu_niv03		IN 0 
+	
+	SELECT * FROM menu_niv01 WHERE ano_eje = gcano_eje AND !DELETED() INTO CURSOR cur_menu_01_bak
+	SELECT * FROM menu_niv02 WHERE ano_eje = gcano_eje AND !DELETED() INTO CURSOR cur_menu_02_bak
+	SELECT * FROM menu_niv03 WHERE ano_eje = gcano_eje AND !DELETED() INTO CURSOR cur_menu_03_bak
+	
+	SELECT distinct usuario FROM menu_niv01 INTO CURSOR cur_user
+
+	ZAP IN menu_niv01
+	ZAP IN menu_niv02
+	ZAP IN menu_niv03
+	
+	SELECT cur_user
+	SCAN ALL 
+		lcCuser_id = cur_user.usuario	
+		SELECT cur_menu01
+		SCAN ALL 
+			SCATTER MEMVAR 
+			m.usuario = lcCuser_id
+			IF !SEEK(m.ano_eje+m.sec_ejec+m.usuario+m.modulo+m.id_menuniv01,'menu_niv01','id_menu') THEN 
+				INSERT INTO menu_niv01 (ano_eje, sec_ejec, usuario, modulo, id_menuniv01, des_menuniv1, estado, visible, clave) ;
+					VALUES (cur_menu01.ano_eje, cur_menu01.sec_ejec, lcCuser_id, cur_menu01.modulo, cur_menu01.id_menuniv01, cur_menu01.des_menuniv1, cur_menu01.estado, cur_menu01.visible, cur_menu01.clave)
+			ELSE
+*!*					IF m.visible = 'N' THEN 
+*!*						REPLACE ano_eje WITH RIGHT(SYS(2015),4) IN menu_niv01
+*!*						DELETE IN menu_niv01
+*!*					ELSE 
+				REPLACE menu_niv01.des_menuniv1  WITH cur_menu01.des_menuniv1 
+				REPLACE menu_niv01.estado		 WITH cur_menu01.estado
+				REPLACE menu_niv01.visible		 WITH cur_menu01.visible
+				REPLACE menu_niv01.modulo		 WITH cur_menu01.modulo
+				REPLACE menu_niv01.clave		 WITH cur_menu01.clave
+*!*					ENDIF 
+			ENDIF 
+		ENDSCAN 
+
+		SELECT cur_menu02
+		SCAN ALL 
+			SCATTER MEMVAR 
+			m.usuario = lcCuser_id		
+			IF !SEEK(m.ano_eje+m.sec_ejec+ALLTRIM(m.usuario)+m.modulo+m.id_menuniv01+m.id_menuniv02,'menu_niv02','menu_niv2') THEN 
+				INSERT INTO menu_niv02 (ano_eje, sec_ejec, usuario, modulo, id_menuniv01, id_menuniv02, des_menuniv2, ejecutaniv2,tipo_nodoniv2, estado ,visible, clave);
+					VALUES (cur_menu02.ano_eje, cur_menu02.sec_ejec, lcCuser_id, cur_menu02.modulo, cur_menu02.id_menuniv01, cur_menu02.id_menuniv02, cur_menu02.des_menuniv2, cur_menu02.ejecutaniv2,cur_menu02.tipo_nodoniv2, cur_menu02.estado ,cur_menu02.visible, cur_menu02.clave)
+			ELSE
+				REPLACE menu_niv02.des_menuniv2		WITH cur_menu02.des_menuniv2
+				REPLACE menu_niv02.ejecutaniv2		WITH cur_menu02.ejecutaniv2
+				REPLACE menu_niv02.tipo_nodoniv2	WITH cur_menu02.tipo_nodoniv2
+				REPLACE menu_niv02.estado		 	WITH cur_menu02.estado
+				REPLACE menu_niv02.visible		 	WITH cur_menu02.visible
+				REPLACE menu_niv02.modulo			WITH cur_menu02.modulo
+				REPLACE menu_niv02.clave			WITH cur_menu02.clave
+			ENDIF 
+		ENDSCAN 
+
+		SELECT cur_menu03
+		SCAN ALL 
+			SCATTER MEMVAR 
+			m.usuario = lcCuser_id		
+			IF !SEEK(m.ano_eje+m.sec_ejec+ALLTRIM(m.usuario)+m.modulo+m.id_menuniv01+m.id_menuniv02+m.id_menuniv03,'menu_niv03','id_menu') THEN 
+				INSERT INTO menu_niv03 (ano_eje, sec_ejec, usuario, modulo, id_menuniv01, id_menuniv02,id_menuniv03, des_menuniv3,ejecutaniv3, estado, visible, clave);
+							VALUES (cur_menu03.ano_eje, cur_menu03.sec_ejec, lcCuser_id, cur_menu03.modulo, cur_menu03.id_menuniv01, cur_menu03.id_menuniv02,cur_menu03.id_menuniv03,cur_menu03.des_menuniv3,cur_menu03.ejecutaniv3, cur_menu03.estado, cur_menu03.visible, cur_menu03.clave)
+			ELSE
+				REPLACE menu_niv03.des_menuniv3		WITH cur_menu03.des_menuniv3	
+				REPLACE menu_niv03.ejecutaniv3		WITH cur_menu03.ejecutaniv3
+				REPLACE menu_niv03.estado		 	WITH cur_menu03.estado
+				REPLACE menu_niv03.visible		 	WITH cur_menu03.visible
+				REPLACE menu_niv03.modulo			WITH cur_menu03.modulo
+				REPLACE menu_niv03.clave			WITH cur_menu03.clave
+			ENDIF 
+		ENDSCAN 
+	ENDSCAN 
+	
+	SELECT cur_menu_01_bak 
+	SCAN ALL 
+		SCATTER MEMVAR 
+		IF SEEK(m.ano_eje+m.sec_ejec+m.usuario+m.modulo+m.id_menuniv01,'menu_niv01','id_menu') THEN 
+*			REPLACE menu_niv01.des_menuniv1  WITH cur_menu_01_bak.des_menuniv1 		
+			REPLACE menu_niv01.estado		 WITH cur_menu_01_bak.estado
+			REPLACE menu_niv01.visible		 WITH cur_menu_01_bak.visible
+			REPLACE menu_niv01.modulo		 WITH cur_menu_01_bak.modulo 
+		ENDIF 
+	ENDSCAN 
+
+	SELECT cur_menu_02_bak 
+	SCAN ALL 
+		SCATTER MEMVAR 
+		IF SEEK(m.ano_eje+m.sec_ejec+ALLTRIM(m.usuario)+m.modulo+m.id_menuniv01+m.id_menuniv02,'menu_niv02','menu_niv2') THEN 
+*			REPLACE menu_niv02.des_menuniv2		WITH cur_menu_02_bak.des_menuniv2		
+			REPLACE menu_niv02.estado		 	WITH cur_menu_02_bak.estado
+			REPLACE menu_niv02.visible		 	WITH cur_menu_02_bak.visible
+			REPLACE menu_niv02.modulo			WITH cur_menu_02_bak.modulo
+		ENDIF 
+	ENDSCAN 
+	
+	SELECT cur_menu_03_bak 
+	SCAN ALL 
+		SCATTER MEMVAR 
+		IF SEEK(m.ano_eje+m.sec_ejec+ALLTRIM(m.usuario)+m.modulo+m.id_menuniv01+m.id_menuniv02+m.id_menuniv03,'menu_niv03','id_menu') THEN 	
+*			REPLACE menu_niv03.des_menuniv3		WITH cur_menu_03_bak.des_menuniv3	
+*			REPLACE menu_niv03.ejecutaniv3		WITH cur_menu_03_bak.ejecutaniv3						
+			REPLACE menu_niv03.estado		 	WITH cur_menu_03_bak.estado
+			REPLACE menu_niv03.visible		 	WITH cur_menu_03_bak.visible
+			REPLACE menu_niv03.modulo			WITH cur_menu_03_bak.modulo
+			
+		ENDIF 
+	ENDSCAN 
+	USE IN menu_niv01
+	USE IN menu_niv02
+	USE IN menu_niv03	
+	USE IN cur_menu_01_bak 
+	USE IN cur_menu_02_bak 
+	USE IN cur_menu_03_bak 		
+	=MESSAGEBOX('Proceso Terminado',64,'Aviso')
+	DELETE FILE XML\menu_niv01.XML
+	DELETE FILE XML\menu_niv02.XML
+	DELETE FILE XML\menu_niv03.XML
+ENDIF 	
+ 
+SET EXCLUSIVE off

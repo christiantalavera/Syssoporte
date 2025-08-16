@@ -1,0 +1,4164 @@
+<?xml version = "1.0" encoding="Windows-1252" standalone="yes"?>
+<VFPData>
+	<xsd:schema id="VFPData" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="VFPData" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="cur_1" minOccurs="0" maxOccurs="unbounded">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="ano_eje">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="4"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="sec_ejec2">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="6"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="componente">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="sub_componente">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="actividad">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="sub_actividad">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="grupo_gasto">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="categ_gasto">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="elemento_gasto">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="especifica_gasto">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="sub_especifica_gasto">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="4"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="moneda">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="6"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="tipo_cambio">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="15"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="monto">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="monto_nacional">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="monto_extranjero">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="cod_doc">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="3"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="num_doc">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="20"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="descripcion_pago">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2147483647"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="fecha_doc" type="xsd:date" minOccurs="0"/>
+								<xsd:element name="fecha_entrega" type="xsd:date" minOccurs="0"/>
+								<xsd:element name="tipo_id">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="1"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="ruc">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="11"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="proveedor">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="100"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="no_objecion">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="30"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="origen">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="1"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="fuente_financ">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="beneficiario">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="10"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="prism">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="20"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="tipo_recurso">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="tipo_gasto">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="3"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="enlace">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="33"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="tipo_aporte">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+				<xsd:anyAttribute namespace="http://www.w3.org/XML/1998/namespace" processContents="lax"/>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>03</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.655000000000000</tipo_cambio>
+		<monto>13000.00</monto>
+		<monto_nacional>13000.00</monto_nacional>
+		<monto_extranjero>3556.77</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>0003-EJE NOPENAL2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE JARA BARRUTIA ALBERTO DEMETRIO POR EL SERVIC</descripcion_pago>
+		<fecha_doc>2021-02-16</fecha_doc>
+		<fecha_entrega>2021-02-17</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10086034544</ruc>
+		<proveedor>JARA BARRUTIA ALBERTO DEMETRIO</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>00</fuente_financ>
+		<beneficiario/>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000005GG00030001001</enlace>
+		<tipo_aporte>00</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>03</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.655000000000000</tipo_cambio>
+		<monto>13000.00</monto>
+		<monto_nacional>13000.00</monto_nacional>
+		<monto_extranjero>3556.77</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>0004-EJE NOPENAL-202</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE CRAVERO MOROCHO VICTOR ANDRES POR EL SERVICI</descripcion_pago>
+		<fecha_doc>2021-02-16</fecha_doc>
+		<fecha_entrega>2021-02-17</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10081123727</ruc>
+		<proveedor>CRAVERO MOROCHO VICTOR ANDRES</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>00</fuente_financ>
+		<beneficiario/>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000006GG00040001001</enlace>
+		<tipo_aporte>00</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>03</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.715000000000000</tipo_cambio>
+		<monto>13000.00</monto>
+		<monto_nacional>13000.00</monto_nacional>
+		<monto_extranjero>3499.33</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>0006-EJE NOPENAL-202</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE CRAVERO MOROCHO VICTOR ANDRES POR EL SERVICIO COMO ESPECIALISTA EN PROYECTOS POR EL MES DE FEBRERO 2021 SEGÚN ADENDA N° 002-2020-UE-PJ/BIRF-EJE NO PENAL</descripcion_pago>
+		<fecha_doc>2021-03-18</fecha_doc>
+		<fecha_entrega>2021-03-19</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10081123727</ruc>
+		<proveedor>CRAVERO MOROCHO VICTOR ANDRES</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>00</fuente_financ>
+		<beneficiario/>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000010GG00030001003</enlace>
+		<tipo_aporte>00</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>03</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.708000000000000</tipo_cambio>
+		<monto>13000.00</monto>
+		<monto_nacional>13000.00</monto_nacional>
+		<monto_extranjero>3505.93</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>0005-EJE NOPENAL-202</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE JARA BARRUTIA ALBERTO DEMETRIO POR EL SERVIC</descripcion_pago>
+		<fecha_doc>2021-03-15</fecha_doc>
+		<fecha_entrega>2021-03-16</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10086034544</ruc>
+		<proveedor>JARA BARRUTIA ALBERTO DEMETRIO</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>00</fuente_financ>
+		<beneficiario/>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000012GG00030001001</enlace>
+		<tipo_aporte>00</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.820000000000000</tipo_cambio>
+		<monto>11960.00</monto>
+		<monto_nacional>11960.00</monto_nacional>
+		<monto_extranjero>3130.89</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>008-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE LABAN ELERA HUGO NEPTALI PAGO POR SERVICIO DE CONSULTORIA INDIVIDUAL DEL ESPECIALISTA FINANCIERO EN EL MARCO DEL PROGRAMA DE INVERSION MEJORAMIENTO DE LOS SERVICIOSDE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL ES </descripcion_pago>
+		<fecha_doc>2021-07-01</fecha_doc>
+		<fecha_entrega>2021-07-06</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10073262378</ruc>
+		<proveedor>LABAN ELERA HUGO NEPTALI</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>46</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000046GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.890000000000000</tipo_cambio>
+		<monto>11960.00</monto>
+		<monto_nacional>11960.00</monto_nacional>
+		<monto_extranjero>3074.55</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>022-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE LABAN ELERA HUGO NEPTALI PAGO POR SERVICIO DE CONSULTORIA INDIVIDUAL DEL ESPECIALISTA FINANCIERO EN EL MARCO DEL PROGRAMA DE INVERSION MEJORAMIENTO DE LOS SERVICIOSDE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL ES </descripcion_pago>
+		<fecha_doc>2021-07-27</fecha_doc>
+		<fecha_entrega>2021-08-02</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10073262378</ruc>
+		<proveedor>LABAN ELERA HUGO NEPTALI</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>46</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000046GG00080001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.050000000000000</tipo_cambio>
+		<monto>11960.00</monto>
+		<monto_nacional>11960.00</monto_nacional>
+		<monto_extranjero>2953.09</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>040-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE LABAN ELERA HUGO NEPTALI PAGO POR SERVICIO DE CONSULTORIA INDIVIDUAL DEL ESPECIALISTA FINANCIERO EN EL MARCO DEL PROGRAMA DE INVERSION MEJORAMIENTO DE LOS SERVICIOSDE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL ES </descripcion_pago>
+		<fecha_doc>2021-08-27</fecha_doc>
+		<fecha_entrega>2021-08-27</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10073262378</ruc>
+		<proveedor>LABAN ELERA HUGO NEPTALI</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>46</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000046GG00120001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.050000000000000</tipo_cambio>
+		<monto>11960.00</monto>
+		<monto_nacional>11960.00</monto_nacional>
+		<monto_extranjero>2953.09</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>054-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE LABAN ELERA HUGO NEPTALI PAGO POR SERVICIO DE CONSULTORIA INDIVIDUAL DEL ESPECIALISTA FINANCIERO EN EL MARCO DEL PROGRAMA DE INVERSION MEJORAMIENTO DE LOS SERVICIOSDE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL ES </descripcion_pago>
+		<fecha_doc>2021-09-28</fecha_doc>
+		<fecha_entrega>2021-09-30</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10073262378</ruc>
+		<proveedor>LABAN ELERA HUGO NEPTALI</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>46</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000046GG00150001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.100000000000000</tipo_cambio>
+		<monto>9567.99</monto>
+		<monto_nacional>9567.99</monto_nacional>
+		<monto_extranjero>2333.66</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>076-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE LABAN ELERA HUGO NEPTALI PAGO POR SERVICIO DE CONSULTORIA INDIVIDUAL DEL ESPECIALISTA FINANCIERO EN EL MARCO DEL PROGRAMA DE INVERSION MEJORAMIENTO DE LOS SERVICIOSDE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL ES </descripcion_pago>
+		<fecha_doc>2021-11-05</fecha_doc>
+		<fecha_entrega>2021-11-05</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10073262378</ruc>
+		<proveedor>LABAN ELERA HUGO NEPTALI</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>46</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000046GG00180001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.050000000000000</tipo_cambio>
+		<monto>0.01</monto>
+		<monto_nacional>0.01</monto_nacional>
+		<monto_extranjero>0.00</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>076-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE LABAN ELERA HUGO NEPTALI PAGO POR SERVICIO DE CONSULTORIA INDIVIDUAL DEL ESPECIALISTA FINANCIERO EN EL MARCO DEL PROGRAMA DE INVERSION MEJORAMIENTO DE LOS SERVICIOSDE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL ES </descripcion_pago>
+		<fecha_doc>2021-11-05</fecha_doc>
+		<fecha_entrega>2021-11-05</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10073262378</ruc>
+		<proveedor>LABAN ELERA HUGO NEPTALI</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>46</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000046GG00180001002</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.820000000000000</tipo_cambio>
+		<monto>11960.00</monto>
+		<monto_nacional>11960.00</monto_nacional>
+		<monto_extranjero>3130.89</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>009-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE MORAN JHONCON MARKO JOEL SERVICIO DE CONSULTORIA INDIVIDUAL DEL ESPECIALISTA EN ADQUISICIONES EN EL MARCO DEL PROGRAMA DE INVERSION MEJORAMIENTO DE LOS SERVICIOS DEJUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL ESPED </descripcion_pago>
+		<fecha_doc>2021-07-01</fecha_doc>
+		<fecha_entrega>2021-07-01</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10096001792</ruc>
+		<proveedor>MORAN JHONCON MARKO JOEL</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>52</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000052GG00040001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000360000000</tipo_cambio>
+		<monto>11959.95</monto>
+		<monto_nacional>11959.95</monto_nacional>
+		<monto_extranjero>3074.54</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>026-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE MORAN JHONCON MARKO JOEL SERVICIO DE CONSULTORIA INDIVIDUAL DEL ESPECIALISTA EN ADQUISICIONES EN EL MARCO DEL PROGRAMA DE INVERSION MEJORAMIENTO DE LOS SERVICIOS DEJUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL ESPED </descripcion_pago>
+		<fecha_doc>2021-08-10</fecha_doc>
+		<fecha_entrega>2021-09-30</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10096001792</ruc>
+		<proveedor>MORAN JHONCON MARKO JOEL</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>52</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000052GG00130001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000360000000</tipo_cambio>
+		<monto>0.05</monto>
+		<monto_nacional>0.05</monto_nacional>
+		<monto_extranjero>0.01</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>026-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE MORAN JHONCON MARKO JOEL SERVICIO DE CONSULTORIA INDIVIDUAL DEL ESPECIALISTA EN ADQUISICIONES EN EL MARCO DEL PROGRAMA DE INVERSION MEJORAMIENTO DE LOS SERVICIOS DEJUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL ESPED </descripcion_pago>
+		<fecha_doc>2021-08-10</fecha_doc>
+		<fecha_entrega>2021-08-11</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10096001792</ruc>
+		<proveedor>MORAN JHONCON MARKO JOEL</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>52</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000052GG00130001002</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.050000000000000</tipo_cambio>
+		<monto>11960.00</monto>
+		<monto_nacional>11960.00</monto_nacional>
+		<monto_extranjero>2953.09</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>042-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE MORAN JHONCON MARKO JOEL SERVICIO DE CONSULTORIA INDIVIDUAL DEL ESPECIALISTA EN ADQUISICIONES EN EL MARCO DEL PROGRAMA DE INVERSION MEJORAMIENTO DE LOS SERVICIOS DEJUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL ESPED </descripcion_pago>
+		<fecha_doc>2021-09-06</fecha_doc>
+		<fecha_entrega>2021-09-06</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10096001792</ruc>
+		<proveedor>MORAN JHONCON MARKO JOEL</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>52</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000052GG00160001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.050000000000000</tipo_cambio>
+		<monto>11960.00</monto>
+		<monto_nacional>11960.00</monto_nacional>
+		<monto_extranjero>2953.09</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>056-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>
+GIRO A FAVOR DE MORAN JHONCON MARKO JOEL SERVICIO DE CONSULTORIA INDIVIDUAL DEL ESPECIALISTA EN ADQUISICIONES EN EL MARCO DEL PROGRAMA DE INVERSION MEJORAMIENTO DE LOS SERVICIOS DEJUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL ESPED </descripcion_pago>
+		<fecha_doc>2021-09-30</fecha_doc>
+		<fecha_entrega>2021-09-06</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10096001792</ruc>
+		<proveedor>MORAN JHONCON MARKO JOEL</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>52</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000052GG00190001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.040745300000000</tipo_cambio>
+		<monto>11960.00</monto>
+		<monto_nacional>11960.00</monto_nacional>
+		<monto_extranjero>2959.85</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>078-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE MORAN JHONCON MARKO JOEL SERVICIO DE CONSULTORIA INDIVIDUAL DEL ESPECIALISTA EN ADQUISICIONES EN EL MARCO DEL PROGRAMA DE INVERSION MEJORAMIENTO DE LOS SERVICIOS DEJUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL ESPED </descripcion_pago>
+		<fecha_doc>2021-11-05</fecha_doc>
+		<fecha_entrega>2021-11-05</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10096001792</ruc>
+		<proveedor>MORAN JHONCON MARKO JOEL</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>52</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000052GG00220001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>3189.31</monto>
+		<monto_nacional>3189.31</monto_nacional>
+		<monto_extranjero>788.85</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>183-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE MORAN JHONCON MARKO JOEL SERVICIO DE CONSULTORIA INDIVIDUAL DEL ESPECIALISTA EN ADQUISICIONES EN EL MARCO DEL PROGRAMA DE INVERSION MEJORAMIENTO DE LOS SERVICIOS DE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL ESPED</descripcion_pago>
+		<fecha_doc>2021-12-30</fecha_doc>
+		<fecha_entrega>2021-12-31</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10096001792</ruc>
+		<proveedor>MORAN JHONCON MARKO JOEL</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>52</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000052GG00290001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.820000000000000</tipo_cambio>
+		<monto>6992.00</monto>
+		<monto_nacional>6992.00</monto_nacional>
+		<monto_extranjero>1830.37</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>010-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE TARRLLO VASQUEZ INES SERVICIO DE CONSULTORIAINDIVUAL: ASESORA LEGAL DEL PROGRAMA DE INVERSION MEJORAMIE NTO DE LOS SERVICIO DE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL EXPEDIENTE JUDICIAL ELECTRONICO (EJE) CU: 2</descripcion_pago>
+		<fecha_doc>2021-07-07</fecha_doc>
+		<fecha_entrega>2021-07-07</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10408239163</ruc>
+		<proveedor>TARRLLO VASQUEZ INES</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>56</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000056GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.890000000000000</tipo_cambio>
+		<monto>11040.00</monto>
+		<monto_nacional>11040.00</monto_nacional>
+		<monto_extranjero>2838.05</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>024-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE TARRLLO VASQUEZ INES SERVICIO DE CONSULTORIAINDIVIDUAL: ASESOR/A LEGAL EN EL MARCO DEL PROGRAMA DE INVE RSION MEJORAMIENTO DE LOS SERVICIOS DE JUSTICIA NO PENALES ATRAVES DE LA IMPLEMENTACION DEL EXPEDIENTE JUDICIAL ELECTRO </descripcion_pago>
+		<fecha_doc>2021-08-10</fecha_doc>
+		<fecha_entrega>2021-08-10</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10408239163</ruc>
+		<proveedor>TARRLLO VASQUEZ INES</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>56</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000056GG00120001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>03</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.050000000000000</tipo_cambio>
+		<monto>6624.00</monto>
+		<monto_nacional>6624.00</monto_nacional>
+		<monto_extranjero>1635.56</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>050-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>
+GIRO A FAVOR DE TARRLLO VASQUEZ INES SERVICIO DE CONSULTORIAINDIVUAL: ASESORA LEGAL DEL PROGRAMA DE INVERSION MEJORAMIE NTO DE LOS SERVICIO DE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL EXPEDIENTE JUDICIAL ELECTRONICO (EJE) CU: 2</descripcion_pago>
+		<fecha_doc>2021-09-16</fecha_doc>
+		<fecha_entrega>2021-09-16</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10408239163</ruc>
+		<proveedor>BANCO DE LA NACION</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>56</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000056GG00160001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.820000000000000</tipo_cambio>
+		<monto>11040.00</monto>
+		<monto_nacional>11040.00</monto_nacional>
+		<monto_extranjero>2890.05</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>011-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE DEL AGUILA PORTOCARRERO ELSA AMALIA SERVICIODE CONSULTORIA INDIVIDUAL: BANCO MUNDIAL COMO ESPECIALISTA  EN PROYECTOS DEL PROGRAMA DE INVERSION MEJORAMIENTO DE LOS SERVICIOS DE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACIO</descripcion_pago>
+		<fecha_doc>2021-07-07</fecha_doc>
+		<fecha_entrega>2021-07-14</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10410114386</ruc>
+		<proveedor>DEL AGUILA PORTOCARRERO ELSA AMALIA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>59</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000059GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.890000000000000</tipo_cambio>
+		<monto>11040.00</monto>
+		<monto_nacional>11040.00</monto_nacional>
+		<monto_extranjero>2838.05</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>025-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE DEL AGUILA PORTOCARRERO ELSA AMALIA SERVICIODEL ESPECIALISTA EN PROYECTOS EN EL MARCO DEL PROGRAMA DE I NVERSION MEJORAMIENTO DE LOS SERVICIOS DE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL EXPEDIENTE JUDICIAL ELEC</descripcion_pago>
+		<fecha_doc>2021-08-10</fecha_doc>
+		<fecha_entrega>2022-08-06</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10410114386</ruc>
+		<proveedor>BANCO DE LA NACION</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>59</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000059GG00090001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.100000000000000</tipo_cambio>
+		<monto>7772.09</monto>
+		<monto_nacional>7772.09</monto_nacional>
+		<monto_extranjero>1895.63</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>044-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE DEL AGUILA PORTOCARRERO ELSA AMALIA SERVICIODEL ESPECIALISTA EN PROYECTOS EN EL MARCO DEL PROGRAMA DE I NVERSION MEJORAMIENTO DE LOS SERVICIOS DE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL EXPEDIENTE JUDICIAL ELEC</descripcion_pago>
+		<fecha_doc>2021-09-07</fecha_doc>
+		<fecha_entrega>2021-09-07</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10410114386</ruc>
+		<proveedor>DEL AGUILA PORTOCARRERO ELSA AMALIA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>59</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000059GG00130001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.050000000000000</tipo_cambio>
+		<monto>3267.91</monto>
+		<monto_nacional>3267.91</monto_nacional>
+		<monto_extranjero>806.89</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>044-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE DEL AGUILA PORTOCARRERO ELSA AMALIA SERVICIODEL ESPECIALISTA EN PROYECTOS EN EL MARCO DEL PROGRAMA DE I NVERSION MEJORAMIENTO DE LOS SERVICIOS DE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL EXPEDIENTE JUDICIAL ELEC</descripcion_pago>
+		<fecha_doc>2021-09-07</fecha_doc>
+		<fecha_entrega>2021-09-07</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10410114386</ruc>
+		<proveedor>DEL AGUILA PORTOCARRERO ELSA AMALIA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>59</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000059GG00130001002</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.050000000000000</tipo_cambio>
+		<monto>11040.00</monto>
+		<monto_nacional>11040.00</monto_nacional>
+		<monto_extranjero>2725.93</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>094-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE DEL AGUILA PORTOCARRERO ELSA AMALIA POR EL SERVICIO DEL ESPECIALISTA EN PROYECTOS EN EL MARCO DEL PROGRAMA DE INVERSION MEJORAMIENTO DE LOS SERVICIOS DE JUSTICIA NOPENALES A TRAVES DE LA IMPLEMENTACION DEL EXPEDIENTE JUDICI </descripcion_pago>
+		<fecha_doc>2021-11-09</fecha_doc>
+		<fecha_entrega>2021-11-09</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10410114386</ruc>
+		<proveedor>DEL AGUILA PORTOCARRERO ELSA AMALIA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>59</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000059GG00160001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.920000000000000</tipo_cambio>
+		<monto>7084.00</monto>
+		<monto_nacional>7084.00</monto_nacional>
+		<monto_extranjero>1807.14</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>014-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE VEGA HUAYLINOS RICARDO PAGO DEL SERVICIO D  E CONSULTORIA INDIVIDUAL DIRECTOR DE PROGRAMA MEJORAMIENTO DE LOS SERVICIOS DE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL EXPEDIENTE JUDICIAL ELECTRONICO (EJE)" PRIMER E</descripcion_pago>
+		<fecha_doc>2021-07-16</fecha_doc>
+		<fecha_entrega>2021-07-16</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10094441191</ruc>
+		<proveedor>BANCO DE LA NACION</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>64</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000064GG00040001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.890000000000000</tipo_cambio>
+		<monto>15180.00</monto>
+		<monto_nacional>15180.00</monto_nacional>
+		<monto_extranjero>3902.31</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>031-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE VEGA HUAYLINOS RICARDO PAGO DEL SERVICIO D  E CONSULTORIA COMO DIRECTOR DEL PROGRAMA EN EL MARCO DEL PROG. DE INVERSION MEJORAMIENTO DE LOS SERVICIOS DE JUSTICIA NOPENALES COMP 4 GESTION DEL PROGRAMA CU 2413068 - ENTREGABLE </descripcion_pago>
+		<fecha_doc>2021-08-19</fecha_doc>
+		<fecha_entrega>2021-08-20</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10094441191</ruc>
+		<proveedor>VEGA HUAYLINOS RICARDO</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>64</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000064GG00100001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.050000000000000</tipo_cambio>
+		<monto>15180.00</monto>
+		<monto_nacional>15180.00</monto_nacional>
+		<monto_extranjero>3748.15</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>058-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE VEGA HUAYLINOS RICARDO PAGO DEL SERVICIO D  E CONSULTORIA INDIVIDUAL DIRECTOR DE PROGRAMA MEJORAMIENTO DE LOS SERVICIOS DE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL EXPEDIENTE JUDICIAL ELECTRONICO (EJE)" - TERCER</descripcion_pago>
+		<fecha_doc>2021-09-30</fecha_doc>
+		<fecha_entrega>2021-09-30</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10094441191</ruc>
+		<proveedor>VEGA HUAYLINOS RICARDO</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>64</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000064GG00150001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.980000000000000</tipo_cambio>
+		<monto>15180.00</monto>
+		<monto_nacional>15180.00</monto_nacional>
+		<monto_extranjero>3814.07</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>089-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE VEGA HUAYLINOS RICARDO  PAGO DEL SERVICIO DE CONSULTORIA INDIVIDUAL DIRECTOR DE PROGRAMA MEJORAMIENTO DE LOS SERVICIOS DE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL EXPEDIENTE JUDICIAL ELECTRONICO (EJE)" - CUARTO ENTREGABLE</descripcion_pago>
+		<fecha_doc>2021-11-05</fecha_doc>
+		<fecha_entrega>2021-11-08</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10094441191</ruc>
+		<proveedor>VEGA HUAYLINOS RICARDO</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>64</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000064GG00180001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.020000000000000</tipo_cambio>
+		<monto>15180.00</monto>
+		<monto_nacional>15180.00</monto_nacional>
+		<monto_extranjero>3776.12</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>115-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE VEGA HUAYLINOS RICARDO PAGO DEL SERVICIO D  E CONSULTORIA INDIVIDUAL DIRECTOR DE PROGRAMA MEJORAMIENTO DE LOS SERVICIOS DE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL EXPEDIENTE JUDICIAL ELECTRONICO (EJE)" - CUARTO</descripcion_pago>
+		<fecha_doc>2021-12-03</fecha_doc>
+		<fecha_entrega>2021-12-03</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10094441191</ruc>
+		<proveedor>VEGA HUAYLINOS RICARDO</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>64</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000064GG00210001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.020000000000000</tipo_cambio>
+		<monto>10520.08</monto>
+		<monto_nacional>10520.08</monto_nacional>
+		<monto_extranjero>2616.94</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>123-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE VEGA HUAYLINOS RICARDO PAGO DEL SERVICIO D  E CONSULTORIA INDIVIDUAL DIRECTOR DE PROGRAMA MEJORAMIENTO DE LOS SERVICIOS DE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL EXPEDIENTE JUDICIAL ELECTRONICO (EJE)" - QUINTO</descripcion_pago>
+		<fecha_doc>2021-12-13</fecha_doc>
+		<fecha_entrega>2021-12-13</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10094441191</ruc>
+		<proveedor>VEGA HUAYLINOS RICARDO</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>64</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000064GG00240001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.980000000000000</tipo_cambio>
+		<monto>4659.92</monto>
+		<monto_nacional>4659.92</monto_nacional>
+		<monto_extranjero>1170.83</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>123-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE VEGA HUAYLINOS RICARDO PAGO DEL SERVICIO D  E CONSULTORIA INDIVIDUAL DIRECTOR DE PROGRAMA MEJORAMIENTO DE LOS SERVICIOS DE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL EXPEDIENTE JUDICIAL ELECTRONICO (EJE)" - QUINTO</descripcion_pago>
+		<fecha_doc>2021-12-13</fecha_doc>
+		<fecha_entrega>2021-12-02</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10094441191</ruc>
+		<proveedor>VEGA HUAYLINOS RICARDO</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>64</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000064GG00240001002</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.820000000000000</tipo_cambio>
+		<monto>3220.00</monto>
+		<monto_nacional>3220.00</monto_nacional>
+		<monto_extranjero>842.93</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>012-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE REATEGUI ACHING FRANKLIN PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL PARA LA ELABORACION DE LA LINEA DE BASE DEL MAPEO DE LOS PROCESOS DE DIRECCION, SOPORTE Y JUDICIALES NO PENALES DEL PODER JUDICIAL - CONTRATO N° 006-202</descripcion_pago>
+		<fecha_doc>2021-07-15</fecha_doc>
+		<fecha_entrega>2021-07-15</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10066722959</ruc>
+		<proveedor>REATEGUI ACHING FRANKLIN</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>65</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000065GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.050000000000000</tipo_cambio>
+		<monto>55716.10</monto>
+		<monto_nacional>55716.10</monto_nacional>
+		<monto_extranjero>13757.06</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>060-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE GRUPO VENTURA PERU S.A.C. POR LA ADQUISICIONDE TRES ESCANERES PARA REALIZAR LA IMPLEMENTACION DE UNA LI NEA DE DIGITALIZACION PILOTO EN LA MESA DE PARTES DE LA CORTE SUPREMA DE JUSTICIA DE LA REPUBLICA DEL PODER JUDICIAL CUI</descripcion_pago>
+		<fecha_doc>2021-09-30</fecha_doc>
+		<fecha_entrega>2021-10-01</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>20553450749</ruc>
+		<proveedor>GRUPO VENTURA PERU S.A.C</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>78</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>NCS</tipo_gasto>
+		<enlace>20210012150000000078GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.980033490000000</tipo_cambio>
+		<monto>26400.00</monto>
+		<monto_nacional>26400.00</monto_nacional>
+		<monto_extranjero>6633.11</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>084-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE BELLTECH PERU S.A.C. POR LA ADQUISICION DE UN SOFTWARE DE PLATAFORMA PARA LA AUTOMATIZACION DE PROCESO (RPA) PARA REALIZAR LA IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION PILOTO EN LA MESA DE PARTES DE LA CORTE SUPREMA DE J</descripcion_pago>
+		<fecha_doc>2021-11-05</fecha_doc>
+		<fecha_entrega>2021-11-08</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>20504747981</ruc>
+		<proveedor>BELLTECH PERU S.A.C.</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>80</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>NCS</tipo_gasto>
+		<enlace>20210012150000000080GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.890000000000000</tipo_cambio>
+		<monto>13800.00</monto>
+		<monto_nacional>13800.00</monto_nacional>
+		<monto_extranjero>3547.56</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>033-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE REATEGUI ACHING FRANKLIN PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: GESTOR DEL PROYECTO AMAG - SEGUNDO ENTREGABLE COMPONENTE 4.3 AMAG.                         </descripcion_pago>
+		<fecha_doc>2021-08-23</fecha_doc>
+		<fecha_entrega>2021-08-24</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10066722959</ruc>
+		<proveedor>REATEGUI ACHING FRANKLIN</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>92</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000092GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.050000000000000</tipo_cambio>
+		<monto>13800.00</monto>
+		<monto_nacional>13800.00</monto_nacional>
+		<monto_extranjero>3407.41</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>048-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE REATEGUI ACHING FRANKLIN PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: GESTOR DEL PROYECTO AMAG - TERCER ENTREGABLE COMPONENTE 4.3 AMAG0                          </descripcion_pago>
+		<fecha_doc>2021-09-10</fecha_doc>
+		<fecha_entrega>2021-09-13</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10066722959</ruc>
+		<proveedor>REATEGUI ACHING FRANKLIN</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>92</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000092GG00070001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.100000000000000</tipo_cambio>
+		<monto>13800.00</monto>
+		<monto_nacional>13800.00</monto_nacional>
+		<monto_extranjero>3365.85</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>065-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE REATEGUI ACHING FRANKLIN PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: GESTOR DEL PROYECTO AMAG - CUARTO ENTREGABLE COMPONENTE 4.3 AMAG                           </descripcion_pago>
+		<fecha_doc>2021-10-18</fecha_doc>
+		<fecha_entrega>2021-10-19</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10066722959</ruc>
+		<proveedor>REATEGUI ACHING FRANKLIN</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>92</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000092GG00100001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.980000000000000</tipo_cambio>
+		<monto>13800.00</monto>
+		<monto_nacional>13800.00</monto_nacional>
+		<monto_extranjero>3467.34</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>096-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE REATEGUI ACHING FRANKLIN PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: GESTOR DEL PROYECTO AMAG - QUINTO ENTREGABLE COMPONENTE 4.3 AMAG                           </descripcion_pago>
+		<fecha_doc>2021-11-10</fecha_doc>
+		<fecha_entrega>2021-11-10</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10066722959</ruc>
+		<proveedor>REATEGUI ACHING FRANKLIN</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>92</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000092GG00130001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.020000000000000</tipo_cambio>
+		<monto>13800.00</monto>
+		<monto_nacional>13800.00</monto_nacional>
+		<monto_extranjero>3432.84</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>121-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE REATEGUI ACHING FRANKLIN PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: GESTOR DEL PROYECTO AMAG - SEXTO ENTREGABLE COMPONENTE 4.3 AMAG                            </descripcion_pago>
+		<fecha_doc>2021-12-13</fecha_doc>
+		<fecha_entrega>2021-12-13</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10066722959</ruc>
+		<proveedor>REATEGUI ACHING FRANKLIN</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>92</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000092GG00160001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.890000000000000</tipo_cambio>
+		<monto>2760.00</monto>
+		<monto_nacional>2760.00</monto_nacional>
+		<monto_extranjero>709.51</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>035-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE TELLO AVILA SANDRA GRACIELA PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: ASISTENTE ADMINISTRATIVO AMAG - PRIMER ENTREGABLE COMPONENTE 4.3 AMAG                   </descripcion_pago>
+		<fecha_doc>2021-08-23</fecha_doc>
+		<fecha_entrega>2021-08-24</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10416002369</ruc>
+		<proveedor>TELLO AVILA SANDRA GRACIELA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>93</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000093GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.050000000000000</tipo_cambio>
+		<monto>5520.00</monto>
+		<monto_nacional>5520.00</monto_nacional>
+		<monto_extranjero>1362.96</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>046-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE TELLO AVILA SANDRA GRACIELA PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: ASISTENTE ADMINISTRATIVO AMAG - SEGUNDO ENTREGABLE COMPONENTE 4.3                       </descripcion_pago>
+		<fecha_doc>2021-09-10</fecha_doc>
+		<fecha_entrega>2021-09-13</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10416002369</ruc>
+		<proveedor>TELLO AVILA SANDRA GRACIELA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>93</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000093GG00070001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.100000000000000</tipo_cambio>
+		<monto>5520.00</monto>
+		<monto_nacional>5520.00</monto_nacional>
+		<monto_extranjero>1346.34</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>062-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE TELLO AVILA SANDRA GRACIELA PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: ASISTENTE ADMINISTRATIVO AMAG - TERCER ENTREGABLE COMPONENTE 4.3                        </descripcion_pago>
+		<fecha_doc>2021-10-12</fecha_doc>
+		<fecha_entrega>2021-10-12</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10416002369</ruc>
+		<proveedor>TELLO AVILA SANDRA GRACIELA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>93</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000093GG00100001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.980000000000000</tipo_cambio>
+		<monto>5520.00</monto>
+		<monto_nacional>5520.00</monto_nacional>
+		<monto_extranjero>1386.93</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>098-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE TELLO AVILA SANDRA GRACIELA PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: ASISTENTE ADMINISTRATIVO AMAG - CUARTO ENTREGABLE COMPONENTE 4.3                        </descripcion_pago>
+		<fecha_doc>2021-11-12</fecha_doc>
+		<fecha_entrega>2021-11-12</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10416002369</ruc>
+		<proveedor>TELLO AVILA SANDRA GRACIELA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>93</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000093GG00140001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.020000000000000</tipo_cambio>
+		<monto>5520.00</monto>
+		<monto_nacional>5520.00</monto_nacional>
+		<monto_extranjero>1373.13</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>125-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE TELLO AVILA SANDRA GRACIELA PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: ASISTENTE ADMINISTRATIVO AMAG - CUARTO ENTREGABLE COMPONENTE 4.2
+                       </descripcion_pago>
+		<fecha_doc>2021-12-13</fecha_doc>
+		<fecha_entrega>2021-12-13</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10416002369</ruc>
+		<proveedor>TELLO AVILA SANDRA GRACIELA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>93</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000093GG00170001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.050000000000000</tipo_cambio>
+		<monto>1405.16</monto>
+		<monto_nacional>1405.16</monto_nacional>
+		<monto_extranjero>346.95</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>052-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE MULTIAVISA S.A.C. POR EL SERVICIO DE PUBLICACIÓN PARA INVITACIÓN A PRESENTAR EXPRESIONES DE INTERÉS PARAEL SERVICIO DE CONSULTORÍA INDIVIDUAL EN EL DIARIO DE MAYOR CIRCULACIÓN NACIONAL ( GESTOR/A PMO, SUPERVISOR/A DE ARQUIT </descripcion_pago>
+		<fecha_doc>2021-09-24</fecha_doc>
+		<fecha_entrega>2021-09-27</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>20340084692</ruc>
+		<proveedor>MULTIAVISA SOCIEDAD ANONIMA CERRADA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>101</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000101GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.050000000000000</tipo_cambio>
+		<monto>191.53</monto>
+		<monto_nacional>191.53</monto_nacional>
+		<monto_extranjero>47.29</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>064-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE BANCO DE LA NACION PAGO DE LA DETRACCION DEL12% POR EL SERVICIO DE PUBLICACIÓN PARA INVITACIÓN A PRESEN TAR EXPRESIONES DE INTERÉS PARA EL SERVICIO DE CONSULTORÍA INDIVIDUAL EN EL DIARIO DE MAYOR CIRCULACIÓN NACIONAL ( GESTO</descripcion_pago>
+		<fecha_doc>2021-10-12</fecha_doc>
+		<fecha_entrega>2021-10-12</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>20340084692</ruc>
+		<proveedor>BANCO DE LA MULTIAVISA S.A.</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>101</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000101GG00050001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.979755010000000</tipo_cambio>
+		<monto>4285.44</monto>
+		<monto_nacional>4285.44</monto_nacional>
+		<monto_extranjero>1076.81</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>083-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE GRUPO ALTECH S.A.C. POR LA ADQUISICIÓN DE OCHO (8) MONITORES LED PARA IMPLEMENTACIÓN DE UNA LÍNEA DE DIGITALIZACIÓN PILOTO EN MESA DE PARTES DE LA CORTE SUPREMA DE JUSTICIA DE LA REPÚBLICA DEL PODER JUDICIAL.                </descripcion_pago>
+		<fecha_doc>2021-11-05</fecha_doc>
+		<fecha_entrega>2021-11-08</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>20524171989</ruc>
+		<proveedor>GRUPO ALTECH S.A.C</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>102</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>NCS</tipo_gasto>
+		<enlace>20210012150000000102GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.981013890000000</tipo_cambio>
+		<monto>813.56</monto>
+		<monto_nacional>813.56</monto_nacional>
+		<monto_extranjero>204.36</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>075-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE T&amp;G INFORMATICA SOCIEDAD ANONIMA CERRADA PORLA ADQUISICION DE CUI: 2386675 : 8 ESTABILIZADORES O REGULA DOR DE VOLTAJE, MARCA: FORZA, MODELO: FVR-1002, POTENCIA: 1000 VA, NUMERO DE FASES: MONOFASICO, TOMA DE CORRIENTES: 4x 2</descripcion_pago>
+		<fecha_doc>2021-11-05</fecha_doc>
+		<fecha_entrega>2021-11-05</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>20545913811</ruc>
+		<proveedor>T&amp;G INFORMATICA SOCIEDAD ANONIMA CERRADA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>103</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>NCS</tipo_gasto>
+		<enlace>20210012150000000103GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.980000000000000</tipo_cambio>
+		<monto>2257.69</monto>
+		<monto_nacional>2257.69</monto_nacional>
+		<monto_extranjero>567.26</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>082-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE GRUPO ALTECH S.A.C. POR LA ADQUISICIÓN DE TRES (3) LECTORES DE CÓDIGO DE BARRA INALÁMBRICO PARA MESA DE PARTES DE LA CORTE SUPREMA DE JUSTICIA DE LA REPÚBLICA DEL PODER JUDICIAL.                                              </descripcion_pago>
+		<fecha_doc>2021-11-05</fecha_doc>
+		<fecha_entrega>2021-11-05</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>20524171989</ruc>
+		<proveedor>BANCO DE LA NACION</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>104</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>NCS</tipo_gasto>
+		<enlace>20210012150000000104GG00070001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.979962200000000</tipo_cambio>
+		<monto>34185.05</monto>
+		<monto_nacional>34185.05</monto_nacional>
+		<monto_extranjero>8589.29</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>092-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE GRUPO ALTECH S.A.C. POR LA ADQUISICIÓN DE OCHO (08) COMPUTADORAS DE ESCRITORIO PARA LA IMPLEMENTACIÓN DEUNA LÍNEA DE DIGITALIZACIÓN PILOTO EN LA MESA DE PARTES DE  LA CORTE SUPREMA DE JUSTICIA DE LA REPÚBLICA DEL PODER JUDIC</descripcion_pago>
+		<fecha_doc>2021-11-05</fecha_doc>
+		<fecha_entrega>2021-11-08</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>20524171989</ruc>
+		<proveedor>GRUPO ALTECH S.A.C.</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>105</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>NCS</tipo_gasto>
+		<enlace>20210012150000000105GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.100000000000000</tipo_cambio>
+		<monto>3500.00</monto>
+		<monto_nacional>3500.00</monto_nacional>
+		<monto_extranjero>853.66</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>068-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE ROMO RIVERO JOSE LUIS PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: CONSULTOR 13-SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES UTILIZANDO RPA PARA LA MESA DE PARTES DE LA SALA SUPREMA </descripcion_pago>
+		<fecha_doc>2021-10-27</fecha_doc>
+		<fecha_entrega>2021-10-27</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10100163409</ruc>
+		<proveedor>ROMO RIVERO JOSE LUIS</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>172</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000172GG00040001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.980000000000000</tipo_cambio>
+		<monto>3500.00</monto>
+		<monto_nacional>3500.00</monto_nacional>
+		<monto_extranjero>879.40</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>101-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE ROMO RIVERO JOSE LUIS PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: CONSULTOR 13-SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES UTILIZANDO RPA PARA LA MESA DE PARTES DE LA SALA SUPREMA </descripcion_pago>
+		<fecha_doc>2021-11-22</fecha_doc>
+		<fecha_entrega>2021-11-22</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10100163409</ruc>
+		<proveedor>ROMO RIVERO JOSE LUIS</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>172</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000172GG00060001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.100000000000000</tipo_cambio>
+		<monto>3220.00</monto>
+		<monto_nacional>3220.00</monto_nacional>
+		<monto_extranjero>785.37</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>072-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE CACERES MANRIQUE CLAUDIA ELIZABETH PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: CONSULTOR 3-SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES UTILIZANDO RPA PARA LA MESA DE PARTES DE LA S</descripcion_pago>
+		<fecha_doc>2021-10-27</fecha_doc>
+		<fecha_entrega>2021-10-27</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10734209487</ruc>
+		<proveedor>CACERES MANRIQUE CLAUDIA ELIZABETH</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>173</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000173GG00040001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.980000000000000</tipo_cambio>
+		<monto>3220.00</monto>
+		<monto_nacional>3220.00</monto_nacional>
+		<monto_extranjero>809.05</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>105-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE CACERES MANRIQUE CLAUDIA ELIZABETH PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: CONSULTOR 3-SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES UTILIZANDO RPA PARA LA MESA DE PARTES DE LA S</descripcion_pago>
+		<fecha_doc>2021-11-22</fecha_doc>
+		<fecha_entrega>2021-11-22</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10734209487</ruc>
+		<proveedor>CACERES MANRIQUE CLAUDIA ELIZABETH</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>173</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000173GG00070001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.100000000000000</tipo_cambio>
+		<monto>3500.00</monto>
+		<monto_nacional>3500.00</monto_nacional>
+		<monto_extranjero>853.66</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>074-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE ALBERCA GUERRERO ELGAR ELI PAGO POR EL SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES UTILIZANDO RPA PARA LA MESA DE PARTES DE LA SALA SUPREMA DE DERECHO CONSTITUCIONAL Y SOCIAL TRANSITOR</descripcion_pago>
+		<fecha_doc>2021-10-27</fecha_doc>
+		<fecha_entrega>2021-10-27</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10471104294</ruc>
+		<proveedor>ALBERCA GUERRERO ELGAR ELI</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>174</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000174GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.980000000000000</tipo_cambio>
+		<monto>3500.00</monto>
+		<monto_nacional>3500.00</monto_nacional>
+		<monto_extranjero>879.40</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>107-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE ALBERCA GUERRERO ELGAR ELI PAGO POR EL SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES UTILIZANDO RPA PARA LA MESA DE PARTES DE LA SALA SUPREMA DE DERECHO CONSTITUCIONAL Y SOCIAL TRANSITOR</descripcion_pago>
+		<fecha_doc>2021-11-22</fecha_doc>
+		<fecha_entrega>2021-11-22</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10471104294</ruc>
+		<proveedor>ALBERCA GUERRERO ELGAR ELI</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>174</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000174GG00050001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.100000000000000</tipo_cambio>
+		<monto>3500.00</monto>
+		<monto_nacional>3500.00</monto_nacional>
+		<monto_extranjero>853.66</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>070-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE RIVERA ACEVEDO ESPERANZA AMELIA PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: CONSULTOR 9-SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTESJUDICIALES UTILIZANDO RPA PARA LA MESA DE PARTES DE LA SALA </descripcion_pago>
+		<fecha_doc>2021-10-27</fecha_doc>
+		<fecha_entrega>2021-10-27</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10435256002</ruc>
+		<proveedor>RIVERA ACEVEDO ESPERANZA AMELIA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>175</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000175GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.980000000000000</tipo_cambio>
+		<monto>3500.00</monto>
+		<monto_nacional>3500.00</monto_nacional>
+		<monto_extranjero>879.40</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>103-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE RIVERA ACEVEDO ESPERANZA AMELIA PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: CONSULTOR 9-SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES UTILIZANDO RPA PARA LA MESA DE PARTES DE LA SALA</descripcion_pago>
+		<fecha_doc>2021-11-22</fecha_doc>
+		<fecha_entrega>2021-11-22</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10435256002</ruc>
+		<proveedor>RIVERA ACEVEDO ESPERANZA AMELIA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>175</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000175GG00050001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.100000000000000</tipo_cambio>
+		<monto>3500.00</monto>
+		<monto_nacional>3500.00</monto_nacional>
+		<monto_extranjero>853.66</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>069-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE LEGUA PALOMINO JOSE LUIS PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: CONSULTOR 11-SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES UTILIZANDO RPA PARA LA MESA DE PARTES DE LA SALA SUPRE</descripcion_pago>
+		<fecha_doc>2021-10-27</fecha_doc>
+		<fecha_entrega>2021-10-28</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10428289825</ruc>
+		<proveedor>LEGUA PALOMINO JOSE LUIS</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>176</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000176GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.980000000000000</tipo_cambio>
+		<monto>3500.00</monto>
+		<monto_nacional>3500.00</monto_nacional>
+		<monto_extranjero>879.40</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>102-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE LEGUA PALOMINO JOSE LUIS PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: CONSULTOR 11-SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES UTILIZANDO RPA PARA LA MESA DE PARTES DE LA SALA SUPRE</descripcion_pago>
+		<fecha_doc>2021-11-22</fecha_doc>
+		<fecha_entrega>2021-11-22</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10428289825</ruc>
+		<proveedor>LEGUA PALOMINO JOSE LUIS</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>176</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000176GG00050001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.100000000000000</tipo_cambio>
+		<monto>3500.00</monto>
+		<monto_nacional>3500.00</monto_nacional>
+		<monto_extranjero>853.66</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>071-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE VARGAS SARAVIA JUSTINA MARLENE PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: CONSULTOR 12-SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTESJUDICIALES UTILIZANDO RPA PARA LA MESA DE PARTES DE LA SALA </descripcion_pago>
+		<fecha_doc>2021-10-27</fecha_doc>
+		<fecha_entrega>2021-10-27</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10459924171</ruc>
+		<proveedor>VARGAS SARAVIA JUSTINA MARLENE</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>177</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000177GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.980000000000000</tipo_cambio>
+		<monto>3500.00</monto>
+		<monto_nacional>3500.00</monto_nacional>
+		<monto_extranjero>879.40</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>104-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE VARGAS SARAVIA JUSTINA MARLENE PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: CONSULTOR 12-SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES UTILIZANDO RPA PARA LA MESA DE PARTES DE LA SALA</descripcion_pago>
+		<fecha_doc>2021-11-22</fecha_doc>
+		<fecha_entrega>2021-11-22</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10459924171</ruc>
+		<proveedor>VARGAS SARAVIA JUSTINA MARLENE</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>177</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000177GG00050001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.100000000000000</tipo_cambio>
+		<monto>3500.00</monto>
+		<monto_nacional>3500.00</monto_nacional>
+		<monto_extranjero>853.66</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>067-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE LAGOS QUINTE RUDICINDO ALBINO PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: CONSULTOR 15-SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES UTILIZANDO RPA PARA LA MESA DE PARTES DE LA SALA </descripcion_pago>
+		<fecha_doc>2021-10-27</fecha_doc>
+		<fecha_entrega>2021-10-27</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10411905816</ruc>
+		<proveedor>LAGOS QUINTE RUDICINDO ALBINO</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>178</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000178GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.980000000000000</tipo_cambio>
+		<monto>3500.00</monto>
+		<monto_nacional>3500.00</monto_nacional>
+		<monto_extranjero>879.40</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>100-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE LAGOS QUINTE RUDICINDO ALBINO PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: CONSULTOR 15-SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES UTILIZANDO RPA PARA LA MESA DE PARTES DE LA SALA </descripcion_pago>
+		<fecha_doc>2021-11-22</fecha_doc>
+		<fecha_entrega>2021-11-22</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10411905816</ruc>
+		<proveedor>LAGOS QUINTE RUDICINDO ALBINO</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>178</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000178GG00050001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.980000000000000</tipo_cambio>
+		<monto>9200.00</monto>
+		<monto_nacional>9200.00</monto_nacional>
+		<monto_extranjero>2311.56</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>087-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE JIMENEZ DELGADO SILVIA CECILIA POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: GESTOR/A PMO EN EL MARCO DEL PROGRAMA DE INVERSION DE MEJORAMIENTO DE LOS SERVICIOS DE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL EXPEDIENT</descripcion_pago>
+		<fecha_doc>2021-11-05</fecha_doc>
+		<fecha_entrega>2021-11-05</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10075796086</ruc>
+		<proveedor>JIMENEZ DELGADO SILVIA CECILIA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>179</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000179GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.980000000000000</tipo_cambio>
+		<monto>9600.00</monto>
+		<monto_nacional>9600.00</monto_nacional>
+		<monto_extranjero>2412.06</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>091-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE SALAS MONCADA LUIS ALEX PAGO POR EL SERVICIODE CONSULTORIA INDIVIDUAL: SUPERVISOR/A DE ANALISIS DE NEGO CIOS EN EL MARCO DEL PROGRAMA DE INVERSION MEJORAMIENTO DE LOS SERVICIOS DE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENT</descripcion_pago>
+		<fecha_doc>2021-11-05</fecha_doc>
+		<fecha_entrega>2021-11-08</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10074666201</ruc>
+		<proveedor>SALAS MONCADA LUIS ALEX</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>180</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000180GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.020000000000000</tipo_cambio>
+		<monto>11040.00</monto>
+		<monto_nacional>11040.00</monto_nacional>
+		<monto_extranjero>2746.27</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>119-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE SALAS MONCADA LUIS ALEX PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: SUPERVISOR/A DE ANALISIS DE NEGOCIOS EN EL MARCO DEL PROGRAMA DE INVERSION MEJORAMIENTO DE LOS SERVICIOS DE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENT</descripcion_pago>
+		<fecha_doc>2021-12-10</fecha_doc>
+		<fecha_entrega>2021-12-10</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10074666201</ruc>
+		<proveedor>SALAS MONCADA LUIS ALEX</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>180</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000180GG00070001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.980000000000000</tipo_cambio>
+		<monto>9200.00</monto>
+		<monto_nacional>9200.00</monto_nacional>
+		<monto_extranjero>2311.56</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>085-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE LENGUA HUERTAS MANUEL ALBERTO ENTREGABLE DELSERVICIO DE CONSULTORIA INDIVIDUAL: SUPERVISOR DE ARQUITECT URA EMPRESARIAL E INNOVACION EN EL MARCO DEL PROGRAMA DE INVERSION MEJORAMIENTO DE LOS SERVICIOS DE JUSTICIA NO PENALES </descripcion_pago>
+		<fecha_doc>2021-11-05</fecha_doc>
+		<fecha_entrega>2021-11-08</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10099254250</ruc>
+		<proveedor>LENGUA HUERTAS MANUEL ALBERTO</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>181</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000181GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.020000000000000</tipo_cambio>
+		<monto>11040.00</monto>
+		<monto_nacional>11040.00</monto_nacional>
+		<monto_extranjero>2746.27</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>111-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE LENGUA HUERTAS MANUEL ALBERTO ENTREGABLE DEL SERVICIO DE CONSULTORIA INDIVIDUAL: SUPERVISOR DE ARQUITECTURA EMPRESARIAL E INNOVACION EN EL MARCO DEL PROGRAMA DE INVERSION MEJORAMIENTO DE LOS SERVICIOS DE JUSTICIA NO PENALES </descripcion_pago>
+		<fecha_doc>2021-12-03</fecha_doc>
+		<fecha_entrega>2021-12-06</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10099254250</ruc>
+		<proveedor>LENGUA HUERTAS MANUEL ALBERTO</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>181</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000181GG00060001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>3.980000000000000</tipo_cambio>
+		<monto>9200.00</monto>
+		<monto_nacional>9200.00</monto_nacional>
+		<monto_extranjero>2311.56</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>080-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE JULIAN LLOSA LUIS MIGUEL SERVICIO DE CONSULTORIA INDIVIDUAL: SUPERVISOR DE DESARROLLO EN EL MARCO DEL PROGRAMA DE INVERSION MEJORAMIENTO DE LOS SERVICIOS DE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL EXPEDIENTE JU</descripcion_pago>
+		<fecha_doc>2021-11-05</fecha_doc>
+		<fecha_entrega>2021-11-05</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10404160287</ruc>
+		<proveedor>BANCO DE LA NACION</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>182</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000182GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.020000000000000</tipo_cambio>
+		<monto>11040.00</monto>
+		<monto_nacional>11040.00</monto_nacional>
+		<monto_extranjero>2746.27</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>120-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE JULIAN LLOSA LUIS MIGUEL SERVICIO DE CONSULTORIA INDIVIDUAL: SUPERVISOR DE DESARROLLO EN EL MARCO DEL PROGRAMA DE INVERSION MEJORAMIENTO DE LOS SERVICIOS DE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL EXPEDIENTE JU</descripcion_pago>
+		<fecha_doc>2021-12-10</fecha_doc>
+		<fecha_entrega>2021-12-10</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10404160287</ruc>
+		<proveedor>JULIAN LLOSA LUIS MANUEL</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>182</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000182GG00080001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.020000000000000</tipo_cambio>
+		<monto>1472.00</monto>
+		<monto_nacional>1472.00</monto_nacional>
+		<monto_extranjero>366.17</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>117-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE GOMEZ CERVANTES MARIA  PAGO DEL SERVICIO D  E CONSULTORIA INDIVIDUAL: ANALISTA DE ADQUISICIONES EN EL MARCO DEL PROGRAMA DEL EJE NO PENAL. CUI 2413068 CONTRATO 031-2021-UE-PJ-BIRF - PRIMER ENTREGABLE.                        </descripcion_pago>
+		<fecha_doc>2021-12-06</fecha_doc>
+		<fecha_entrega>2021-12-06</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10107993938</ruc>
+		<proveedor>GOMEZ CERVANTES MARIA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>231</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000231GG00040001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>3500.00</monto>
+		<monto_nacional>3500.00</monto_nacional>
+		<monto_extranjero>865.69</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>143-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE QUISPE PEÑA ALMENDRA VICTORIA PAGO POR EL SERVICIO DE CONSULTOR 1 SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES - PRIMER ENTREGABLE.                                                      </descripcion_pago>
+		<fecha_doc>2021-12-20</fecha_doc>
+		<fecha_entrega>2021-12-21</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10473251782</ruc>
+		<proveedor>QUISPE PEÑA ALMENDRA VICTORIA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>256</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000256GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>1166.67</monto>
+		<monto_nacional>1166.67</monto_nacional>
+		<monto_extranjero>288.57</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>177-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE QUISPE PEÑA ALMENDRA VICTORIA PAGO POR EL SERVICIO DE CONSULTOR 1 SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES - SEGUNDO ENTREGABLE.                                                     </descripcion_pago>
+		<fecha_doc>2021-12-28</fecha_doc>
+		<fecha_entrega>2021-12-30</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10473251782</ruc>
+		<proveedor>QUISPE PEÑA ALMENDRA VICTORIA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>256</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000256GG00050001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>3500.00</monto>
+		<monto_nacional>3500.00</monto_nacional>
+		<monto_extranjero>865.69</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>142-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE PINEDO TELLO ETHEL LAURA PAGO POR EL SERVICIO DE CONSULTOR 2 SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES. CONTRATO N°023-2021-UE-PJ - PRIMER ENTREGABLE.                                </descripcion_pago>
+		<fecha_doc>2021-12-20</fecha_doc>
+		<fecha_entrega>2021-12-21</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10763323418</ruc>
+		<proveedor>PINEDO TELLO ETHEL LAURA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>257</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000257GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>1166.67</monto>
+		<monto_nacional>1166.67</monto_nacional>
+		<monto_extranjero>288.57</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>172-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE PINEDO TELLO ETHEL LAURA PAGO POR EL SERVICIO DE CONSULTOR 2 SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES. CONTRATO N°023-2021-UE-PJ - SEGUNDO ENTREGABLE.                               </descripcion_pago>
+		<fecha_doc>2021-12-28</fecha_doc>
+		<fecha_entrega>2021-12-30</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10763323418</ruc>
+		<proveedor>PINEDO TELLO ETHEL LAURA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>257</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000257GG00050001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>3500.00</monto>
+		<monto_nacional>3500.00</monto_nacional>
+		<monto_extranjero>865.69</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>140-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE BARRETO GALVEZ FABIO PAGO POR EL SERVICIO DE CONSULTOR 4 SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES. CONTRATO N° 024-2021-UE-PJ - PRIMER ENTREGABLE.                                   </descripcion_pago>
+		<fecha_doc>2021-12-20</fecha_doc>
+		<fecha_entrega>2021-12-21</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10715380515</ruc>
+		<proveedor>BARRETO GALVEZ FABIO</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>258</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000258GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>1166.67</monto>
+		<monto_nacional>1166.67</monto_nacional>
+		<monto_extranjero>288.57</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>173-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE BARRETO GALVEZ FABIO PAGO POR EL SERVICIO DE CONSULTOR 4 SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES. CONTRATO N° 024-2021-UE-PJ - SEGUNDO ENTREGABLE.                                  </descripcion_pago>
+		<fecha_doc>2021-12-28</fecha_doc>
+		<fecha_entrega>2021-12-30</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10715380515</ruc>
+		<proveedor>BARRETO GALVEZ FABIO</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>258</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000258GG00050001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>3500.00</monto>
+		<monto_nacional>3500.00</monto_nacional>
+		<monto_extranjero>865.69</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>139-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE ANCHIRAICO SABRERA YOMIRA FELICIA PAGO POR EL SERVICIO DE CONSULTOR 6 SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES.CONTRATO N 026-2021-UE-PJ - PRIMER ENTREGABLE.                        </descripcion_pago>
+		<fecha_doc>2021-12-20</fecha_doc>
+		<fecha_entrega>2021-12-21</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10734623640</ruc>
+		<proveedor>ANCHIRAICO SABRERA YOMIRA FELICIA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>259</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000259GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>1166.67</monto>
+		<monto_nacional>1166.67</monto_nacional>
+		<monto_extranjero>288.57</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>174-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE ANCHIRAICO SABRERA YOMIRA FELICIA PAGO POR EL SERVICIO DE CONSULTOR 6 SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES.CONTRATO N 026-2021-UE-PJ - SEGUNDO ENTREGABLE.                       </descripcion_pago>
+		<fecha_doc>2021-12-28</fecha_doc>
+		<fecha_entrega>2021-12-30</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10734623640</ruc>
+		<proveedor>ANCHIRAICO SABRERA YOMIRA FELICIA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>259</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000259GG00050001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>3500.00</monto>
+		<monto_nacional>3500.00</monto_nacional>
+		<monto_extranjero>865.69</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>137-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE RODRIGUEZ REINA BRENDA PAGO POR EL SERVICIO DE CONSULTOR 8 SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES. CONTRATO 027-2021-UE-PJ - PRIMER ENTREGABLE.                                    </descripcion_pago>
+		<fecha_doc>2021-12-20</fecha_doc>
+		<fecha_entrega>2021-12-21</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10487821123</ruc>
+		<proveedor>RODRIGUEZ REINA BRENDA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>260</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000260GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>1166.67</monto>
+		<monto_nacional>1166.67</monto_nacional>
+		<monto_extranjero>288.57</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>171-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE RODRIGUEZ REINA BRENDA PAGO POR EL SERVICIO DE CONSULTOR 8 SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES. CONTRATO 027-2021-UE-PJ - SEGUNDO ENTREGABLE.                                   </descripcion_pago>
+		<fecha_doc>2021-12-28</fecha_doc>
+		<fecha_entrega>2021-12-30</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10487821123</ruc>
+		<proveedor>RODRIGUEZ REINA BRENDA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>260</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000260GG00050001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>3500.00</monto>
+		<monto_nacional>3500.00</monto_nacional>
+		<monto_extranjero>865.69</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>144-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE HUILLCAÑAHUI BECERRA ANNI MILAGROS PAGO POR EL CONSULTOR 10 SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES. CONTRATO 028-2021-UE-PJ - PRIMER ENTREGABLE.                                   </descripcion_pago>
+		<fecha_doc>2021-12-20</fecha_doc>
+		<fecha_entrega>2021-12-21</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10729254300</ruc>
+		<proveedor>HUILLCAÑAHUI BECERRA ANNI MILAGROS</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>261</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000261GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>1166.67</monto>
+		<monto_nacional>1166.67</monto_nacional>
+		<monto_extranjero>288.57</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>175-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE HUILLCAÑAHUI BECERRA ANNI MILAGROS PAGO POR EL CONSULTOR 10 SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES. CONTRATO 028-2021-UE-PJ - SEGUNDO ENTREGABLE.                                  </descripcion_pago>
+		<fecha_doc>2021-12-28</fecha_doc>
+		<fecha_entrega>2021-12-30</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10729254300</ruc>
+		<proveedor>HUILLCAÑAHUI BECERRA ANNI MILAGROS</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>261</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000261GG00050001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>3500.00</monto>
+		<monto_nacional>3500.00</monto_nacional>
+		<monto_extranjero>865.69</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>138-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE MARTINEZ REYNAGA ROSA ALESSANDRA PAGO POR EL SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES. CONTRATO 029-2021-UE-PJ - PRIMER ENTREGABLE.                                                  </descripcion_pago>
+		<fecha_doc>2021-12-20</fecha_doc>
+		<fecha_entrega>2021-12-21</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10716668806</ruc>
+		<proveedor>MARTINEZ REYNAGA ROSA ALESSANDRA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>262</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000262GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>1166.67</monto>
+		<monto_nacional>1166.67</monto_nacional>
+		<monto_extranjero>288.57</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>176-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE MARTINEZ REYNAGA ROSA ALESSANDRA PAGO POR EL SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES. CONTRATO 029-2021-UE-PJ - SEGUNDO ENTREGABLE.                                                 </descripcion_pago>
+		<fecha_doc>2021-12-28</fecha_doc>
+		<fecha_entrega>2021-12-30</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10716668806</ruc>
+		<proveedor>MARTINEZ REYNAGA ROSA ALESSANDRA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>262</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000262GG00050001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>3500.00</monto>
+		<monto_nacional>3500.00</monto_nacional>
+		<monto_extranjero>865.69</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>141-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE VILLANUEVA SANCHEZ LUCIA VICTORIA PAGO POR EL SERVICIO DE CONSULTOR 16 SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES. CONTRATO 030-2021-UE-PJ - PRIMER ENTREGABLE.                        </descripcion_pago>
+		<fecha_doc>2021-12-20</fecha_doc>
+		<fecha_entrega>2021-12-21</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10467734976</ruc>
+		<proveedor>VILLANUEVA SANCHEZ LUCIA VICTORIA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>263</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000263GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>1166.67</monto>
+		<monto_nacional>1166.67</monto_nacional>
+		<monto_extranjero>288.57</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>178-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE VILLANUEVA SANCHEZ LUCIA VICTORIA PAGO POR EL SERVICIO DE CONSULTOR 16 SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES. CONTRATO 030-2021-UE-PJ - SEGUNDO ENTREGABLE.                       </descripcion_pago>
+		<fecha_doc>2021-12-28</fecha_doc>
+		<fecha_entrega>2021-12-30</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10467734976</ruc>
+		<proveedor>VILLANUEVA SANCHEZ LUCIA VICTORIA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>263</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000263GG00050001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>US$</moneda>
+		<tipo_cambio>4.109000000000000</tipo_cambio>
+		<monto>164360.00</monto>
+		<monto_nacional>164360.00</monto_nacional>
+		<monto_extranjero>40000.00</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>126-EJE NOPENAL</num_doc>
+		<descripcion_pago>PAGO DEL PRIMER ENTREGABLE AL PROVEEDOR UBA - UNIVERSIDAD DE BUENOS AIRES, CORRESPONDIENTE AL CONTRATO N° 017-2021-UE-PJ</descripcion_pago>
+		<fecha_doc>2021-12-17</fecha_doc>
+		<fecha_entrega>2021-12-17</fecha_entrega>
+		<tipo_id>2</tipo_id>
+		<ruc>30603769716</ruc>
+		<proveedor>FACULTAD DE DERECHO DE LA UNIVERSIDAD DE BUENOS AIRES</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>265</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>NCS</tipo_gasto>
+		<enlace>20210012150000000265GG00070001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>US$</moneda>
+		<tipo_cambio>4.109000000000000</tipo_cambio>
+		<monto>123270.00</monto>
+		<monto_nacional>123270.00</monto_nacional>
+		<monto_extranjero>30000.00</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>127-EJE NOPENAL-2021</num_doc>
+		<descripcion_pago>GIRO DEL SEGUNDO ENTREGABLE AL PROVEEDOR UBA - UNIVERSIDAD DE BUENOS AIRES, CORRESPONDIENTE AL CONTRATO N° 017-2021-UE-PJ                                                           </descripcion_pago>
+		<fecha_doc>2021-12-17</fecha_doc>
+		<fecha_entrega>2021-12-17</fecha_entrega>
+		<tipo_id>2</tipo_id>
+		<ruc>30603769716</ruc>
+		<proveedor>FACULTAD DE DERECHO DE LA UNIVERSIDAD DE BUENOS AIRES</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>265</beneficiario>
+		<prism/>
+		<tipo_recurso>0</tipo_recurso>
+		<tipo_gasto>NCS</tipo_gasto>
+		<enlace>20210012150000000265GG00080001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>2208.00</monto>
+		<monto_nacional>2208.00</monto_nacional>
+		<monto_extranjero>546.13</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>145-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE LECHUGA MARMANILLO ADRIANA KARLA PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL ASESORA LEGAL EN EL MARCO DEL PROGRAMA CUI 2413068.-PRIMER ENTREGABLE.              </descripcion_pago>
+		<fecha_doc>2021-12-21</fecha_doc>
+		<fecha_entrega>2021-12-23</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10404560161</ruc>
+		<proveedor>LECHUGA MARMANILLO ADRIANA KARLA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>271</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000271GG00040001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>2576.00</monto>
+		<monto_nacional>2576.00</monto_nacional>
+		<monto_extranjero>637.15</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>147-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE LECHUGA MARMANILLO ADRIANA KARLA PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL ASESORA LEGAL EN EL MARCO DEL PROGRAMA CUI 2413068.-SEGUNDO ENTREGABLE.             </descripcion_pago>
+		<fecha_doc>2021-12-21</fecha_doc>
+		<fecha_entrega>2021-12-23</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10404560161</ruc>
+		<proveedor>LECHUGA MARMANILLO ADRIANA KARLA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>271</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000271GG00060001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>9966.59</monto>
+		<monto_nacional>9966.59</monto_nacional>
+		<monto_extranjero>2465.15</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>159-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE NUÑEZ PUENTE LUIS CARLOS PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL ABOGADO ESPECIALISTA PROCESAL COMPONENTE 9 , CONTRATO N°035-2021. PROGRAMA EJE NO PENAL.    </descripcion_pago>
+		<fecha_doc>2021-12-22</fecha_doc>
+		<fecha_entrega>2021-12-24</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10429402161</ruc>
+		<proveedor>NUÑEZ PUENTE LUIS CARLOS</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>275</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000275GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>9200.00</monto>
+		<monto_nacional>9200.00</monto_nacional>
+		<monto_extranjero>2275.54</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>161-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE VILLON SUAREZ RAFAEL ANDRE  PAGO POR EL SERVO DE CONSULTORIA INDIVIDUAL ESPECIALISTA EN SUPERVISION (INFORME ÚNICO), CONTRATO N° 034-2021. PROGRAMA EJE NO PENAL.   </descripcion_pago>
+		<fecha_doc>2021-12-22</fecha_doc>
+		<fecha_entrega>2021-12-23</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10099926622</ruc>
+		<proveedor>VILLON SUAREZ RAFAEL ANDRE</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>276</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000276GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>5066.67</monto>
+		<monto_nacional>5066.67</monto_nacional>
+		<monto_extranjero>1253.20</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>157-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE MORALES CANO EDER FABIAN PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL ANALISTA SENIOR EN PROCESOS- CONTRATO N°039-2021 - UNICO ENTREGABLE - EJE NOP PENAL. PRIMER ENTREGABLE.                                                 </descripcion_pago>
+		<fecha_doc>2021-12-22</fecha_doc>
+		<fecha_entrega>2021-12-23</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10478847896</ruc>
+		<proveedor>MORALES CANO EDER FABIAN</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>277</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000277GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>9166.75</monto>
+		<monto_nacional>9166.75</monto_nacional>
+		<monto_extranjero>2267.31</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>158-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE CHAPOÑAN CHAPOÑAN WALTER  PAGO POR EL SERVICO DE CONSULTORIA INDIVIDUAL ESPECIALISTA SENIOR EN PROCESOS - CONTRATO N°036-2021. - UNICO ENTREGABLE - PROGRAMA DEL EJE NO PENAL.. PRIMER ENTREGABLE.                              </descripcion_pago>
+		<fecha_doc>2021-12-22</fecha_doc>
+		<fecha_entrega>2021-12-24</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10403460791</ruc>
+		<proveedor>CHAPOÑAN CHAPOÑAN WALTER</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>278</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000278GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>3500.00</monto>
+		<monto_nacional>3500.00</monto_nacional>
+		<monto_extranjero>865.69</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>130-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE ROMO RIVERO JOSE LUIS PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: CONSULTOR 13-SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES UTILIZANDO RPA PARA LA MESA DE PARTES DE LA SALA SUPREMA </descripcion_pago>
+		<fecha_doc>2021-12-20</fecha_doc>
+		<fecha_entrega>2021-12-21</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10100163409</ruc>
+		<proveedor>ROMO RIVERO REGINA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>280</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000280GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>3220.00</monto>
+		<monto_nacional>3220.00</monto_nacional>
+		<monto_extranjero>796.44</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>132-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE CACERES MANRIQUE CLAUDIA ELIZABETH PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: CONSULTOR 3-SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES UTILIZANDO RPA PARA LA MESA DE PARTES DE LA S</descripcion_pago>
+		<fecha_doc>2021-12-20</fecha_doc>
+		<fecha_entrega>2021-12-21</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10734209487</ruc>
+		<proveedor>CACERES MANRIQUE CLAUDIA ELIZABETH</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>281</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000281GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>3500.00</monto>
+		<monto_nacional>3500.00</monto_nacional>
+		<monto_extranjero>865.69</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>135-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE ALBERCA GUERRERO ELGAR ELI PAGO POR EL SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES UTILIZANDO RPA PARA LA MESA DE PARTES DE LA SALA SUPREMA DE DERECHO CONSTITUCIONAL Y SOCIAL TRANSITOR</descripcion_pago>
+		<fecha_doc>2021-12-20</fecha_doc>
+		<fecha_entrega>2021-12-21</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10471104294</ruc>
+		<proveedor>ALBERCA GUERRERO ELGAR ELI</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>282</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000282GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>3500.00</monto>
+		<monto_nacional>3500.00</monto_nacional>
+		<monto_extranjero>865.69</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>136-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE RIVERA ACEVEDO ESPERANZA AMELIA PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: CONSULTOR 9-SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES UTILIZANDO RPA PARA LA MESA DE PARTES DE LA SALA</descripcion_pago>
+		<fecha_doc>2021-12-20</fecha_doc>
+		<fecha_entrega>2021-12-21</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10435256002</ruc>
+		<proveedor>RIVERA ACEVEDO ESPERANZA AMELIA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>283</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000283GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>3500.00</monto>
+		<monto_nacional>3500.00</monto_nacional>
+		<monto_extranjero>865.69</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>134-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE LEGUA PALOMINO JOSE LUIS PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: CONSULTOR 11-SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES UTILIZANDO RPA PARA LA MESA DE PARTES DE LA SALA SUPRE</descripcion_pago>
+		<fecha_doc>2021-12-20</fecha_doc>
+		<fecha_entrega>2021-12-21</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10428289825</ruc>
+		<proveedor>LEGUA PALOMINO JOSE LUIS</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>284</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000284GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>3500.00</monto>
+		<monto_nacional>3500.00</monto_nacional>
+		<monto_extranjero>865.69</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>129-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE VARGAS SARAVIA JUSTINA MARLENE PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: CONSULTOR 12-SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES UTILIZANDO RPA PARA LA MESA DE PARTES DE LA SALA</descripcion_pago>
+		<fecha_doc>2021-12-20</fecha_doc>
+		<fecha_entrega>2021-12-21</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10459924171</ruc>
+		<proveedor>VARGAS SARAVIA JUSTINA MARLENE</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>285</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000285GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>01</componente>
+		<sub_componente>01</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>3500.00</monto>
+		<monto_nacional>3500.00</monto_nacional>
+		<monto_extranjero>865.69</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>131-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE LAGOS QUINTE RUDICINDO ALBINO PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: CONSULTOR 15-SERVICIO DE IMPLEMENTACION DE UNA LINEA DE DIGITALIZACION DE EXPEDIENTES JUDICIALES UTILIZANDO RPA PARA LA MESA DE PARTES DE LA SALA </descripcion_pago>
+		<fecha_doc>2021-12-20</fecha_doc>
+		<fecha_entrega>2021-12-21</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10411905816</ruc>
+		<proveedor>LAGOS QUINTE RUDICINDO ALBINO</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>286</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000286GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>11040.00</monto>
+		<monto_nacional>11040.00</monto_nacional>
+		<monto_extranjero>2730.65</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>149-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE JULIAN LLOSA LUIS MIGUEL SERVICIO DE CONSULTORIA INDIVIDUAL: SUPERVISOR DE DESARROLLO EN EL MARCO DEL PROGRAMA DE INVERSION MEJORAMIENTO DE LOS SERVICIOS DE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL EXPEDIENTE JU</descripcion_pago>
+		<fecha_doc>2021-12-21</fecha_doc>
+		<fecha_entrega>2021-12-23</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10404160287</ruc>
+		<proveedor>JULIAN LLOSA LUIS MANUEL</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>288</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000288GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>13800.00</monto>
+		<monto_nacional>13800.00</monto_nacional>
+		<monto_extranjero>3413.31</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>169-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE REATEGUI ACHING FRANKLIN PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: GESTOR DEL PROYECTO AMAG - SEPTIMO ENTREGABLE COMPONENTE 4.2 AMAG                          </descripcion_pago>
+		<fecha_doc>2021-12-23</fecha_doc>
+		<fecha_entrega>2021-12-24</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10066722959</ruc>
+		<proveedor>REATEGUI ACHING FRANKLIN</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>289</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000289GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>5520.00</monto>
+		<monto_nacional>5520.00</monto_nacional>
+		<monto_extranjero>1365.32</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>167-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE TELLO AVILA SANDRA GRACIELA PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: ASISTENTE ADMINISTRATIVO AMAG - SEXTO ENTREGABLE COMPONENTE 4.3                         </descripcion_pago>
+		<fecha_doc>2021-12-23</fecha_doc>
+		<fecha_entrega>2021-12-24</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10416002369</ruc>
+		<proveedor>TELLO AVILA SANDRA GRACIELA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>290</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000290GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>8096.00</monto>
+		<monto_nacional>8096.00</monto_nacional>
+		<monto_extranjero>2002.47</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>181-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE VEGA HUAYLINOS RICARDO  PAGO DEL SERVICIO D E CONSULTORIA INDIVIDUAL DIRECTOR DE PROGRAMA MEJORAMIENTO DE LOS SERVICIOS DE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENTACION DEL EXPEDIENTE JUDICIAL ELECTRONICO (EJE)".        </descripcion_pago>
+		<fecha_doc>2021-12-30</fecha_doc>
+		<fecha_entrega>2021-12-31</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10094441191</ruc>
+		<proveedor>VEGA HUAYLINOS RICARDO ERNESTO</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>291</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000291GG00050001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>11040.00</monto>
+		<monto_nacional>11040.00</monto_nacional>
+		<monto_extranjero>2730.65</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>155-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE SALAS MONCADA LUIS ALEX PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: SUPERVISOR/A DE ANALISIS DE NEGOCIOS EN EL MARCO DEL PROGRAMA DE INVERSION MEJORAMIENTO DE LOS SERVICIOS DE JUSTICIA NO PENALES A TRAVES DE LA IMPLEMENT</descripcion_pago>
+		<fecha_doc>2021-12-21</fecha_doc>
+		<fecha_entrega>2021-12-23</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10074666201</ruc>
+		<proveedor>SALAS MONCADA LUIS ALEX</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>292</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000292GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>11040.00</monto>
+		<monto_nacional>11040.00</monto_nacional>
+		<monto_extranjero>2730.65</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>153-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE LENGUA HUERTAS MANUEL ALBERTO ENTREGABLE DEL SERVICIO DE CONSULTORIA INDIVIDUAL: SUPERVISOR DE ARQUITECTURA EMPRESARIAL E INNOVACION EN EL MARCO DEL PROGRAMA DE INVERSION MEJORAMIENTO DE LOS SERVICIOS DE JUSTICIA NO PENALES </descripcion_pago>
+		<fecha_doc>2021-12-21</fecha_doc>
+		<fecha_entrega>2021-12-23</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10099254250</ruc>
+		<proveedor>LENGUA HUERTAS MANUEL ALBERTO</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>293</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000293GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>7360.00</monto>
+		<monto_nacional>7360.00</monto_nacional>
+		<monto_extranjero>1820.43</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>163-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE GOMEZ CERVANTES MARIA REGINA PAGO DE CONSULTORIA INDIVIDUAL DEL EJE NO PÈNAL: ANALISTA DE ADQUISICIONES EN EL MARCO DEL PROGRAMA CUI 2413068 CONTRATO 031-2021-UE-PJ-BIRF SIAF 231 - SEGUNDO ENTREGABLE.                        </descripcion_pago>
+		<fecha_doc>2021-12-22</fecha_doc>
+		<fecha_entrega>2021-12-23</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10107993938</ruc>
+		<proveedor>GOMEZ CERVANTES MARIA REGINA</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>294</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000294GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+	<cur_1>
+		<ano_eje>2021</ano_eje>
+		<sec_ejec2>001215</sec_ejec2>
+		<componente>04</componente>
+		<sub_componente>02</sub_componente>
+		<actividad>01</actividad>
+		<sub_actividad>01</sub_actividad>
+		<grupo_gasto>01</grupo_gasto>
+		<categ_gasto>01</categ_gasto>
+		<elemento_gasto>01</elemento_gasto>
+		<especifica_gasto>01</especifica_gasto>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<moneda>S/.</moneda>
+		<tipo_cambio>4.043000000000000</tipo_cambio>
+		<monto>11040.00</monto>
+		<monto_nacional>11040.00</monto_nacional>
+		<monto_extranjero>2730.65</monto_extranjero>
+		<cod_doc>009</cod_doc>
+		<num_doc>165-2021-EJE NOPENAL</num_doc>
+		<descripcion_pago>GIRO A FAVOR DE ALVITES CASTILLO CESAR ANTONIO PAGO POR EL SERVICIO DE CONSULTORIA INDIVIDUAL: EN PLANIFICACION Y PRESUPUESTO EN EL MARCO DEL PROGRAMA DE INVERSIONES MEJORAMIENTO DE LOS SERVICIOS DE JUSTICIA NO PENALES A TRAVES DE LA IMPLEM</descripcion_pago>
+		<fecha_doc>2021-12-22</fecha_doc>
+		<fecha_entrega>2021-12-24</fecha_entrega>
+		<tipo_id>1</tipo_id>
+		<ruc>10076833210</ruc>
+		<proveedor>ALVITES CASTILLO CESAR ANTONIO</proveedor>
+		<no_objecion/>
+		<origen>1</origen>
+		<fuente_financ>19</fuente_financ>
+		<beneficiario>296</beneficiario>
+		<prism/>
+		<tipo_recurso>23</tipo_recurso>
+		<tipo_gasto>CS</tipo_gasto>
+		<enlace>20210012150000000296GG00030001001</enlace>
+		<tipo_aporte>01</tipo_aporte>
+	</cur_1>
+</VFPData>

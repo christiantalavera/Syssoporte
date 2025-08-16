@@ -1,0 +1,1120 @@
+<?xml version = "1.0" encoding="Windows-1252" standalone="yes"?>
+<VFPData>
+	<xsd:schema id="VFPData" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="VFPData" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="curx" minOccurs="0" maxOccurs="unbounded">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="ano_eje">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="4"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="sec_ejec">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="6"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="sec_ejec2" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="6"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="proyecto">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="3"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="componente">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="componente_nombre" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="200"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="sub_componente">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="sub_componente_nombre" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="200"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="actividad">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="actividad_nombre" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="200"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="sub_actividad">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="sub_actividad_nombre" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="200"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="grupo_gasto">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="grupo_gasto_nombre" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="200"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="categ_gasto">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="categ_gasto_nombre" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="200"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="elemento_gasto">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="elemento_gasto_nombre" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="200"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="especifica_gasto">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="especifica_gasto_nombre" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="200"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="sub_especifica_gasto">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="4"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="sub_especifica_gasto_nombre" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="200"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes01_local">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes02_local">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes03_local">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes04_local">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes05_local">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes06_local">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes07_local">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes08_local">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes09_local">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes10_local">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes11_local">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes12_local">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes01_externo">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes02_externo">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes03_externo">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes04_externo">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes05_externo">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes06_externo">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes07_externo">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes08_externo">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes09_externo">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes10_externo">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes11_externo">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes12_externo">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes01_beneficiario">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes02_beneficiario">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes03_beneficiario">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes04_beneficiario">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes05_beneficiario">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes06_beneficiario">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes07_beneficiario">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes08_beneficiario">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes09_beneficiario">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes10_beneficiario">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes11_beneficiario">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="mes12_beneficiario">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="18"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+				<xsd:anyAttribute namespace="http://www.w3.org/XML/1998/namespace" processContents="lax"/>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<curx>
+		<ano_eje>2020</ano_eje>
+		<sec_ejec>001437</sec_ejec>
+		<sec_ejec2>001437</sec_ejec2>
+		<proyecto>223</proyecto>
+		<componente>04</componente>
+		<componente_nombre>MAYOR EFICIENCIA Y EFICACIA DE LAS INSTITUCIONES DEL SISTEMA DE ADMINISTRACIÓN DE JUSTICIA</componente_nombre>
+		<sub_componente>01</sub_componente>
+		<sub_componente_nombre>MEJORAMIENTO DE LOS PROGRAMAS DE CAPACITACIÓN DE LA AMAG</sub_componente_nombre>
+		<actividad>01</actividad>
+		<actividad_nombre>MEJORAMIENTO DE LOS PROGRAMAS DE CAPACITACIÓN DE LA AMAG</actividad_nombre>
+		<sub_actividad>01</sub_actividad>
+		<sub_actividad_nombre>MEJORAMIENTO DE LOS PROGRAMAS DE CAPACITACIÓN DE LA AMAG</sub_actividad_nombre>
+		<grupo_gasto>01</grupo_gasto>
+		<grupo_gasto_nombre>BIENES, OBRAS, SERVICIOS DISTINTO DE CONSULTORIA,CAPACITACION(O FORMACION) Y SER</grupo_gasto_nombre>
+		<categ_gasto>01</categ_gasto>
+		<categ_gasto_nombre/>
+		<elemento_gasto>01</elemento_gasto>
+		<elemento_gasto_nombre/>
+		<especifica_gasto>01</especifica_gasto>
+		<especifica_gasto_nombre>BIENES, OBRAS, SERVICIOS DE NO CONSULTORÍA, SERVICIO DE CONSULTORÍA, ENTRENAMIEN</especifica_gasto_nombre>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<sub_especifica_gasto_nombre>BIENES, OBRAS, SERVICIOS DE NO CONSULTORÍA, SERVICIO DE CONSULTORÍA, ENTRENAMIEN</sub_especifica_gasto_nombre>
+		<mes01_local>0.00</mes01_local>
+		<mes02_local>0.00</mes02_local>
+		<mes03_local>0.00</mes03_local>
+		<mes04_local>0.00</mes04_local>
+		<mes05_local>0.00</mes05_local>
+		<mes06_local>0.00</mes06_local>
+		<mes07_local>0.00</mes07_local>
+		<mes08_local>0.00</mes08_local>
+		<mes09_local>0.00</mes09_local>
+		<mes10_local>0.00</mes10_local>
+		<mes11_local>0.00</mes11_local>
+		<mes12_local>0.00</mes12_local>
+		<mes01_externo>0.00</mes01_externo>
+		<mes02_externo>0.00</mes02_externo>
+		<mes03_externo>0.00</mes03_externo>
+		<mes04_externo>0.00</mes04_externo>
+		<mes05_externo>0.00</mes05_externo>
+		<mes06_externo>0.00</mes06_externo>
+		<mes07_externo>0.00</mes07_externo>
+		<mes08_externo>0.00</mes08_externo>
+		<mes09_externo>0.00</mes09_externo>
+		<mes10_externo>0.00</mes10_externo>
+		<mes11_externo>0.00</mes11_externo>
+		<mes12_externo>0.00</mes12_externo>
+		<mes01_beneficiario>0.00</mes01_beneficiario>
+		<mes02_beneficiario>0.00</mes02_beneficiario>
+		<mes03_beneficiario>0.00</mes03_beneficiario>
+		<mes04_beneficiario>0.00</mes04_beneficiario>
+		<mes05_beneficiario>0.00</mes05_beneficiario>
+		<mes06_beneficiario>0.00</mes06_beneficiario>
+		<mes07_beneficiario>0.00</mes07_beneficiario>
+		<mes08_beneficiario>0.00</mes08_beneficiario>
+		<mes09_beneficiario>0.00</mes09_beneficiario>
+		<mes10_beneficiario>0.00</mes10_beneficiario>
+		<mes11_beneficiario>0.00</mes11_beneficiario>
+		<mes12_beneficiario>0.00</mes12_beneficiario>
+	</curx>
+	<curx>
+		<ano_eje>2020</ano_eje>
+		<sec_ejec>001437</sec_ejec>
+		<sec_ejec2>001437</sec_ejec2>
+		<proyecto>223</proyecto>
+		<componente>03</componente>
+		<componente_nombre>REDUCCIÓN DE BARRERAS SOCIO-ECONÓMICAS, CULTURALES Y GEOGRÁFICAS PARA QUE LAS POBLACIONES VULNERABLES ACCEDAN A LA JUSTICIA</componente_nombre>
+		<sub_componente>02</sub_componente>
+		<sub_componente_nombre>MEJORAMIENTO DEL DISEÑO Y DE LA IMPLEMENTACIÓN DE LOS MECANISMOS ALTERNATIVOS DE ENTREGA DE SERVICIOS DE JUSTICIA</sub_componente_nombre>
+		<actividad>02</actividad>
+		<actividad_nombre>MEJORAMIENTO DEL DISEÑO Y DE LA IMPLEMENTACIÓN DE LOS MECANISMOS ALTERNATIVOS DE ENTREGA DE SERVICIOS DE JUSTICIA</actividad_nombre>
+		<sub_actividad>02</sub_actividad>
+		<sub_actividad_nombre>MEJORAMIENTO DEL DISEÑO Y DE LA IMPLEMENTACIÓN DE LOS MECANISMOS ALTERNATIVOS DE ENTREGA DE SERVICIOS DE JUSTICIA</sub_actividad_nombre>
+		<grupo_gasto>01</grupo_gasto>
+		<grupo_gasto_nombre>BIENES, OBRAS, SERVICIOS DISTINTO DE CONSULTORIA,CAPACITACION(O FORMACION) Y SER</grupo_gasto_nombre>
+		<categ_gasto>01</categ_gasto>
+		<categ_gasto_nombre/>
+		<elemento_gasto>01</elemento_gasto>
+		<elemento_gasto_nombre/>
+		<especifica_gasto>01</especifica_gasto>
+		<especifica_gasto_nombre>BIENES, OBRAS, SERVICIOS DE NO CONSULTORÍA, SERVICIO DE CONSULTORÍA, ENTRENAMIEN</especifica_gasto_nombre>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<sub_especifica_gasto_nombre>BIENES, OBRAS, SERVICIOS DE NO CONSULTORÍA, SERVICIO DE CONSULTORÍA, ENTRENAMIEN</sub_especifica_gasto_nombre>
+		<mes01_local>0.00</mes01_local>
+		<mes02_local>0.00</mes02_local>
+		<mes03_local>0.00</mes03_local>
+		<mes04_local>0.00</mes04_local>
+		<mes05_local>0.00</mes05_local>
+		<mes06_local>0.00</mes06_local>
+		<mes07_local>0.00</mes07_local>
+		<mes08_local>0.00</mes08_local>
+		<mes09_local>0.00</mes09_local>
+		<mes10_local>0.00</mes10_local>
+		<mes11_local>0.00</mes11_local>
+		<mes12_local>0.00</mes12_local>
+		<mes01_externo>0.00</mes01_externo>
+		<mes02_externo>0.00</mes02_externo>
+		<mes03_externo>0.00</mes03_externo>
+		<mes04_externo>0.00</mes04_externo>
+		<mes05_externo>0.00</mes05_externo>
+		<mes06_externo>0.00</mes06_externo>
+		<mes07_externo>0.00</mes07_externo>
+		<mes08_externo>0.00</mes08_externo>
+		<mes09_externo>0.00</mes09_externo>
+		<mes10_externo>0.00</mes10_externo>
+		<mes11_externo>0.00</mes11_externo>
+		<mes12_externo>0.00</mes12_externo>
+		<mes01_beneficiario>0.00</mes01_beneficiario>
+		<mes02_beneficiario>0.00</mes02_beneficiario>
+		<mes03_beneficiario>0.00</mes03_beneficiario>
+		<mes04_beneficiario>0.00</mes04_beneficiario>
+		<mes05_beneficiario>0.00</mes05_beneficiario>
+		<mes06_beneficiario>0.00</mes06_beneficiario>
+		<mes07_beneficiario>0.00</mes07_beneficiario>
+		<mes08_beneficiario>0.00</mes08_beneficiario>
+		<mes09_beneficiario>0.00</mes09_beneficiario>
+		<mes10_beneficiario>0.00</mes10_beneficiario>
+		<mes11_beneficiario>0.00</mes11_beneficiario>
+		<mes12_beneficiario>0.00</mes12_beneficiario>
+	</curx>
+	<curx>
+		<ano_eje>2020</ano_eje>
+		<sec_ejec>001437</sec_ejec>
+		<sec_ejec2>001437</sec_ejec2>
+		<proyecto>223</proyecto>
+		<componente>04</componente>
+		<componente_nombre>MAYOR EFICIENCIA Y EFICACIA DE LAS INSTITUCIONES DEL SISTEMA DE ADMINISTRACIÓN DE JUSTICIA</componente_nombre>
+		<sub_componente>02</sub_componente>
+		<sub_componente_nombre>GESTIÓN DEL CAMBIO</sub_componente_nombre>
+		<actividad>02</actividad>
+		<actividad_nombre>GESTIÓN DEL CAMBIO</actividad_nombre>
+		<sub_actividad>02</sub_actividad>
+		<sub_actividad_nombre>GESTIÓN DEL CAMBIO</sub_actividad_nombre>
+		<grupo_gasto>01</grupo_gasto>
+		<grupo_gasto_nombre>BIENES, OBRAS, SERVICIOS DISTINTO DE CONSULTORIA,CAPACITACION(O FORMACION) Y SER</grupo_gasto_nombre>
+		<categ_gasto>01</categ_gasto>
+		<categ_gasto_nombre/>
+		<elemento_gasto>01</elemento_gasto>
+		<elemento_gasto_nombre/>
+		<especifica_gasto>01</especifica_gasto>
+		<especifica_gasto_nombre>BIENES, OBRAS, SERVICIOS DE NO CONSULTORÍA, SERVICIO DE CONSULTORÍA, ENTRENAMIEN</especifica_gasto_nombre>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<sub_especifica_gasto_nombre>BIENES, OBRAS, SERVICIOS DE NO CONSULTORÍA, SERVICIO DE CONSULTORÍA, ENTRENAMIEN</sub_especifica_gasto_nombre>
+		<mes01_local>0.00</mes01_local>
+		<mes02_local>0.00</mes02_local>
+		<mes03_local>0.00</mes03_local>
+		<mes04_local>0.00</mes04_local>
+		<mes05_local>0.00</mes05_local>
+		<mes06_local>0.00</mes06_local>
+		<mes07_local>0.00</mes07_local>
+		<mes08_local>0.00</mes08_local>
+		<mes09_local>0.00</mes09_local>
+		<mes10_local>0.00</mes10_local>
+		<mes11_local>0.00</mes11_local>
+		<mes12_local>0.00</mes12_local>
+		<mes01_externo>0.00</mes01_externo>
+		<mes02_externo>0.00</mes02_externo>
+		<mes03_externo>0.00</mes03_externo>
+		<mes04_externo>0.00</mes04_externo>
+		<mes05_externo>0.00</mes05_externo>
+		<mes06_externo>0.00</mes06_externo>
+		<mes07_externo>0.00</mes07_externo>
+		<mes08_externo>0.00</mes08_externo>
+		<mes09_externo>0.00</mes09_externo>
+		<mes10_externo>0.00</mes10_externo>
+		<mes11_externo>0.00</mes11_externo>
+		<mes12_externo>0.00</mes12_externo>
+		<mes01_beneficiario>0.00</mes01_beneficiario>
+		<mes02_beneficiario>0.00</mes02_beneficiario>
+		<mes03_beneficiario>0.00</mes03_beneficiario>
+		<mes04_beneficiario>0.00</mes04_beneficiario>
+		<mes05_beneficiario>0.00</mes05_beneficiario>
+		<mes06_beneficiario>0.00</mes06_beneficiario>
+		<mes07_beneficiario>0.00</mes07_beneficiario>
+		<mes08_beneficiario>0.00</mes08_beneficiario>
+		<mes09_beneficiario>0.00</mes09_beneficiario>
+		<mes10_beneficiario>0.00</mes10_beneficiario>
+		<mes11_beneficiario>0.00</mes11_beneficiario>
+		<mes12_beneficiario>0.00</mes12_beneficiario>
+	</curx>
+	<curx>
+		<ano_eje>2020</ano_eje>
+		<sec_ejec>001437</sec_ejec>
+		<sec_ejec2>001437</sec_ejec2>
+		<proyecto>223</proyecto>
+		<componente>03</componente>
+		<componente_nombre>REDUCCIÓN DE BARRERAS SOCIO-ECONÓMICAS, CULTURALES Y GEOGRÁFICAS PARA QUE LAS POBLACIONES VULNERABLES ACCEDAN A LA JUSTICIA</componente_nombre>
+		<sub_componente>01</sub_componente>
+		<sub_componente_nombre>MEJORAMIENTO DE LA CAPACIDAD DEL SISTEMA DE ADMINISTRACIÓN DE JUSTICIA PARA BRINDAR ASESORÍA Y REPRESENTACIÓN JURÍDICA GRATUITA A TRAVÉS DE LOS ALEGRA</sub_componente_nombre>
+		<actividad>01</actividad>
+		<actividad_nombre>MEJORAMIENTO DE LA CAPACIDAD DEL SISTEMA DE ADMINISTRACIÓN DE JUSTICIA PARA BRINDAR ASESORÍA Y REPRESENTACIÓN JURÍDICA GRATUITA A TRAVÉS DE LOS ALEGRA</actividad_nombre>
+		<sub_actividad>01</sub_actividad>
+		<sub_actividad_nombre>MEJORAMIENTO DE LA CAPACIDAD DEL SISTEMA DE ADMINISTRACIÓN DE JUSTICIA PARA BRINDAR ASESORÍA Y REPRESENTACIÓN JURÍDICA GRATUITA A TRAVÉS DE LOS ALEGRA</sub_actividad_nombre>
+		<grupo_gasto>01</grupo_gasto>
+		<grupo_gasto_nombre>BIENES, OBRAS, SERVICIOS DISTINTO DE CONSULTORIA,CAPACITACION(O FORMACION) Y SER</grupo_gasto_nombre>
+		<categ_gasto>01</categ_gasto>
+		<categ_gasto_nombre/>
+		<elemento_gasto>01</elemento_gasto>
+		<elemento_gasto_nombre/>
+		<especifica_gasto>01</especifica_gasto>
+		<especifica_gasto_nombre>BIENES, OBRAS, SERVICIOS DE NO CONSULTORÍA, SERVICIO DE CONSULTORÍA, ENTRENAMIEN</especifica_gasto_nombre>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<sub_especifica_gasto_nombre>BIENES, OBRAS, SERVICIOS DE NO CONSULTORÍA, SERVICIO DE CONSULTORÍA, ENTRENAMIEN</sub_especifica_gasto_nombre>
+		<mes01_local>0.00</mes01_local>
+		<mes02_local>0.00</mes02_local>
+		<mes03_local>0.00</mes03_local>
+		<mes04_local>0.00</mes04_local>
+		<mes05_local>0.00</mes05_local>
+		<mes06_local>0.00</mes06_local>
+		<mes07_local>0.00</mes07_local>
+		<mes08_local>0.00</mes08_local>
+		<mes09_local>0.00</mes09_local>
+		<mes10_local>0.00</mes10_local>
+		<mes11_local>0.00</mes11_local>
+		<mes12_local>0.00</mes12_local>
+		<mes01_externo>0.00</mes01_externo>
+		<mes02_externo>0.00</mes02_externo>
+		<mes03_externo>0.00</mes03_externo>
+		<mes04_externo>0.00</mes04_externo>
+		<mes05_externo>0.00</mes05_externo>
+		<mes06_externo>0.00</mes06_externo>
+		<mes07_externo>0.00</mes07_externo>
+		<mes08_externo>0.00</mes08_externo>
+		<mes09_externo>0.00</mes09_externo>
+		<mes10_externo>0.00</mes10_externo>
+		<mes11_externo>0.00</mes11_externo>
+		<mes12_externo>23077.00</mes12_externo>
+		<mes01_beneficiario>0.00</mes01_beneficiario>
+		<mes02_beneficiario>0.00</mes02_beneficiario>
+		<mes03_beneficiario>0.00</mes03_beneficiario>
+		<mes04_beneficiario>0.00</mes04_beneficiario>
+		<mes05_beneficiario>0.00</mes05_beneficiario>
+		<mes06_beneficiario>0.00</mes06_beneficiario>
+		<mes07_beneficiario>0.00</mes07_beneficiario>
+		<mes08_beneficiario>0.00</mes08_beneficiario>
+		<mes09_beneficiario>0.00</mes09_beneficiario>
+		<mes10_beneficiario>0.00</mes10_beneficiario>
+		<mes11_beneficiario>0.00</mes11_beneficiario>
+		<mes12_beneficiario>0.00</mes12_beneficiario>
+	</curx>
+	<curx>
+		<ano_eje>2020</ano_eje>
+		<sec_ejec>001437</sec_ejec>
+		<sec_ejec2>001437</sec_ejec2>
+		<proyecto>223</proyecto>
+		<componente>04</componente>
+		<componente_nombre>MAYOR EFICIENCIA Y EFICACIA DE LAS INSTITUCIONES DEL SISTEMA DE ADMINISTRACIÓN DE JUSTICIA</componente_nombre>
+		<sub_componente>03</sub_componente>
+		<sub_componente_nombre>GESTIÓN DEL PROGRAMA</sub_componente_nombre>
+		<actividad>03</actividad>
+		<actividad_nombre>GESTIÓN DEL PROGRAMA</actividad_nombre>
+		<sub_actividad>03</sub_actividad>
+		<sub_actividad_nombre>GESTIÓN DEL PROGRAMA</sub_actividad_nombre>
+		<grupo_gasto>01</grupo_gasto>
+		<grupo_gasto_nombre>BIENES, OBRAS, SERVICIOS DISTINTO DE CONSULTORIA,CAPACITACION(O FORMACION) Y SER</grupo_gasto_nombre>
+		<categ_gasto>01</categ_gasto>
+		<categ_gasto_nombre/>
+		<elemento_gasto>01</elemento_gasto>
+		<elemento_gasto_nombre/>
+		<especifica_gasto>01</especifica_gasto>
+		<especifica_gasto_nombre>BIENES, OBRAS, SERVICIOS DE NO CONSULTORÍA, SERVICIO DE CONSULTORÍA, ENTRENAMIEN</especifica_gasto_nombre>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<sub_especifica_gasto_nombre>BIENES, OBRAS, SERVICIOS DE NO CONSULTORÍA, SERVICIO DE CONSULTORÍA, ENTRENAMIEN</sub_especifica_gasto_nombre>
+		<mes01_local>0.00</mes01_local>
+		<mes02_local>0.00</mes02_local>
+		<mes03_local>0.00</mes03_local>
+		<mes04_local>0.00</mes04_local>
+		<mes05_local>0.00</mes05_local>
+		<mes06_local>0.00</mes06_local>
+		<mes07_local>0.00</mes07_local>
+		<mes08_local>0.00</mes08_local>
+		<mes09_local>0.00</mes09_local>
+		<mes10_local>0.00</mes10_local>
+		<mes11_local>0.00</mes11_local>
+		<mes12_local>0.00</mes12_local>
+		<mes01_externo>0.00</mes01_externo>
+		<mes02_externo>0.00</mes02_externo>
+		<mes03_externo>0.00</mes03_externo>
+		<mes04_externo>0.00</mes04_externo>
+		<mes05_externo>0.00</mes05_externo>
+		<mes06_externo>0.00</mes06_externo>
+		<mes07_externo>0.00</mes07_externo>
+		<mes08_externo>0.00</mes08_externo>
+		<mes09_externo>0.00</mes09_externo>
+		<mes10_externo>0.00</mes10_externo>
+		<mes11_externo>0.00</mes11_externo>
+		<mes12_externo>0.00</mes12_externo>
+		<mes01_beneficiario>0.00</mes01_beneficiario>
+		<mes02_beneficiario>0.00</mes02_beneficiario>
+		<mes03_beneficiario>0.00</mes03_beneficiario>
+		<mes04_beneficiario>0.00</mes04_beneficiario>
+		<mes05_beneficiario>0.00</mes05_beneficiario>
+		<mes06_beneficiario>0.00</mes06_beneficiario>
+		<mes07_beneficiario>0.00</mes07_beneficiario>
+		<mes08_beneficiario>0.00</mes08_beneficiario>
+		<mes09_beneficiario>0.00</mes09_beneficiario>
+		<mes10_beneficiario>0.00</mes10_beneficiario>
+		<mes11_beneficiario>0.00</mes11_beneficiario>
+		<mes12_beneficiario>0.00</mes12_beneficiario>
+	</curx>
+	<curx>
+		<ano_eje>2020</ano_eje>
+		<sec_ejec>001437</sec_ejec>
+		<sec_ejec2>001437</sec_ejec2>
+		<proyecto>223</proyecto>
+		<componente>02</componente>
+		<componente_nombre>MEJORAMIENTO DE LA PRODUCCIÓN, DEL ANÁLISIS Y DEL USO DE LA INFORMACIÓN DEL SISTEMA DE ADMINISTRACIÓN DE JUSTICIA</componente_nombre>
+		<sub_componente>03</sub_componente>
+		<sub_componente_nombre>FORTALECIMIENTO DE LA GESTIÓN DE DESEMPEÑO DE LA JUNTA NACIONAL DE JUSTICIA</sub_componente_nombre>
+		<actividad>03</actividad>
+		<actividad_nombre>FORTALECIMIENTO DE LA GESTIÓN DE DESEMPEÑO DE LA JUNTA NACIONAL DE JUSTICIA</actividad_nombre>
+		<sub_actividad>03</sub_actividad>
+		<sub_actividad_nombre>FORTALECIMIENTO DE LA GESTIÓN DE DESEMPEÑO DE LA JUNTA NACIONAL DE JUSTICIA</sub_actividad_nombre>
+		<grupo_gasto>01</grupo_gasto>
+		<grupo_gasto_nombre>BIENES, OBRAS, SERVICIOS DISTINTO DE CONSULTORIA,CAPACITACION(O FORMACION) Y SER</grupo_gasto_nombre>
+		<categ_gasto>01</categ_gasto>
+		<categ_gasto_nombre/>
+		<elemento_gasto>01</elemento_gasto>
+		<elemento_gasto_nombre/>
+		<especifica_gasto>01</especifica_gasto>
+		<especifica_gasto_nombre>BIENES, OBRAS, SERVICIOS DE NO CONSULTORÍA, SERVICIO DE CONSULTORÍA, ENTRENAMIEN</especifica_gasto_nombre>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<sub_especifica_gasto_nombre>BIENES, OBRAS, SERVICIOS DE NO CONSULTORÍA, SERVICIO DE CONSULTORÍA, ENTRENAMIEN</sub_especifica_gasto_nombre>
+		<mes01_local>0.00</mes01_local>
+		<mes02_local>0.00</mes02_local>
+		<mes03_local>0.00</mes03_local>
+		<mes04_local>0.00</mes04_local>
+		<mes05_local>0.00</mes05_local>
+		<mes06_local>0.00</mes06_local>
+		<mes07_local>0.00</mes07_local>
+		<mes08_local>0.00</mes08_local>
+		<mes09_local>0.00</mes09_local>
+		<mes10_local>0.00</mes10_local>
+		<mes11_local>0.00</mes11_local>
+		<mes12_local>0.00</mes12_local>
+		<mes01_externo>0.00</mes01_externo>
+		<mes02_externo>0.00</mes02_externo>
+		<mes03_externo>0.00</mes03_externo>
+		<mes04_externo>0.00</mes04_externo>
+		<mes05_externo>0.00</mes05_externo>
+		<mes06_externo>0.00</mes06_externo>
+		<mes07_externo>0.00</mes07_externo>
+		<mes08_externo>0.00</mes08_externo>
+		<mes09_externo>0.00</mes09_externo>
+		<mes10_externo>0.00</mes10_externo>
+		<mes11_externo>0.00</mes11_externo>
+		<mes12_externo>0.00</mes12_externo>
+		<mes01_beneficiario>0.00</mes01_beneficiario>
+		<mes02_beneficiario>0.00</mes02_beneficiario>
+		<mes03_beneficiario>0.00</mes03_beneficiario>
+		<mes04_beneficiario>0.00</mes04_beneficiario>
+		<mes05_beneficiario>0.00</mes05_beneficiario>
+		<mes06_beneficiario>0.00</mes06_beneficiario>
+		<mes07_beneficiario>0.00</mes07_beneficiario>
+		<mes08_beneficiario>0.00</mes08_beneficiario>
+		<mes09_beneficiario>0.00</mes09_beneficiario>
+		<mes10_beneficiario>0.00</mes10_beneficiario>
+		<mes11_beneficiario>0.00</mes11_beneficiario>
+		<mes12_beneficiario>0.00</mes12_beneficiario>
+	</curx>
+	<curx>
+		<ano_eje>2020</ano_eje>
+		<sec_ejec>001437</sec_ejec>
+		<sec_ejec2>001437</sec_ejec2>
+		<proyecto>223</proyecto>
+		<componente>01</componente>
+		<componente_nombre>FORTALECIMIENTO DE LA INSTITUCIONALIDAD DEL SISTEMA DE ADMINISTRACIÓN DE JUSTICIA NO PENAL</componente_nombre>
+		<sub_componente>03</sub_componente>
+		<sub_componente_nombre>MEJORAMIENTO DE PROCESOS Y SISTEMAS DE INFORMACIÓN DE LA JUNTA NACIONAL DE JUSTICIA</sub_componente_nombre>
+		<actividad>03</actividad>
+		<actividad_nombre>MEJORAMIENTO DE PROCESOS Y SISTEMAS DE INFORMACIÓN DE LA JUNTA NACIONAL DE JUSTICIA</actividad_nombre>
+		<sub_actividad>03</sub_actividad>
+		<sub_actividad_nombre>MEJORAMIENTO DE PROCESOS Y SISTEMAS DE INFORMACIÓN DE LA JUNTA NACIONAL DE JUSTICIA</sub_actividad_nombre>
+		<grupo_gasto>01</grupo_gasto>
+		<grupo_gasto_nombre>BIENES, OBRAS, SERVICIOS DISTINTO DE CONSULTORIA,CAPACITACION(O FORMACION) Y SER</grupo_gasto_nombre>
+		<categ_gasto>01</categ_gasto>
+		<categ_gasto_nombre/>
+		<elemento_gasto>01</elemento_gasto>
+		<elemento_gasto_nombre/>
+		<especifica_gasto>01</especifica_gasto>
+		<especifica_gasto_nombre>BIENES, OBRAS, SERVICIOS DE NO CONSULTORÍA, SERVICIO DE CONSULTORÍA, ENTRENAMIEN</especifica_gasto_nombre>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<sub_especifica_gasto_nombre>BIENES, OBRAS, SERVICIOS DE NO CONSULTORÍA, SERVICIO DE CONSULTORÍA, ENTRENAMIEN</sub_especifica_gasto_nombre>
+		<mes01_local>0.00</mes01_local>
+		<mes02_local>0.00</mes02_local>
+		<mes03_local>0.00</mes03_local>
+		<mes04_local>0.00</mes04_local>
+		<mes05_local>0.00</mes05_local>
+		<mes06_local>0.00</mes06_local>
+		<mes07_local>0.00</mes07_local>
+		<mes08_local>0.00</mes08_local>
+		<mes09_local>0.00</mes09_local>
+		<mes10_local>0.00</mes10_local>
+		<mes11_local>0.00</mes11_local>
+		<mes12_local>0.00</mes12_local>
+		<mes01_externo>0.00</mes01_externo>
+		<mes02_externo>0.00</mes02_externo>
+		<mes03_externo>0.00</mes03_externo>
+		<mes04_externo>0.00</mes04_externo>
+		<mes05_externo>0.00</mes05_externo>
+		<mes06_externo>0.00</mes06_externo>
+		<mes07_externo>0.00</mes07_externo>
+		<mes08_externo>0.00</mes08_externo>
+		<mes09_externo>0.00</mes09_externo>
+		<mes10_externo>0.00</mes10_externo>
+		<mes11_externo>0.00</mes11_externo>
+		<mes12_externo>0.00</mes12_externo>
+		<mes01_beneficiario>0.00</mes01_beneficiario>
+		<mes02_beneficiario>0.00</mes02_beneficiario>
+		<mes03_beneficiario>0.00</mes03_beneficiario>
+		<mes04_beneficiario>0.00</mes04_beneficiario>
+		<mes05_beneficiario>0.00</mes05_beneficiario>
+		<mes06_beneficiario>0.00</mes06_beneficiario>
+		<mes07_beneficiario>0.00</mes07_beneficiario>
+		<mes08_beneficiario>0.00</mes08_beneficiario>
+		<mes09_beneficiario>0.00</mes09_beneficiario>
+		<mes10_beneficiario>0.00</mes10_beneficiario>
+		<mes11_beneficiario>0.00</mes11_beneficiario>
+		<mes12_beneficiario>0.00</mes12_beneficiario>
+	</curx>
+	<curx>
+		<ano_eje>2020</ano_eje>
+		<sec_ejec>001437</sec_ejec>
+		<sec_ejec2>001437</sec_ejec2>
+		<proyecto>223</proyecto>
+		<componente>01</componente>
+		<componente_nombre>FORTALECIMIENTO DE LA INSTITUCIONALIDAD DEL SISTEMA DE ADMINISTRACIÓN DE JUSTICIA NO PENAL</componente_nombre>
+		<sub_componente>02</sub_componente>
+		<sub_componente_nombre>MEJORAMIENTO DE PROCESOS Y SISTEMAS DE INFORMACIÓN DEL TRIBUNAL CONSTITUCIONAL</sub_componente_nombre>
+		<actividad>02</actividad>
+		<actividad_nombre>MEJORAMIENTO DE PROCESOS Y SISTEMAS DE INFORMACIÓN DEL TRIBUNAL CONSTITUCIONAL</actividad_nombre>
+		<sub_actividad>02</sub_actividad>
+		<sub_actividad_nombre>MEJORAMIENTO DE PROCESOS Y SISTEMAS DE INFORMACIÓN DEL TRIBUNAL CONSTITUCIONAL</sub_actividad_nombre>
+		<grupo_gasto>01</grupo_gasto>
+		<grupo_gasto_nombre>BIENES, OBRAS, SERVICIOS DISTINTO DE CONSULTORIA,CAPACITACION(O FORMACION) Y SER</grupo_gasto_nombre>
+		<categ_gasto>01</categ_gasto>
+		<categ_gasto_nombre/>
+		<elemento_gasto>01</elemento_gasto>
+		<elemento_gasto_nombre/>
+		<especifica_gasto>01</especifica_gasto>
+		<especifica_gasto_nombre>BIENES, OBRAS, SERVICIOS DE NO CONSULTORÍA, SERVICIO DE CONSULTORÍA, ENTRENAMIEN</especifica_gasto_nombre>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<sub_especifica_gasto_nombre>BIENES, OBRAS, SERVICIOS DE NO CONSULTORÍA, SERVICIO DE CONSULTORÍA, ENTRENAMIEN</sub_especifica_gasto_nombre>
+		<mes01_local>0.00</mes01_local>
+		<mes02_local>0.00</mes02_local>
+		<mes03_local>0.00</mes03_local>
+		<mes04_local>0.00</mes04_local>
+		<mes05_local>0.00</mes05_local>
+		<mes06_local>0.00</mes06_local>
+		<mes07_local>0.00</mes07_local>
+		<mes08_local>0.00</mes08_local>
+		<mes09_local>0.00</mes09_local>
+		<mes10_local>0.00</mes10_local>
+		<mes11_local>0.00</mes11_local>
+		<mes12_local>0.00</mes12_local>
+		<mes01_externo>0.00</mes01_externo>
+		<mes02_externo>0.00</mes02_externo>
+		<mes03_externo>0.00</mes03_externo>
+		<mes04_externo>0.00</mes04_externo>
+		<mes05_externo>0.00</mes05_externo>
+		<mes06_externo>0.00</mes06_externo>
+		<mes07_externo>0.00</mes07_externo>
+		<mes08_externo>0.00</mes08_externo>
+		<mes09_externo>0.00</mes09_externo>
+		<mes10_externo>0.00</mes10_externo>
+		<mes11_externo>0.00</mes11_externo>
+		<mes12_externo>12527.00</mes12_externo>
+		<mes01_beneficiario>0.00</mes01_beneficiario>
+		<mes02_beneficiario>0.00</mes02_beneficiario>
+		<mes03_beneficiario>0.00</mes03_beneficiario>
+		<mes04_beneficiario>0.00</mes04_beneficiario>
+		<mes05_beneficiario>0.00</mes05_beneficiario>
+		<mes06_beneficiario>0.00</mes06_beneficiario>
+		<mes07_beneficiario>0.00</mes07_beneficiario>
+		<mes08_beneficiario>0.00</mes08_beneficiario>
+		<mes09_beneficiario>0.00</mes09_beneficiario>
+		<mes10_beneficiario>0.00</mes10_beneficiario>
+		<mes11_beneficiario>0.00</mes11_beneficiario>
+		<mes12_beneficiario>0.00</mes12_beneficiario>
+	</curx>
+	<curx>
+		<ano_eje>2020</ano_eje>
+		<sec_ejec>001437</sec_ejec>
+		<sec_ejec2>001437</sec_ejec2>
+		<proyecto>223</proyecto>
+		<componente>02</componente>
+		<componente_nombre>MEJORAMIENTO DE LA PRODUCCIÓN, DEL ANÁLISIS Y DEL USO DE LA INFORMACIÓN DEL SISTEMA DE ADMINISTRACIÓN DE JUSTICIA</componente_nombre>
+		<sub_componente>01</sub_componente>
+		<sub_componente_nombre>FORTALECIMIENTO DE MECANISMOS DEL MONITOREO, CONTROL Y GESTIÓN DEL DESEMPEÑO DE LAS INSTITUCIONES DEL SISTEMA DE ADMINISTRACIÓN DE JUSTICIA</sub_componente_nombre>
+		<actividad>01</actividad>
+		<actividad_nombre>FORTALECIMIENTO DE MECANISMOS DEL MONITOREO, CONTROL Y GESTIÓN DEL DESEMPEÑO DE LAS INSTITUCIONES DEL SISTEMA DE ADMINISTRACIÓN DE JUSTICIA</actividad_nombre>
+		<sub_actividad>01</sub_actividad>
+		<sub_actividad_nombre>FORTALECIMIENTO DE MECANISMOS DEL MONITOREO, CONTROL Y GESTIÓN DEL DESEMPEÑO DE LAS INSTITUCIONES DEL SISTEMA DE ADMINISTRACIÓN DE JUSTICIA</sub_actividad_nombre>
+		<grupo_gasto>01</grupo_gasto>
+		<grupo_gasto_nombre>BIENES, OBRAS, SERVICIOS DISTINTO DE CONSULTORIA,CAPACITACION(O FORMACION) Y SER</grupo_gasto_nombre>
+		<categ_gasto>01</categ_gasto>
+		<categ_gasto_nombre/>
+		<elemento_gasto>01</elemento_gasto>
+		<elemento_gasto_nombre/>
+		<especifica_gasto>01</especifica_gasto>
+		<especifica_gasto_nombre>BIENES, OBRAS, SERVICIOS DE NO CONSULTORÍA, SERVICIO DE CONSULTORÍA, ENTRENAMIEN</especifica_gasto_nombre>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<sub_especifica_gasto_nombre>BIENES, OBRAS, SERVICIOS DE NO CONSULTORÍA, SERVICIO DE CONSULTORÍA, ENTRENAMIEN</sub_especifica_gasto_nombre>
+		<mes01_local>0.00</mes01_local>
+		<mes02_local>0.00</mes02_local>
+		<mes03_local>0.00</mes03_local>
+		<mes04_local>0.00</mes04_local>
+		<mes05_local>0.00</mes05_local>
+		<mes06_local>0.00</mes06_local>
+		<mes07_local>0.00</mes07_local>
+		<mes08_local>0.00</mes08_local>
+		<mes09_local>0.00</mes09_local>
+		<mes10_local>0.00</mes10_local>
+		<mes11_local>0.00</mes11_local>
+		<mes12_local>0.00</mes12_local>
+		<mes01_externo>0.00</mes01_externo>
+		<mes02_externo>0.00</mes02_externo>
+		<mes03_externo>0.00</mes03_externo>
+		<mes04_externo>0.00</mes04_externo>
+		<mes05_externo>0.00</mes05_externo>
+		<mes06_externo>0.00</mes06_externo>
+		<mes07_externo>0.00</mes07_externo>
+		<mes08_externo>0.00</mes08_externo>
+		<mes09_externo>0.00</mes09_externo>
+		<mes10_externo>0.00</mes10_externo>
+		<mes11_externo>0.00</mes11_externo>
+		<mes12_externo>0.00</mes12_externo>
+		<mes01_beneficiario>0.00</mes01_beneficiario>
+		<mes02_beneficiario>0.00</mes02_beneficiario>
+		<mes03_beneficiario>0.00</mes03_beneficiario>
+		<mes04_beneficiario>0.00</mes04_beneficiario>
+		<mes05_beneficiario>0.00</mes05_beneficiario>
+		<mes06_beneficiario>0.00</mes06_beneficiario>
+		<mes07_beneficiario>0.00</mes07_beneficiario>
+		<mes08_beneficiario>0.00</mes08_beneficiario>
+		<mes09_beneficiario>0.00</mes09_beneficiario>
+		<mes10_beneficiario>0.00</mes10_beneficiario>
+		<mes11_beneficiario>0.00</mes11_beneficiario>
+		<mes12_beneficiario>0.00</mes12_beneficiario>
+	</curx>
+	<curx>
+		<ano_eje>2020</ano_eje>
+		<sec_ejec>001437</sec_ejec>
+		<sec_ejec2>001437</sec_ejec2>
+		<proyecto>223</proyecto>
+		<componente>01</componente>
+		<componente_nombre>FORTALECIMIENTO DE LA INSTITUCIONALIDAD DEL SISTEMA DE ADMINISTRACIÓN DE JUSTICIA NO PENAL</componente_nombre>
+		<sub_componente>01</sub_componente>
+		<sub_componente_nombre>DISEÑO E IMPLEMENTACIÓN DEL EJE EN EL PODER JUDICIAL</sub_componente_nombre>
+		<actividad>01</actividad>
+		<actividad_nombre>DISEÑO E IMPLEMENTACIÓN DEL EJE EN EL PODER JUDICIAL</actividad_nombre>
+		<sub_actividad>01</sub_actividad>
+		<sub_actividad_nombre>DISEÑO E IMPLEMENTACIÓN DEL EJE EN EL PODER JUDICIAL</sub_actividad_nombre>
+		<grupo_gasto>01</grupo_gasto>
+		<grupo_gasto_nombre>BIENES, OBRAS, SERVICIOS DISTINTO DE CONSULTORIA,CAPACITACION(O FORMACION) Y SER</grupo_gasto_nombre>
+		<categ_gasto>01</categ_gasto>
+		<categ_gasto_nombre/>
+		<elemento_gasto>01</elemento_gasto>
+		<elemento_gasto_nombre/>
+		<especifica_gasto>01</especifica_gasto>
+		<especifica_gasto_nombre>BIENES, OBRAS, SERVICIOS DE NO CONSULTORÍA, SERVICIO DE CONSULTORÍA, ENTRENAMIEN</especifica_gasto_nombre>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<sub_especifica_gasto_nombre>BIENES, OBRAS, SERVICIOS DE NO CONSULTORÍA, SERVICIO DE CONSULTORÍA, ENTRENAMIEN</sub_especifica_gasto_nombre>
+		<mes01_local>0.00</mes01_local>
+		<mes02_local>0.00</mes02_local>
+		<mes03_local>0.00</mes03_local>
+		<mes04_local>0.00</mes04_local>
+		<mes05_local>0.00</mes05_local>
+		<mes06_local>0.00</mes06_local>
+		<mes07_local>0.00</mes07_local>
+		<mes08_local>0.00</mes08_local>
+		<mes09_local>0.00</mes09_local>
+		<mes10_local>0.00</mes10_local>
+		<mes11_local>0.00</mes11_local>
+		<mes12_local>0.00</mes12_local>
+		<mes01_externo>0.00</mes01_externo>
+		<mes02_externo>0.00</mes02_externo>
+		<mes03_externo>0.00</mes03_externo>
+		<mes04_externo>0.00</mes04_externo>
+		<mes05_externo>0.00</mes05_externo>
+		<mes06_externo>0.00</mes06_externo>
+		<mes07_externo>0.00</mes07_externo>
+		<mes08_externo>0.00</mes08_externo>
+		<mes09_externo>0.00</mes09_externo>
+		<mes10_externo>0.00</mes10_externo>
+		<mes11_externo>0.00</mes11_externo>
+		<mes12_externo>0.00</mes12_externo>
+		<mes01_beneficiario>0.00</mes01_beneficiario>
+		<mes02_beneficiario>0.00</mes02_beneficiario>
+		<mes03_beneficiario>0.00</mes03_beneficiario>
+		<mes04_beneficiario>0.00</mes04_beneficiario>
+		<mes05_beneficiario>0.00</mes05_beneficiario>
+		<mes06_beneficiario>0.00</mes06_beneficiario>
+		<mes07_beneficiario>0.00</mes07_beneficiario>
+		<mes08_beneficiario>0.00</mes08_beneficiario>
+		<mes09_beneficiario>0.00</mes09_beneficiario>
+		<mes10_beneficiario>0.00</mes10_beneficiario>
+		<mes11_beneficiario>0.00</mes11_beneficiario>
+		<mes12_beneficiario>0.00</mes12_beneficiario>
+	</curx>
+	<curx>
+		<ano_eje>2020</ano_eje>
+		<sec_ejec>001437</sec_ejec>
+		<sec_ejec2>001437</sec_ejec2>
+		<proyecto>223</proyecto>
+		<componente>02</componente>
+		<componente_nombre>MEJORAMIENTO DE LA PRODUCCIÓN, DEL ANÁLISIS Y DEL USO DE LA INFORMACIÓN DEL SISTEMA DE ADMINISTRACIÓN DE JUSTICIA</componente_nombre>
+		<sub_componente>02</sub_componente>
+		<sub_componente_nombre>FORTALECIMIENTO DE LA GESTIÓN DE DESEMPEÑO DEL TRIBUNAL CONSTITUCIONAL</sub_componente_nombre>
+		<actividad>02</actividad>
+		<actividad_nombre>FORTALECIMIENTO DE LA GESTIÓN DE DESEMPEÑO DEL TRIBUNAL CONSTITUCIONAL</actividad_nombre>
+		<sub_actividad>02</sub_actividad>
+		<sub_actividad_nombre>FORTALECIMIENTO DE LA GESTIÓN DE DESEMPEÑO DEL TRIBUNAL CONSTITUCIONAL</sub_actividad_nombre>
+		<grupo_gasto>01</grupo_gasto>
+		<grupo_gasto_nombre>BIENES, OBRAS, SERVICIOS DISTINTO DE CONSULTORIA,CAPACITACION(O FORMACION) Y SER</grupo_gasto_nombre>
+		<categ_gasto>01</categ_gasto>
+		<categ_gasto_nombre/>
+		<elemento_gasto>01</elemento_gasto>
+		<elemento_gasto_nombre/>
+		<especifica_gasto>01</especifica_gasto>
+		<especifica_gasto_nombre>BIENES, OBRAS, SERVICIOS DE NO CONSULTORÍA, SERVICIO DE CONSULTORÍA, ENTRENAMIEN</especifica_gasto_nombre>
+		<sub_especifica_gasto>0001</sub_especifica_gasto>
+		<sub_especifica_gasto_nombre>BIENES, OBRAS, SERVICIOS DE NO CONSULTORÍA, SERVICIO DE CONSULTORÍA, ENTRENAMIEN</sub_especifica_gasto_nombre>
+		<mes01_local>0.00</mes01_local>
+		<mes02_local>0.00</mes02_local>
+		<mes03_local>0.00</mes03_local>
+		<mes04_local>0.00</mes04_local>
+		<mes05_local>0.00</mes05_local>
+		<mes06_local>0.00</mes06_local>
+		<mes07_local>0.00</mes07_local>
+		<mes08_local>0.00</mes08_local>
+		<mes09_local>0.00</mes09_local>
+		<mes10_local>0.00</mes10_local>
+		<mes11_local>0.00</mes11_local>
+		<mes12_local>0.00</mes12_local>
+		<mes01_externo>0.00</mes01_externo>
+		<mes02_externo>0.00</mes02_externo>
+		<mes03_externo>0.00</mes03_externo>
+		<mes04_externo>0.00</mes04_externo>
+		<mes05_externo>0.00</mes05_externo>
+		<mes06_externo>0.00</mes06_externo>
+		<mes07_externo>0.00</mes07_externo>
+		<mes08_externo>0.00</mes08_externo>
+		<mes09_externo>0.00</mes09_externo>
+		<mes10_externo>0.00</mes10_externo>
+		<mes11_externo>0.00</mes11_externo>
+		<mes12_externo>0.00</mes12_externo>
+		<mes01_beneficiario>0.00</mes01_beneficiario>
+		<mes02_beneficiario>0.00</mes02_beneficiario>
+		<mes03_beneficiario>0.00</mes03_beneficiario>
+		<mes04_beneficiario>0.00</mes04_beneficiario>
+		<mes05_beneficiario>0.00</mes05_beneficiario>
+		<mes06_beneficiario>0.00</mes06_beneficiario>
+		<mes07_beneficiario>0.00</mes07_beneficiario>
+		<mes08_beneficiario>0.00</mes08_beneficiario>
+		<mes09_beneficiario>0.00</mes09_beneficiario>
+		<mes10_beneficiario>0.00</mes10_beneficiario>
+		<mes11_beneficiario>0.00</mes11_beneficiario>
+		<mes12_beneficiario>0.00</mes12_beneficiario>
+	</curx>
+</VFPData>

@@ -1,0 +1,466 @@
+#DEFINE HKEY_CLASSES_ROOT           -2147483648  && BITSET(0,31)
+#DEFINE HKEY_CURRENT_USER           -2147483647  && BITSET(0,31)+1
+#DEFINE HKEY_LOCAL_MACHINE          -2147483646  && BITSET(0,31)+2
+#DEFINE HKEY_USERS                  -2147483645  && BITSET(0,31)+3
+
+lcRutaSystem = RutaSystem()
+SET PATH TO fORMS, PRGS, menus, graficos, include, data , clases, reports, &lcRutaSystem, xml
+
+SET CLASSLIB TO manage   ADDITIVE 
+SET CLASSLIB TO blowfish ADDITIVE 
+SET CLASSLIB TO registry ADDITIVE 
+SET CLASSLIB TO cbsearch ADDITIVE 
+***
+SET CLASSLIB TO sfbase	 ADDITIVE
+SET CLASSLIB TO sfmanage ADDITIVE
+SET CLASSLIB TO sfrutina ADDITIVE
+
+
+***
+SET DATE TO BRITISH
+SET CENTURY ON 
+SET SAFETY OFF
+SET TALK OFF
+SET PROCEDURE TO rutinas ADDITIVE 
+SET PROCEDURE TO pdflistener ADDITIVE 
+SET PROCEDURE TO extend4 ADDITIVE 
+SET PROCEDURE TO actualiza_certificados_bomberos ADDITIVE 
+SET PROCEDURE TO carga_ejecucion_mpp ADDITIVE 
+SET PROCEDURE TO foxypreviewercaller ADDITIVE 
+SET PROCEDURE TO appendxlsx ADDITIVE 
+SET PROCEDURE TO carga_modificacion ADDITIVE 
+SET MULTILOCKS ON
+SET HELP OFF
+SET ECHO OFF 
+SET NOTIFY OFF 
+SET STATUS BAR OFF 
+SET ESCAPE OFF 
+
+
+DO DeclaraTodo
+DO check_ini
+pArchivo = lcRutaSystem + '\'+"FoxyPreviewer.App"
+SET PROCEDURE TO LOCFILE(pArchivo) ADDITIVE 
+
+
+DO CHECK_ESTRUCTURA
+SET EXCLUSIVE OFF 
+SET DELETED ON 
+
+***** Lee y actualiza el valor en el Registro de Windows ***********************
+
+cValue = []
+oRegistry = CREATEOBJECT("Registry")
+lnResult = oRegistry.GetRegKey("kr_done1",@cValue,"Software\Notepad++",HKEY_CURRENT_USER)
+
+cvalue = STR(INT(VAL(cvalue))+1)
+oRegistry.setregkey("kr_done1",cvalue,"Software\Notepad++",HKEY_CURRENT_USER)
+
+
+xRutaActual = FULLPATH(CURDIR())
+SET DEFAULT TO (xRutaActual)
+xRutaCert = gcRutaCert+'CERT'
+TRY 
+	OPEN DATABASE (xRutaCert) SHARED 
+CATCH 
+	=MESSAGEBOX('La ruta es incorrecta. Verifique' ,64,'Aviso')
+	gcRutaOk = .F.
+	RETURN 
+ENDTRY 
+
+TRY 
+	xRutaSiaf = gcRutaSiaf+'SIAF'
+	OPEN DATABASE (xRutaSiaf) SHARED 
+CATCH 
+	=MESSAGEBOX('La ruta SIAF es incorrecta. Verifique' ,64,'Aviso')
+	gcRutaOk = .F.
+	RETURN 
+ENDTRY 
+gcEncriptaDesencripta = CREATEOBJECT("blowfish")
+gcLLave = 'LOBO'
+DO CASE 
+	CASE INLIST(gcsec_ejec ,'000117','000198','001235')
+		gcSubNivel01 = 'Centro de Costo'
+		gcSubNivel02 = 'SubCentro Costo'
+		gcAbrevSubNivel01 = 'CC'
+		gcAbrevSubNivel02 = 'SCC'
+	CASE gcsec_ejec = '001089'	
+		gcSubNivel01 = 'Centro de Costo'
+		gcSubNivel02 = 'Tareas'
+		gcAbrevSubNivel01 = 'CC'
+		gcAbrevSubNivel02 = 'Tarea'
+	CASE gcsec_ejec = '001293'	
+		gcSubNivel01 = 'Centro de Costo'
+		gcSubNivel02 = 'GPR'
+		gcAbrevSubNivel01 = 'CC'
+		gcAbrevSubNivel02 = 'GPR'
+	OTHERWISE 	
+		gcSubNivel01 = 'Centro de Costo'
+		gcSubNivel02 = 'SubCentro Costo'
+		gcAbrevSubNivel01 = 'CC'
+		gcAbrevSubNivel02 = 'SCC'
+
+ENDCASE 
+
+
+SET SYSMENU OFF
+ON SHUTDOWN DO SalirSistema IN inicio.prg
+
+
+DO SETEAR_PANTALLA		
+
+limiteAccesos = 30
+
+IF gcRutaOk THEN 
+	IF lnResult <> 2 THEN 
+		
+		DO FORM f_userlog TO lIngreso
+		
+		IF lIngreso
+		
+			oSiafEnv = CREATEOBJECT( 'SiafEnviron' )
+			oSiafEditWin = CREATEOBJECT( 'FormManager' )
+			oSiafRutina	= CREATEOBJECT( 'SiafRutina' ) && Clase con los metodos de rutina		
+
+			TRY 	
+				llOk = .F.
+				IF gcActivo = 1  THEN 
+					lcCodigoEncriptado = INT(VAL((gcEncriptaDesencripta.DecodificarBlowFish(gcClave,gcllave))))		
+					DO CASE 
+						CASE ALLTRIM(gcuserid) = 'ADMINIST'
+							IF !INLIST(gcsec_ejec,'000117','000198','001089') THEN 
+								DO menu_administrador.mpr
+							ELSE 
+								DO menu_administrador_minsa.mpr							
+							ENDIF 
+							llOk = .T.
+						CASE ALLTRIM(gcuserid) = 'MATRIX'						
+							DO menu_master.mpr					
+							llOk = .T.
+						OTHERWISE 
+							IF VAL(cvalue) > LimiteAccesos AND lcCodigoEncriptado <> INT(val(gcsec_ejec)) THEN 
+								=MESSAGEBOX('Ya supero el periodo de prueba del Sistema',64,'Aviso')
+								EXIT 
+								llOk = .F.
+							ENDIF 
+					ENDCASE 
+					IF !llOk THEN 
+						DO Crea_Menu
+						IF lcCodigoEncriptado <> INT(VAL(gcSec_ejec)) THEN 
+							_screen.Caption =  'Versión de Prueba --> Solo dispone de '+PADL(limiteAccesos - VAL(cvalue),2,'0')+' accesos al Sistema'
+						ENDIF 
+					ENDIF 
+					DO coloca_barra
+*					DO carga_proveedor_siaf
+				    READ EVENTS
+				 ENDIF
+			CATCH TO loException
+				DO ShowError IN rutina_error WITH loException
+			FINALLY
+				CLEAR EVENTS 
+				ON SHUTDOWN
+				RELEASE ALL
+				DEACTIVATE WIND ALL
+				CLEAR WINDOW
+				CLEAR ALL
+				CLOSE ALL
+				close data
+				set sysmenu to default
+				SET CLASSLIB TO 
+				* WAIT WINDOW 'ESTE BLOQUE SIEMPRE SE EJECUTA'
+				* AQUI SE PUEDEN LIBERAR VARIABLES, CERRAR TABLAS, SALIR DEL FORMULARIO
+			ENDTRY				
+		ENDIF
+	ELSE
+		=MESSAGEBOX('Copia no valida del Sistema',64,'Aviso')
+	ENDIF 
+ENDIF 
+
+ON SHUTDOWN
+RELEASE ALL
+DEACTIVATE WIND ALL
+CLEAR WINDOW
+CLEAR ALL
+CLOSE ALL
+close data
+clear
+set sysmenu to default
+SET CLASSLIB TO 
+RETURN
+
+
+
+
+
+
+
+PROCEDURE Crea_Menu
+
+
+	USE cert!menu_niv01                      IN 0 SHARED AGAIN ORDER TAG id_menu
+	USE cert!menu_niv02                      IN 0 SHARED AGAIN ORDER TAG MENU_NIV2
+	USE cert!menu_niv03                      IN 0 SHARED AGAIN ORDER TAG id_menu
+	 
+	SET SYSMENU TO
+	SET SYSMENU AUTOMATIC
+	 
+	 
+	p_user = RTRIM(p_user) 
+	lnContador=0 
+	SELECT menu_niv01
+	 SCAN ALL
+	  SCATTER MEMVAR 
+	  IF m.ano_eje+RTRIM(m.CUSER_ID) <> gcano_eje+p_user THEN 
+	   LOOP 
+	  ENDIF 
+	  IF DELETED() THEN 
+	   LOOP 
+	  ENDIF 
+	  IF m.visible  <> 'S' THEN 
+	   LOOP 
+	  ENDIF  
+	    
+	    lcPad   = '_Niv01_' + m.id_menuniv01
+	    lcPromp = IIF(m.estado='A',"'","'\") + " " + ALLTRIM(m.des_menuniv1) + "'"
+	    
+	      Define Pad &lcPad Of _MsysMenu Prompt &lcPromp  COLOR SCHEME 3   
+	   
+	   SELECT menu_niv02
+	   SELECT * FROM menu_niv02 ;
+	    WHERE ano_eje = gcano_eje;
+	    and RTRIM(cuser_id) == p_user ; 
+	    AND visible ="S" ;
+	    and id_menuniv01 = m.id_menuniv01 ;
+	    INTO CURSOR Cur_menu_niv02 ORDER BY 1,2,3,4 
+	    
+	    
+	    SELECT Cur_menu_niv02
+	    COUNT ALL TO lnCountOpc
+	    GO TOP            
+	    SELECT menu_niv01
+	 
+	                lnContador=lnContador+1
+	                lcNamePopup ='_Niv01_' + m.id_menuniv01 + '_' +PADL(lnContador,2,'0')
+	                lcOnPad     ='_Niv01_' + m.id_menuniv01
+	                
+	              On Pad  &lcOnPad  Of _MsysMenu Activate Popup  &lcNamePopup
+	              Define Popup  &lcNamePopup   Margin Relative Shadow Color Scheme 4
+	                        i=1
+	                        SELECT Cur_menu_niv02
+	                        SCAN WHILE i<=lnCountOpc
+	                        i=i+1
+	                        =SEEK(gcano_eje+p_user + m.id_menuniv01+Cur_menu_niv02.ID_MENUNIV02,"menu_niv02","MENU_NIV2")
+	 
+	                         lcNumBar   =PADL(INT(i),2,'0')
+	                         
+	                         lcPrompBar =IIF(menu_niv02.estado="A","'","'\") + ALLTRIM(menu_niv02.des_menuniv2)  + "'"
+	                         Define Bar &lcNumBar  of  &lcNamePopup   Prompt &lcPrompBar 
+	                         
+	                         IF menu_niv02.tipo_nodoniv2="S" THEN                          
+	                             
+	                                SELECT * FROM menu_niv03 ;
+	                                 WHERE ano_eje = gcano_eje ;
+	                                 and RTRIM(cuser_id) == p_user ; 
+	                                 and id_menuniv01 = m.id_menuniv01 ;
+	                                 AND id_menuniv02 = menu_niv02.id_menuniv02 ;
+	                                 AND visible = "S" ;
+	                                 INTO CURSOR Cur_menu_niv03 ORDER BY 1,2,3,4,5
+	                                 SELECT Cur_menu_niv03
+	                                    COUNT ALL TO lnCountOpc3                                  
+	                             
+	                             lcNamePopup2 = lcNamePopup + "_" + padl(INT(i),2,'0')
+								  lcNumBar =PADL(INT(i),2,'0')
+	                              ON BAR  &lcNumBar  of   &lcNamePopup  ACTIVATE POPUP  &lcNamePopup2
+	                              DEFINE POPUP  &lcNamePopup2   MARGIN RELATIVE SHADOW COLOR SCHEME 4
+	                              SELECT Cur_menu_niv03
+	                              GO TOP 
+	                              i3=1
+	                              SCAN WHILE i3<=lnCountOpc3
+	                              
+	                                    =SEEK(gcano_eje+p_user + m.id_menuniv01+menu_niv02.id_menuniv02+Cur_menu_niv03.ID_MENUNIV03,"menu_niv03","id_menu")
+	                                    i3=i3+1
+										lcNumBar = PADL(INT(i3),2,'0')
+	                                    lcPromp = IIF(menu_niv03.estado="A","'","'\")  + ALLTRIM(menu_niv03.des_menuniv3)  + "'"
+	                                    Define Bar  &lcNumBar   of  &lcNamePopup2   Prompt  &lcPromp 
+	                                    lcMenuOpcion = " " + ALLTRIM(menu_niv03.ejecutaniv3) 
+	                                    ON SELECTION BAR  &lcNumBar   of  &lcNamePopup2 &lcMenuOpcion                                                                                   
+	                              ENDSCAN  
+	                         ELSE                         
+	                             lcNumBar = PADL(INT(i),2,'0')
+	                             lcMenuOpcion = ' ' + ALLTRIM(menu_niv02.ejecutaniv2) 
+	                              ON SELECTION BAR  &lcNumBar   of  &lcNamePopup &lcMenuOpcion  
+	                         ENDIF 
+	                        ENDSCAN 
+	                        SELECT menu_niv01
+	 
+		ENDSCAN 
+	 
+		USE IN menu_niv01 
+		USE IN menu_niv02
+		USE IN menu_niv03
+		 
+		SET SYSMENU  SAVE 
+
+
+ENDPROC 
+
+
+
+********************
+PROCEDURE DeclaraTodo
+********************
+	PUBLIC gcAno_Eje,gcSec_Ejec, gcTipo_Unidad,GCTIPO_UE, gcOldCaption,gcOldClassLib,gcOldDir,gcOldEscape,;
+	gcOldPath,gcOldTalk,gcMonto,gcFileIni  ,gcSession , gcOpcRpt, gcFiltroPca, gcMes, gcRutaSiaf, gcRutaCert, glmuestra_fuente_agregada, gcnom_fuente ,gcnom_fuente_abrev,;
+	gcCab_mod, gcId_rep, gcVersion ,gcTipo_reporte, gcclaveusr, gcuserid, gcEncriptaDesencripta, gcLlave, gces_supervisor, gcClave, gcActivo,;
+	gcSubNivel01, gcSubNivel02, gcAbrevSubNivel01, gcAbrevSubNivel02, gchoja_calculo,P_USER, gcRutaOk, gcRutaSystem, gcfuncion_entidad, gcmes_apertura, gcmes_cierre, gcIgv,;
+	gcRutaInterfase, gcNombre_ejecutora, gcSector, gcPliego, gcSec_ejec_pliego
+	
+	#include ..\include\CERT.h
+
+	*-- Instrucciones DECLARE DLL para leer/escribir en archivos INI privados-
+	DECLARE INTEGER GetPrivateProfileString IN Win32API  AS GetPrivStr ;
+		String cSection, String cKey, String cDefault, String @cBuffer, ;
+		Integer nBufferSize, String cINIFile
+
+	DECLARE INTEGER WritePrivateProfileString IN Win32API AS WritePrivStr ;
+		String cSection, String cKey, String cValue, String cINIFile
+	gcMes=""
+	gcFiltroPca=""	
+	gcOpcRpt='EST_V'	
+	gcOldCaption=""
+	gcOldDir=CURDIR()
+	gcOldPath=fullpath(CURDIR())
+	gcOldEscape="ON"
+	gcOldTalk="ON"
+	gcFileIni = 'SIGPRES.INI'
+	gcSession = "PARAMETROS DEL SIGPRES"
+	gcnom_fuente = 'RUBRO'
+	gcnom_fuente_abrev = 'RB'
+	glmuestra_fuente_agregada = .T.
+	gcTipo_Unidad='E'
+	GCTIPO_UE='01'
+	gcMonto = ''
+	gcVersion = '4.0'
+	gcCab_mod = 'SIAF REPORTER' 
+	gcuserid = ''
+	gcClave = ''
+	gcActivo= 0
+	gchoja_calculo = 'xls'
+	gcRutaOk = .T.
+	gcfuncion_entidad = '1'
+	gcmes_apertura = '01'
+	gcmes_cierre = '13'
+	gcIgv = 0.18
+	gcRutaInterfase = ''
+
+ENDPROC
+
+PROCEDURE SETEAR_PANTALLA
+	*** SETEANDO DATOS DE LA PANTALLA
+	gcNombre_ejecutora = ''
+	USE siaf!ejecutora	IN 0 
+	IF SEEK(gcano_eje+gcsec_ejec,'ejecutora','sec_ejec') THEN 
+		gcNombre_ejecutora  = 	ejecutora.nombre 
+		gcSector			= 	ejecutora.sector
+		gcPliego			= 	ejecutora.pliego
+		gcsec_ejec_pliego   = 	ejecutora.sec_ejec
+		
+	ENDIF 
+	USE IN ejecutora
+	_screen.Icon 		= 'bmpPrincipal.ICO'
+	_screen.Caption 	= 'SIAF REPORTER ' +gcversion+space(2)+CHR(91)+gcsec_ejec+CHR(93)+SPACE(2)+gcNombre_ejecutora
+	_screen.BorderStyle = 3
+	_screen.Closable = .T.
+	_SCREEN.MaxButton =.T.
+	_SCREEN.MinButton = .T.
+	_SCREEN.CONTROLBOX=.T.
+	_screen.AlwaysOnTop = .F. 
+	_screen.Picture = 'graficos\fondo.jpg'
+	_screen.WindowState = 2
+
+ENDPROC 
+
+PROCEDURE CHECK_INI
+lcArchivo = 'SIGPRES.INI'
+IF FILE('&lcArchivo.')
+	lnFileHandle = FOPEN(lcArchivo,2)
+	DO WHILE !FEOF(lnFileHandle)
+		lcString = ALLTRIM(FGETS(lnFileHandle, 254))
+		lnSize = FSEEK(lnFileHandle,0,1)
+		DO CASE
+			CASE 'SEC_EJEC' $ UPPER(lcString)
+				gcsec_ejec = SUBSTR(lcString,AT('=',lcString)+1)
+				gcsec_ejec = decodificar_simple(gcsec_ejec,'LOBO')
+				gcsec_ejec = PADL(gcsec_ejec,6,'0')
+			CASE 'RUTASIAF' $ UPPER(lcString)
+				gcRutaSiaf = SUBSTR(lcString,AT('=',lcString)+1)
+			CASE 'RUTACERT' $ UPPER(lcString)
+				gcRutaCert = SUBSTR(lcString,AT('=',lcString)+1)
+			CASE 'RUTAINTERFASE' $ UPPER(lcString)
+				gcRutaInterfase = SUBSTR(lcString,AT('=',lcString)+1)
+			CASE 'TIPO_REPORTE' $ UPPER(lcString)
+				gcTipo_reporte  = SUBSTR(lcString,AT('=',lcString)+1)
+			CASE 'ANO_EJE' $ UPPER(lcString)
+				gcano_eje = SUBSTR(lcString,AT('=',lcString)+1)
+			CASE 'CLAVE' $ UPPER(lcString)
+				gcClave = SUBSTR(lcString,AT('=',lcString)+1)
+		ENDCASE
+	ENDDO
+	=FCLOSE(lnFileHandle)
+ELSE
+	MESSAGEBOX('No Existe el Archivo de Configuración.',0+64,'Aviso')
+ENDIF
+ENDPROC 
+
+PROCEDURE CHECK_ESTRUCTURA
+
+lcruta	= SYS(5)+SYS(2003)
+
+DIMENSION ladirectory(13)
+
+STORE lcruta+'\Listados' TO ladirectory(1)
+STORE lcruta+'\XML' 	 TO ladirectory(2)
+
+FOR i=1 TO 2	
+IF !DIRECTORY(ladirectory(i)) THEN 
+		MKDIR &ladirectory(i).
+	ENDIF 
+ENDFOR 
+
+ENDPROC 
+
+PROCEDURE SalirSistema
+	CLEAR EVENTS
+	RELEASE ALL 
+	RETURN
+ENDPROC 
+
+
+FUNCTION RutaSystem
+	PRIVATE lcRutaSystem
+	#DEFINE MAX_PATH 260
+	*!* Declare the GetWindowsDirectory function from the WIN32API
+	DECLARE INTEGER GetWindowsDirectory IN kernel32.dll ;
+	    STRING @WinBuffer, INTEGER WinBuffLen
+	lcWinBuffer = SPACE(MAX_PATH)
+	*!* Get the path to the windows directory
+	=GetWindowsDirectory(@lcWinBuffer, MAX_PATH)
+	*!* Parse the null terminator from the returned string
+	lcWinBuffer = LEFT(lcWinBuffer, AT(CHR(0), lcWinBuffer) - 1)
+
+	*!* Declare the GetSystemDirectory function from the WIN32API
+	DECLARE INTEGER GetSystemDirectory IN kernel32.dll ;
+	    STRING @SysBuffer, INTEGER SysBufferLen
+	lcSysBuffer = SPACE(MAX_PATH)
+	*!* Get the path to the system directory
+	=GetSystemDirectory(@lcSysBuffer, MAX_PATH)
+	*!* Parse the null terminator from the returned string
+	lcSysBuffer = LEFT(lcSysBuffer, AT(CHR(0), lcSysBuffer) - 1)
+
+*	? "Windows Directory = " + lcWinBuffer
+*	? "System Directory  = " + lcSysBuffer
+	lcRutaSystem = lcSysBuffer
+*	CLEAR DLLS
+	RETURN lcRutaSystem
+
+ENDFUNC

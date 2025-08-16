@@ -1,0 +1,2 @@
+REPLACE  Ejecucion_Mpp.certificado WITH Ejecucion_Mpp.certificado + Cur_Ejecucion_Mpp.certificado,  ELSE
+Error in line 89: Syntax error.
