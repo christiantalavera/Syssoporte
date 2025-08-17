@@ -1,0 +1,106 @@
+USE SIAF!nota_modificatoria_det 		IN 0 ORDER tag mpnotadetp
+USE siaf!nota_modificatoria_ing			IN 0 ORDER tag mpnotaingp
+USE siaf!nota_modificatoria_sec			IN 0 ORDER tag mp_notasec
+USE siaf!gasto							IN 0 ORDER tag MP_GASTOP
+
+*-- Actualizamos nota_modificatoria_det en gasto
+SELECT nota_modificatoria_det
+=SEEK(gcano_eje + gcsec_ejec)
+SCAN REST WHILE ano_eje = gcano_eje AND sec_ejec = gcsec_ejec
+	lcLlaveGasto = ano_eje + sec_ejec + origen + fuente_financ + ;
+		tipo_recurso + sec_func + id_clasificador
+	*
+	lcLlaveSec = ano_eje + sec_ejec + sec_ejec2 + sec_nota
+	SELECT nota_modificatoria_sec
+	=SEEK(lcLlaveSec)
+	SCAN REST WHILE ano_eje + sec_ejec + sec_ejec2 + sec_nota = lcLlaveSec
+		nMonto_A  = nota_modificatoria_det.monto_a  * IIF(secuencia='0001',1,-1)
+		nMonto_De = nota_modificatoria_det.monto_de * IIF(secuencia='0001',1,-1)
+		*
+		nMonto_A  = IIF(estado='R' AND estado_envio='X', 0, nMonto_A)
+		nMonto_De = IIF(estado='R' AND estado_envio='X', 0, nMonto_De)
+		*
+		IF !SEEK(lcLlaveGasto, 'gasto', 'mp_gastop') THEN
+			INSERT INTO gasto (ano_eje, sec_ejec, ;
+				origen, fuente_financ, tipo_recurso, sec_func, ;
+				categ_gasto, grupo_gasto, modalidad_gasto, elemento_gasto, id_clasificador) VALUES ;
+				(gcano_eje, gcsec_ejec, ;
+				nota_modificatoria_det.origen, nota_modificatoria_det.fuente_financ, ;
+				nota_modificatoria_det.tipo_recurso, nota_modificatoria_det.sec_func, ;
+				nota_modificatoria_det.categ_gasto, nota_modificatoria_det.grupo_gasto, ;
+				nota_modificatoria_det.modalidad_gasto, nota_modificatoria_det.elemento_gasto, ;
+				nota_modificatoria_det.id_clasificador)
+		ENDIF
+		IF estado_envio = 'A' THEN
+			REPLACE modificacion WITH modificacion + nMonto_A - nMonto_De IN gasto
+		ELSE
+			IF secuencia = '0001' THEN
+				REPLACE monto_a_solicitado  WITH monto_a_solicitado  + nMonto_A  ,;
+					monto_de_solicitado WITH monto_de_solicitado + nMonto_De  ;
+					IN gasto
+			ENDIF
+		ENDIF
+	ENDSCAN
+	SELECT nota_modificatoria_det
+	*-- Suma para termómetro
+	* Pendiente para AS *
+ENDSCAN
+*--
+*-- Actualizamos nota_modificatoria_ing en ingreso
+SELECT nota_modificatoria_ing
+=SEEK(gcano_eje + gcsec_ejec)
+SCAN REST WHILE ano_eje = gcano_eje AND sec_ejec = gcsec_ejec
+	lcLlaveIngreso = ano_eje + sec_ejec + origen + fuente_financ + ;
+		tipo_recurso + id_clasificador
+	*
+	lcLlaveSec = ano_eje + sec_ejec + sec_ejec2 + sec_nota
+	SELECT nota_modificatoria_sec
+	=SEEK(lcLlaveSec)
+	SCAN REST WHILE ano_eje + sec_ejec + sec_ejec2 + sec_nota = lcLlaveSec
+		IF !SEEK(lcLlaveIngreso, 'ingreso', 'mpingresop') THEN
+			INSERT INTO ingreso (ano_eje, sec_ejec, ;
+				origen, fuente_financ, tipo_recurso, ;
+				clase_ingreso, tipo_ingreso, sub_tipo_ingreso, elemento_ingreso, id_clasificador) VALUES ;
+				(gcano_eje, gcsec_ejec, ;
+				nota_modificatoria_ing.origen, nota_modificatoria_ing.fuente_financ, ;
+				nota_modificatoria_ing.tipo_recurso, nota_modificatoria_ing.clase_ingreso, ;
+				nota_modificatoria_ing.tipo_ingreso, nota_modificatoria_ing.sub_tipo_ingreso, ;
+				nota_modificatoria_ing.elemento_ingreso, id_clasificador)
+		ENDIF
+		*
+		nMonto_A  = nota_modificatoria_ing.monto_a  * IIF(nota_modificatoria_sec.secuencia='0001',1,-1)
+		nMonto_De = nota_modificatoria_ing.monto_de * IIF(nota_modificatoria_sec.secuencia='0001',1,-1)
+		*
+		nMonto_A  = IIF(estado='R' and estado_envio='X',0,nMonto_A)
+		nMonto_De = IIF(estado='R' and estado_envio='X',0,nMonto_De)
+		*
+		IF nota_modificatoria_sec.estado_envio = 'A' THEN
+			REPLACE modificacion WITH modificacion + nMonto_A - nMonto_De IN ingreso
+		ELSE
+			IF nota_modificatoria_sec.secuencia = '0001' THEN
+				REPLACE monto_a_solicitado  WITH monto_a_solicitado  + nMonto_A  ,;
+					monto_de_solicitado WITH monto_de_solicitado + nMonto_De  ;
+					IN ingreso
+			ENDIF
+		ENDIF
+	ENDSCAN
+	SELECT nota_modificatoria_ing
+	*-- Suma para termómetro
+	* Pendiente pa AS *
+ENDSCAN
+
+
+DO cierra_tablas
+
+PROCEDURE cierra_tablas
+ DIMENSION aTablas(1)
+   nTablas = AUSED(aTablas)
+
+   IF nTablas > 0 
+  FOR EACH oTabla IN aTablas
+     SELECT (oTabla)
+     USE 
+  ENDFOR 
+   ENDIF
+
+ENDPROC 

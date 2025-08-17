@@ -1,0 +1,189 @@
+<?xml version = "1.0" encoding="Windows-1252" standalone="yes"?>
+<VFPData>
+	<xsd:schema id="VFPData" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="VFPData" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="log_app" minOccurs="0" maxOccurs="unbounded">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="dfecha" type="xsd:dateTime"/>
+								<xsd:element name="cerrorinfo">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2147483647"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+				<xsd:anyAttribute namespace="http://www.w3.org/XML/1998/namespace" processContents="lax"/>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<log_app>
+		<dfecha>2020-12-19T11:23:26</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1960
+  LineNo: 0
+  Message: Redefinición no válida de la variable LLOK.
+  Procedure: init
+  Detalles: LLOK
+  StackLevel: 4
+  LineContents: SELECT cur_reg 
+
+  Comments:</cerrorinfo>
+	</log_app>
+	<log_app>
+		<dfecha>2021-01-21T11:57:04</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1733
+  LineNo: 397
+  Message: Class definition WORD.APPLICATION is not found.
+  Procedure: declaratodo
+  Detalles: WORD.APPLICATION
+  StackLevel: 3
+  LineContents: oWord = CreateObject('Word.Application')
+  Comments:</cerrorinfo>
+	</log_app>
+	<log_app>
+		<dfecha>2021-01-21T15:04:01</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1733
+  LineNo: 397
+  Message: Class definition WORD.APPLICATION is not found.
+  Procedure: declaratodo
+  Detalles: WORD.APPLICATION
+  StackLevel: 2
+  LineContents: oWord = CreateObject('Word.Application')
+  Comments:</cerrorinfo>
+	</log_app>
+	<log_app>
+		<dfecha>2021-01-21T15:09:10</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1733
+  LineNo: 398
+  Message: Class definition WORD.APPLICATION is not found.
+  Procedure: declaratodo
+  Detalles: WORD.APPLICATION
+  StackLevel: 2
+  LineContents: oWord = CreateObject('Word.Application')
+  Comments:</cerrorinfo>
+	</log_app>
+	<log_app>
+		<dfecha>2021-01-21T15:58:43</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1733
+  LineNo: 397
+  Message: Class definition WORD.APPLICATION is not found.
+  Procedure: declaratodo
+  Detalles: WORD.APPLICATION
+  StackLevel: 2
+  LineContents: oWord = CreateObject('Word.Application')
+  Comments:</cerrorinfo>
+	</log_app>
+	<log_app>
+		<dfecha>2021-01-21T16:07:13</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1733
+  LineNo: 396
+  Message: Class definition WORD.APPLICATION is not found.
+  Procedure: declaratodo
+  Detalles: WORD.APPLICATION
+  StackLevel: 2
+  LineContents: oWord = CreateObject('Word.Application')
+  Comments:</cerrorinfo>
+	</log_app>
+	<log_app>
+		<dfecha>2021-02-28T15:24:33</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 11
+  LineNo: 20
+  Message: Function argument value, type, or count is invalid.
+  Procedure: actualiza_menu
+  Detalles: 
+  StackLevel: 3
+  LineContents: p_user = RTRIM(p_user)
+  Comments:</cerrorinfo>
+	</log_app>
+	<log_app>
+		<dfecha>2021-02-28T15:27:18</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 11
+  LineNo: 0
+  Message: El valor, tipo o número de argumentos no es válido para la función.
+  Procedure: click
+  Detalles: 
+  StackLevel: 2
+  LineContents: 
+  Comments:</cerrorinfo>
+	</log_app>
+	<log_app>
+		<dfecha>2021-10-26T17:49:20</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 11
+  LineNo: 0
+  Message: El valor, tipo o número de argumentos no es válido para la función.
+  Procedure: actualiza_menu
+  Detalles: 
+  StackLevel: 3
+  LineContents: "S"
+  Comments:</cerrorinfo>
+	</log_app>
+	<log_app>
+		<dfecha>2023-07-15T13:49:09</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 0
+  Message: No se encuentra la variable 'GLES_ETEEPS'.
+  Procedure: init
+  Detalles: GLES_ETEEPS
+  StackLevel: 3
+  LineContents: SELECT cRegCla
+
+  Comments:</cerrorinfo>
+	</log_app>
+	<log_app>
+		<dfecha>2023-07-15T13:55:38</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 12
+  LineNo: 0
+  Message: No se encuentra la variable 'GLES_ETEOPD'.
+  Procedure: refresh
+  Detalles: GLES_ETEOPD
+  StackLevel: 3
+  LineContents: SELECT cDL
+
+  Comments:</cerrorinfo>
+	</log_app>
+	<log_app>
+		<dfecha>2023-11-26T17:42:09</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 3
+  LineNo: 0
+  Message: El archivo ya está en uso.
+  Procedure: beforeopentables
+  Detalles: 
+  StackLevel: 6
+  LineContents: 
+  Comments:</cerrorinfo>
+	</log_app>
+	<log_app>
+		<dfecha>2023-11-26T17:54:42</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 3
+  LineNo: 0
+  Message: El archivo ya está en uso.
+  Procedure: beforeopentables
+  Detalles: 
+  StackLevel: 6
+  LineContents: 
+  Comments:</cerrorinfo>
+	</log_app>
+	<log_app>
+		<dfecha>2023-11-26T17:55:39</dfecha>
+		<cerrorinfo>Exception Object 0:  ErrorNo: 3  LineNo: 1  Message: File is in use.  Procedure: beforeopentables  Detalles:   StackLevel: 6  LineContents: USE siaf!ctb_control			order tag precierre  Comments: </cerrorinfo>
+	</log_app>
+</VFPData>

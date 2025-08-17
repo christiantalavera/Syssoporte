@@ -1,0 +1,15 @@
+USE siaf!expediente	IN 0 AGAIN ORDER tag expediente
+USE siaf!ejecutora	IN 0 AGAIN ORDER tag sec_ejec
+
+SELECT MAX(expediente) as expediente FROM expediente WHERE ano_eje= gcano_eje AND sec_ejec = gcsec_sec INTO CURSOR curMax
+lcMaxExpediente = curMax.expediente
+SELECT ejecutora
+SEEK gcano_eje+gcsec_ejec
+IF FOUND() THEN 
+	IF VAL(lcMaxExpediente)>VAL(ejecutora.expediente) THEN 
+		REPLACE ejecutora.expediente WITH PADL(INT(VAL(lcMaxExpediente))+1,10,'0')
+	ENDIF 
+ENDIF 
+
+USE IN expediente
+USE IN ejecutora

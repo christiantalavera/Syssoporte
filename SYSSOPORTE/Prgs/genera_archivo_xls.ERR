@@ -1,0 +1,20 @@
+USE IN gasto
+Error in line 516: Statement is not in a procedure.
+USE IN meta
+Error in line 517: Statement is not in a procedure.
+USE IN fuente_financ
+Error in line 518: Statement is not in a procedure.
+USE IN maestro_clasificador
+Error in line 519: Statement is not in a procedure.
+USE IN especifica_det
+Error in line 520: Statement is not in a procedure.
+USE IN subgenerica_det
+Error in line 521: Statement is not in a procedure.
+USE IN expediente
+Error in line 522: Statement is not in a procedure.
+USE IN expediente_fase
+Error in line 523: Statement is not in a procedure.
+USE IN expediente_secuencia
+Error in line 524: Statement is not in a procedure.
+U
+Error in line 525: Unrecognized command verb.

@@ -1,0 +1,39 @@
+USE siaf!persona 		IN 0 AGAIN ORDER tag ruc 
+USE siaf!padron_persona	IN 0 again ORDER tag padron
+IF !FILE('proveedor_siaf') THEN 
+	USE IN persona
+	USE IN padron_persona
+	RETURN 
+ENDIF 
+USE cert!proveedor_siaf IN 0 AGAIN ORDER tag ruc
+
+SELECT distinct tipo_id, ruc , nombre as proveedor, SUBSTR(ruc,3,8) as numero_documento FROM persona  WHERE tipo_id = '1' AND estado = 'A' AND LEN(ruc)=11  INTO CURSOR cur_persona
+SELECT cur_persona
+SCAN all
+	SCATTER MEMVAR 
+	m.tipo_documento = '01'
+	IF !SEEK(m.tipo_id+m.ruc,'proveedor_siaf','ruc') THEN 
+		INSERT INTO proveedor_siaf FROM MEMVAR 
+	ENDIF 
+ENDSCAN 
+
+
+SELECT proveedor_siaf
+SCAN ALL 
+	SCATTER MEMVAR 
+	IF SEEK(m.tipo_documento+m.numero_documento,'padron_persona','padron') THEN 
+		REPLACE apellido_paterno WITH padron_persona.apellido_paterno
+		REPLACE apellido_materno WITH padron_persona.apellido_materno
+		REPLACE nombre			 WITH padron_persona.nombre
+		REPLACE sexo			 WITH IIF(!EMPTY(padron_persona.sexo),ICASE(padron_persona.sexo = '1','M',padron_persona.sexo = '2','F'),'')
+		REPLACE fecha_nacimiento WITH padron_persona.fecha_nacimiento
+		REPLACE direccion		 WITH padron_persona.direccion
+	ENDIF 
+	
+ENDSCAN 
+
+
+USE IN cur_persona
+USE IN persona
+USE IN proveedor_siaf
+USE IN padron_persona

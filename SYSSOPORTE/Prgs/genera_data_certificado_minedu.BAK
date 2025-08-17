@@ -1,0 +1,364 @@
+
+SET TALK OFF
+SET DATE TO british
+SET CENTURY ON
+SET DELETED ON
+lctipoarchivo=1
+lcsec_ejec = gcsec_ejec
+lnnivelcadena=8
+lnnivelclasif= 6
+lcNombreArchivo = 'LISTADOS\'+gcsec_ejec+'_Data_certificado_'+DTOS(DATE())
+&&
+USE siaf!ejecutora 					IN 0 SHARED ALIAS ejecutora 			AGAIN ORDER TAG sec_ejec
+USE siaf!sector 					IN 0 SHARED ALIAS sector 				AGAIN ORDER TAG sector
+USE siaf!pliego 					IN 0 SHARED ALIAS pliego 				AGAIN ORDER TAG pliego
+USE siaf!certificado			 	IN 0 SHARED ALIAS certi 				AGAIN ORDER TAG CERTI
+USE siaf!certificado_fase		 	IN 0 SHARED ALIAS certi_fase 			AGAIN ORDER TAG CERTI_FASE
+USE siaf!certificado_secuencia	 	IN 0 SHARED ALIAS certi_secu 			AGAIN ORDER TAG CERTI_SEC
+USE siaf!certificado_clasif		 	IN 0 SHARED ALIAS certi_clas 			AGAIN ORDER TAG CERTI_CLAS
+USE siaf!certificado_meta		 	IN 0 SHARED ALIAS certi_meta 			AGAIN ORDER TAG CERTI_META
+USE siaf!nota_modificatoria_sec 	IN 0 SHARED ALIAS nota_sec 				AGAIN ORDER TAG mp_notasec
+USE siaf!fuente_financ 				IN 0 SHARED ALIAS fuente_financ 		AGAIN ORDER TAG fuente_fin
+USE siaf!fuente_financ_agregada		IN 0 SHARED ALIAS fuente_financ_agre	AGAIN ORDER TAG fte_agreg
+USE siaf!componente_nombre 			IN 0 SHARED ALIAS componente_nombre 	AGAIN ORDER TAG componente
+USE siaf!meta 						IN 0 SHARED ALIAS meta 					AGAIN ORDER TAG meta
+USE siaf!tipo_transaccion  			IN 0 SHARED ALIAS tipo_transaccion      AGAIN ORDER TAG tipotrn
+USE siaf!generica		  			IN 0 SHARED ALIAS generica      		AGAIN ORDER TAG generica
+USE siaf!subgenerica	  			IN 0 SHARED ALIAS subgenerica      		AGAIN ORDER TAG sgenerica
+USE siaf!subgenerica_det  			IN 0 SHARED ALIAS subgenerica_det  		AGAIN ORDER TAG sgenericad
+USE siaf!especifica		  			IN 0 SHARED ALIAS especifica  			AGAIN ORDER TAG especif
+USE siaf!especifica_det	  			IN 0 SHARED ALIAS especifica_det		AGAIN ORDER TAG especifdet
+USE siaf!maestro_documento			IN 0 SHARED ALIAS maestro_documento		AGAIN ORDER TAG COD_DOC
+USE siaf!mes 						IN 0 SHARED ALIAS mes 					AGAIN ORDER TAG mes
+USE siaf!departamento 				IN 0 SHARED ALIAS departamento			AGAIN ORDER TAG departamen
+USE siaf!provincia					IN 0 SHARED ALIAS provincia				AGAIN ORDER TAG provincia
+USE siaf!mensaje_error				IN 0 SHARED ALIAS mensaje_error			AGAIN ORDER TAG mensaje
+USE siaf!funcion				 	IN 0 SHARED AGAIN ORDER TAG funcion
+USE siaf!programa_nombre		 	IN 0 SHARED AGAIN ORDER TAG programa
+USE siaf!sub_programa_nombre 	 	IN 0 SHARED AGAIN ORDER TAG sub_prog
+USE siaf!programa_ppto_nombre 	 	IN 0 SHARED AGAIN ORDER TAG progppto_n
+USE siaf!act_proy_nombre		 	IN 0 SHARED AGAIN ORDER TAG act_proy
+USE siaf!finalidad 				 	IN 0 SHARED AGAIN ORDER TAG finalidad
+USE siaf!maestro_clasificador	 	IN 0 SHARED AGAIN ORDER TAG idclasif
+USE siaf!categoria_gasto		 	IN 0 SHARED AGAIN ORDER TAG categoria
+USE cert!matriz_minedu				IN 0 SHARED again ORDER tag sec_func
+
+SELECT meta
+SET RELATION TO ano_eje+sec_ejec+sec_func INTO matriz_minedu ADDITIVE 
+
+
+CREATE CURSOR curgen(	ano_eje					c(04)	,;
+						sec_ejec				c(06)	,;
+						certificado				c(10)	,;
+						tipo_certificado		c(01)	,;
+						tipo_operacion			c(02)	,;
+						secuencia				c(04)	,;
+						correlativo				c(04)	,;
+						fuente_financ			c(02)	,;
+						etapa					c(01)	,;
+						es_compromiso			c(01)	,;
+						ind_anulacion			c(01)	,;
+						cod_doc					c(03)	,;
+						num_doc					c(20)	,;
+						fecha_doc				d		,;
+						mes_eje					c(02)	,;
+						ind_certificacion		c(01)	,;
+						tipo_registro			c(01)	,;
+						fecha_bd_oracle			d		,;
+						id_clasificador			c(07)	,;
+						sec_func				c(04)	,;
+						estado_registro			c(01)	,;
+						estado_envio			c(01)	,;
+						estado_reg_nombre		c(20)	,;
+						categ_gasto				c(01)	,;
+						tipo_transaccion		c(01)	,;
+						generica				c(01)	,;
+						subgenerica				c(02)	,;
+						subgenerica_det			c(02)	,;
+						especifica				c(02)	,;
+						especifica_det			c(02)	,;
+						funcion					c(02)	,;
+						programa				c(03)	,;
+						sub_programa			c(04)	,;
+						programa_ppto			c(04)	,;
+						act_proy				c(07)	,;
+						componente				c(07)	,;
+						meta					c(05)	,;
+						finalidad				c(07)	,;
+						monto					n(19,2) ,;
+						glosa					c(250)	,;
+						denominacion_tipo_organo		c(250),;
+						denominacion_estructura_padre	c(250),;
+						codigo							c(010),;
+						descripcion						c(250),;
+						denominacion_unidad_operativa	c(250),;
+						denominacion_actividad			c(250))
+
+INDEX ON ano_eje+sec_ejec+certificado+secuencia TAG ORD01
+INDEX ON ano_eje+sec_ejec+certificado+secuencia+correlativo+sec_func+fuente_financ+programa_ppto+act_proy+componente+funcion+programa+sub_programa+meta+finalidad;
+		+categ_gasto+tipo_transaccion+generica+subgenerica+subgenerica_det+especifica+especifica_det+tipo_registro TAG ORD02
+
+
+
+CREATE CURSOR CurRpteP(	ano_eje					c(04)	,;
+						sec_ejec				c(06)	,;
+						sector					c(02)	,;
+						sector_nombre			c(150)	,;
+						pliego					c(03)	,;
+						pliego_nombre			c(150)	,;
+						ejecutora				c(03)	,;
+						ejecutora_nombre		c(150)	,;
+						departamento			c(02)	,;
+						departamento_nombre		c(150)	,;
+						provincia				c(02)	,;
+						provincia_nombre		c(150)	,;
+						certificado				c(10)	,;
+						tipo_certificado		c(01)	,;
+						tipo_operacion			c(02)	,;
+						secuencia				c(04)	,;
+						correlativo				c(04)	,;
+						fuente_financ			c(02)	,;
+						etapa					c(01)	,;
+						es_compromiso			c(01)	,;
+						ind_anulacion			c(01)	,;
+						cod_doc					c(03)	,;
+						num_doc					c(20)	,;
+						fecha_doc				d		,;
+						mes_eje					c(02)	,;
+						ind_certificacion		c(01)	,;
+						tipo_registro			c(01)	,;
+						fecha_bd_oracle			d		,;
+						id_clasificador			c(07)	,;
+						sec_func				c(04)	,;
+						estado_registro			c(01)	,;
+						estado_envio			c(01)	,;
+						estado_reg_nombre		c(20)	,;
+						categ_gasto				c(01)	,;
+						tipo_transaccion		c(01)	,;
+						generica				c(01)	,;
+						subgenerica				c(02)	,;
+						subgenerica_det			c(02)	,;
+						especifica				c(02)	,;
+						especifica_det			c(02)	,;
+						clasificador_gasto		c(15)	,;
+						funcion					c(02)	,;
+						programa				c(03)	,;
+						sub_programa			c(04)	,;
+						programa_ppto			c(04)	,;
+						act_proy				c(07)	,;
+						componente				c(07)	,;
+						meta					c(05)	,;
+						finalidad				c(07)	,;
+						finalidad_nombre		c(150)	,;
+						monto					n(19,2) ,;
+						glosa					c(250)  ,;
+						denominacion_tipo_organo		c(250),;
+						denominacion_estructura_padre	c(250),;
+						codigo							c(010),;
+						descripcion						c(250),;
+						denominacion_unidad_operativa	c(250),;
+						denominacion_actividad			c(250))
+						
+						
+SELECT CurRpteP						
+INDEX ON ano_eje+sec_ejec+certificado+secuencia TAG ORD01
+INDEX ON ano_eje+sec_ejec+certificado+secuencia+correlativo+sec_func+fuente_financ+programa_ppto+act_proy+componente+funcion+programa+sub_programa+meta+finalidad;
+		+categ_gasto+tipo_transaccion+generica+subgenerica+subgenerica_det+especifica+especifica_det+tipo_registro TAG ORD02
+		
+*
+SELECT certi_secu
+SET ORDER TO TAG certi_sec
+SEEK gcano_eje+gcsec_ejec
+SCAN WHILE ano_eje+sec_ejec = gcano_eje+gcsec_ejec
+	
+	=SEEK(certi_secu.ano_eje+certi_secu.sec_ejec+certi_secu.certificado,'certi','certi')
+	=SEEK(certi_secu.ano_eje+certi_secu.sec_ejec+certi_secu.certificado+certi_secu.secuencia,'certi_fase','certi_fase')
+	
+	mes_doc = PADL(month(certi_secu.fecha_doc),2,"0")
+	IF certi_fase.es_compromiso <> 'N'
+		LOOP
+	ENDIF
+	IF certi_fase.ind_anulacion <> 'N'
+		LOOP
+	ENDIF
+	IF certi_secu.estado_registro <> 'A'
+		LOOP
+	ENDIF
+
+	IF certi_secu.ind_certificacion <> 'S'
+		IF !INLIST(certi_secu.tipo_registro,'R','H','T')
+			LOOP
+		ENDIF 
+	ENDIF
+
+	DO CASE
+		CASE certi_secu.estado_registro = 'A'
+			 estado_reg_nom				= 'APROBADO'
+	ENDCASE
+
+	SELECT certi_clas
+	SEEK certi_secu.ano_eje+certi_secu.sec_ejec+certi_secu.certificado+certi_secu.secuencia+certi_secu.correlativo
+	SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo = ;
+		certi_secu.ano_eje+certi_secu.sec_ejec+certi_secu.certificado+certi_secu.secuencia+certi_secu.correlativo
+		
+		=SEEK(gcano_eje+certi_clas.id_clasificador,'maestro_clasificador')
+		wclasificador = maestro_clasificador.clasificador
+		
+		lctt 	= SUBSTR(wclasificador,1,1)
+		lcge 	= SUBSTR(wclasificador,2,1)
+		lcsge 	= SUBSTR(wclasificador,3,2)
+		lcsged 	= SUBSTR(wclasificador,5,2)
+		lces 	= SUBSTR(wclasificador,7,2)
+		lcesp 	= SUBSTR(wclasificador,9,2)
+
+		=SEEK(gcano_eje+lctt+lcge+lcsge+lcsged,'subgenerica_det','sgenericad')
+		lccateg = subgenerica_det.categoria_gasto
+		
+		SELECT certi_meta
+		SEEK certi_secu.ano_eje+certi_secu.sec_ejec+certi_secu.certificado+certi_secu.secuencia+certi_secu.correlativo+certi_clas.id_clasificador 
+		SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo+id_clasificador = ;
+		certi_secu.ano_eje+certi_secu.sec_ejec+certi_secu.certificado+certi_secu.secuencia+certi_secu.correlativo+certi_clas.id_clasificador
+	
+			=SEEK(gcano_eje+gcsec_ejec+certi_meta.sec_func,'meta')
+			
+			lcmonto = certi_meta.monto_nacional + certi_meta.monto_nacional_ajuste
+			*-			
+			INSERT INTO curgen VALUES(	certi.ano_eje					,;
+										certi.sec_ejec					,;
+										certi_fase.certificado			,;
+										certi.tipo_certificado			,;
+										certi.tipo_operacion			,;
+										certi_fase.secuencia			,;
+										certi_secu.correlativo			,;
+										certi_fase.fuente_financ		,;
+										certi_fase.etapa				,;
+										certi_fase.es_compromiso		,;
+										certi_fase.ind_anulacion		,;
+										certi_secu.cod_doc				,;
+										certi_secu.num_doc				,;
+										certi_secu.fecha_doc			,;
+										mes_doc							,;
+										certi_secu.ind_certificacion	,;
+										certi_secu.tipo_registro		,;
+										certi_secu.fecha_bd_oracle		,;
+										certi_clas.id_clasificador		,;
+										meta.sec_func					,;
+										certi_secu.estado_registro		,;
+										certi_secu.estado_envio			,;
+										estado_reg_nom					,;
+										lccateg															,;
+										IIF(lnnivelclasif>=1,lctt,'')									,;
+										IIF(lnnivelclasif>=2,lcge,'')									,;
+										IIF(lnnivelclasif>=3,lcsge,'')									,;
+										IIF(lnnivelclasif>=4,lcsged,'')									,;
+										IIF(lnnivelclasif>=5,lces,'')									,;
+										IIF(lnnivelclasif= 6,lcesp,'')									,;
+										IIF(lnnivelcadena>=5  ,meta.funcion,'')		,;
+										IIF(lnnivelcadena>=6  ,meta.programa,'') 	,;
+										IIF(lnnivelcadena>=7  ,meta.sub_programa,''),;
+										IIF(lnnivelcadena>=2  ,meta.programa_ppto,''),;
+										IIF(lnnivelcadena>=3  ,meta.act_proy,'') 	,;
+										IIF(lnnivelcadena>=4  ,meta.componente,'')	,;
+										IIF(lnnivelcadena=8 ,meta.meta,'')								,;
+										IIF(lnnivelcadena=8 ,meta.finalidad,'')							,;
+										lcmonto															,;
+										certi_fase.glosa 												,;
+										matriz_minedu.denominacion_tipo_organo							,;
+										matriz_minedu.denominacion_estructura_padre						,;
+										matriz_minedu.codigo											,;
+										matriz_minedu.descripcion										,;
+										matriz_minedu.denominacion_unidad_operativa						,;
+										matriz_minedu.denominacion_actividad							)
+
+		ENDSCAN
+	ENDSCAN
+ENDSCAN
+*
+
+
+&&
+SELECT ejecutora
+SET RELATION TO ano_eje+sector 			INTO sector
+SET RELATION TO ano_eje+sector+pliego 	INTO pliego 		ADDITIVE
+SET RELATION TO departamento 			INTO departamento 	ADDITIVE
+SET RELATION TO departamento+provincia 	INTO provincia 		ADDITIVE
+
+&&
+SELECT curgen
+GO TOP 
+SET ORDER TO ORD02
+SET RELATION TO ano_eje+sec_ejec 																			INTO ejecutora
+SET RELATION TO ano_eje+'1'+fuente_financ 																	INTO fuente_financ 			ADDITIVE
+SET RELATION TO ano_eje+sec_ejec+sec_func 																	INTO meta 					ADDITIVE
+SET RELATION TO ano_eje+funcion 																			INTO funcion				ADDITIVE
+SET RELATION TO ano_eje+programa 																			INTO programa_nombre		ADDITIVE
+SET RELATION TO ano_eje+sub_programa 																		INTO sub_programa_nombre	ADDITIVE
+SET RELATION TO ano_eje+programa_ppto																		INTO programa_ppto_nombre	ADDITIVE
+SET RELATION TO ano_eje+act_proy 																			INTO act_proy_nombre		ADDITIVE
+SET RELATION TO ano_eje+componente 																			INTO componente_nombre		ADDITIVE
+SET RELATION TO ano_eje+tipo_transaccion																	INTO tipo_transaccion		ADDITIVE
+SET RELATION TO ano_eje+tipo_transaccion+generica															INTO generica  		     	ADDITIVE
+SET RELATION TO ano_eje+tipo_transaccion+generica+subgenerica												INTO subgenerica	     	ADDITIVE
+SET RELATION TO ano_eje+tipo_transaccion+generica+subgenerica+subgenerica_det								INTO subgenerica_det     	ADDITIVE
+SET RELATION TO ano_eje+tipo_transaccion+generica+subgenerica+subgenerica_det+especifica					INTO especifica    			ADDITIVE
+SET RELATION TO ano_eje+tipo_transaccion+generica+subgenerica+subgenerica_det+especifica+especifica_det		INTO especifica_det    		ADDITIVE
+SET RELATION TO ano_eje+finalidad																			INTO finalidad				ADDITIVE 
+SET RELATION TO cod_doc																						INTO maestro_documento		ADDITIVE
+SET RELATION TO ano_eje+categ_gasto																			INTO categoria_gasto		ADDITIVE
+SET RELATION TO mes_eje 				INTO mes		ADDITIVE
+GO TOP
+*
+
+SELECT curgen
+SCAN ALL 
+	SCATTER MEMVAR 
+	m.sector  					= ejecutora.sector
+	m.sector_nombre				= sector.nombre
+	m.pliego					= ejecutora.pliego
+	m.pliego_nombre				= pliego.nombre
+	m.ejecutora					= ejecutora.ejecutora
+	m.ejecutora_nombre			= ejecutora.nombre
+	m.departamento				= ejecutora.departamento
+	m.departamento_nombre 		= departamento.nombre
+	m.provincia					= ejecutora.provincia
+	m.provincia_nombre			= provincia.nombre
+	m.finalidad_nombre			= finalidad.nombre
+	m.clasificador_gasto    	= especifica_det.tipo_transaccion+'.'+especifica_det.generica+'.'+especifica_det.subgenerica+'.'+especifica_det.subgenerica_det+'.'+especifica_det.especifica+'.'+especifica_det.especifica_det
+	
+	
+	INSERT INTO CurRpteP FROM MEMVAR 
+ENDSCAN 
+
+
+DO ejecutar
+DO cierra_tablas
+
+
+
+PROCEDURE cierra_tablas
+ DIMENSION aTablas(1)
+   nTablas = AUSED(aTablas)
+
+   IF nTablas > 0 
+  FOR EACH oTabla IN aTablas
+     SELECT (oTabla)
+     USE 
+  ENDFOR 
+   ENDIF
+
+ENDPROC 
+
+PROCEDURE ejecutar
+	lcTipoArchivo=1
+	SELECT CurRpteP 
+	IF EMPTY(ALLTRIM(lcNombreArchivo))  THEN 
+		 RETURN 
+	ENDIF 
+
+	COPY TO &lcNombreArchivo. TYPE XL5
+	MESSAGEBOX('Se ha generado el Archivo : ' + lcNombreArchivo,0+64,"Aviso del Sistema")
+
+
+ENDPROC 
+
+

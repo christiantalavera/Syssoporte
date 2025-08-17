@@ -1,0 +1,148 @@
+USE siaf!certificado 				IN 0 AGAIN ORDER TAG certi
+USE siaf!certificado_fase 			IN 0 AGAIN ORDER TAG certi_fase
+USE siaf!certificado_secuencia 		IN 0 AGAIN ORDER TAG certi_sec
+USE siaf!certificado_clasif			IN 0 AGAIN ORDER TAG certi_clas
+USE siaf!certificado_meta			IN 0 AGAIN ORDER TAG certi_clas
+USE siaf!expediente					IN 0 AGAIN ORDER tag expediente 
+USE siaf!expediente_fase			IN 0 AGAIN ORDER tag cer_fase		ALIAS exp_fase
+USE siaf!expediente_secuencia		IN 0 AGAIN ORDER tag exp_sec		ALIAS exp_sec 
+USE siaf!expediente_secuencia		IN 0 AGAIN ORDER tag exp_sec		
+USE siaf!expediente_fase			IN 0 AGAIN ORDER tag exp_fase
+USE siaf!expediente_clasif			IN 0 AGAIN ORDER tag exp_clasif
+USE siaf!expediente_meta			IN 0 AGAIN ORDER TAG exp_metap
+USE cert!expediente_meta_detalle	IN 0 AGAIN ORDER tag expmetadet
+USE cert!meta_gpr					IN 0 AGAIN ORDER tag pkmetagpr
+USE cert!certificado_detalle		IN 0 AGAIN ORDER tag cert_det
+
+lSuccess=CURSORSETPROP("Buffering", 1, "certificado_detalle")
+lSuccess=CURSORSETPROP("Buffering", 1, "expediente_meta_detalle")
+
+xalias = ALIAS()
+
+SELECT ano_eje, sec_ejec, sec_func, COUNT(*) as contador FROM meta_gpr ;
+	WHERE ano_eje+sec_ejec = gcano_eje+gcsec_ejec AND !DELETED() GROUP BY 1,2,3 INTO CURSOR cur1
+
+SELECT * FROM cur1 WHERE contador = 1 INTO CURSOR cur_meta
+
+SELECT cur_meta
+INDEX on ano_eje+sec_ejec+sec_func TAG inx1 
+
+
+	WAIT WINDOW 'Cargando Certificados y Compromisos Anuales' NOWAIT 
+	i = 0
+
+
+	SELECT Certificado_Fase
+	SEEK gcAno_eje+gcSec_ejec
+	SCAN WHILE ano_eje+sec_ejec==gcAno_eje+gcSec_ejec ;
+		FOR !DELETED()
+		SCATTER MEMVAR
+		*
+		SELECT Certificado_Secuencia
+		SEEK m.ano_eje+m.sec_ejec+m.certificado+m.secuencia
+		SCAN WHILE ano_eje+sec_ejec+certificado+secuencia==m.ano_eje+m.sec_ejec+m.certificado+m.secuencia ;
+			FOR certificado_secuencia.estado_registro='A' AND !DELETED() ;
+
+			SCATTER MEMVAR
+			SELECT certificado_clasif
+			SEEK m.ano_eje+m.sec_ejec+m.certificado+m.secuencia+m.correlativo
+			SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo =	m.ano_eje+m.sec_ejec+m.certificado+m.secuencia+m.correlativo
+				SCATTER MEMVAR 
+				IF DELETED() THEN 
+					LOOP 
+				ENDIF 
+				SELECT certificado_meta
+				SEEK m.ano_eje+m.sec_ejec+m.certificado+m.secuencia+m.correlativo+m.id_clasificador
+				SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo+id_clasificador = m.ano_eje+m.sec_ejec+m.certificado+m.secuencia+m.correlativo+m.id_clasificador
+					SCATTER MEMVAR 
+					IF DELETED() THEN 
+						LOOP 
+					ENDIF 
+					IF !SEEK(certificado_meta.ano_eje+certificado_meta.sec_ejec+certificado_meta.sec_func,'cur_meta') THEN 
+						LOOP 
+					ENDIF 
+					IF certificado_meta.estado_registro <> 'A' THEN 
+						LOOP 
+					ENDIF 
+				 	SELECT meta_gpr
+				 	SEEK gcano_eje+gcsec_ejec+certificado_meta.sec_func
+				 	SCAN WHILE ano_eje+sec_ejec+sec_func = gcano_eje+gcsec_ejec+certificado_meta.sec_func
+				 		SCATTER MEMVAR 
+						IF !SEEK(m.ano_eje+m.sec_ejec+m.certificado+m.secuencia+m.correlativo+m.id_clasificador+m.sec_func+meta_gpr.id_centro_costo+meta_gpr.id_gpr,'certificado_detalle','cert_det') THEN 
+							i = i + 1
+							WAIT WINDOW 'Insertando Registro ===>'+PADL(i,10,'0') NOWAIT 
+							INSERT INTO certificado_detalle ( ano_eje, sec_ejec, certificado,;
+															   secuencia, correlativo, id_clasificador,;
+															   sec_func, id_centro_costo, id_gpr, monto_nacional);
+													VALUES ( gcano_eje, gcsec_ejec, m.certificado,;
+															 certificado_meta.secuencia, certificado_meta.correlativo, certificado_meta.id_clasificador,;
+															 certificado_meta.sec_func, meta_gpr.id_centro_costo, meta_gpr.id_gpr, certificado_meta.monto_nacional+certificado_meta.monto_nacional_ajuste)
+																   
+						ENDIF 
+				 	
+				 	
+				 	ENDSCAN 
+				ENDSCAN
+
+			ENDSCAN 		
+		ENDSCAN
+	ENDSCAN
+*	
+	WAIT WINDOW 'Cargando Registros Administrativos' NOWAIT 
+*	=SEEK(cur_meta.sec_ejec+cur_meta.ano_eje+cur_meta.sec_func,'meta_CC','metaCC')
+	SELECT Expediente_fase
+	SEEK gcAno_eje+gcSec_ejec
+	SCAN WHILE ano_eje+sec_ejec==gcAno_eje+gcSec_ejec ;
+		FOR !DELETED()
+		SCATTER MEMVAR
+		*
+		SELECT Expediente_Secuencia
+		SEEK m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia
+		SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia==m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia ;
+			FOR expediente_secuencia.estado_envio =='A' AND !DELETED() 
+
+			SCATTER MEMVAR
+			SELECT expediente_clasif
+			SEEK m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo
+			SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo =	m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo
+				SCATTER MEMVAR 
+				SELECT expediente_meta
+				SEEK m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo+m.id_clasificador
+				SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo+id_clasificador = m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo+m.id_clasificador
+					SCATTER MEMVAR 
+				 	IF !SEEK(m.ano_eje+m.sec_ejec+m.sec_func,'cur_meta') THEN 
+				 		LOOP 
+				 	ENDIF 
+				 	IF m.estado_envio <> 'A' THEN 
+				 		LOOP 
+				 	ENDIF 
+				 	SELECT meta_gpr
+				 	SEEK gcano_eje+gcsec_ejec+m.sec_func
+				 	SCAN WHILE ano_eje+sec_ejec+sec_func = gcano_eje+gcsec_ejec+m.sec_func
+				 		SCATTER MEMVAR 
+						IF !SEEK(m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo+m.id_clasificador+m.sec_func+meta_gpr.id_centro_costo+meta_gpr.id_gpr,'expediente_meta_detalle') THEN 
+							i = i + 1
+							WAIT WINDOW 'Insertando Registro ===>'+PADL(i,10,'0') NOWAIT 
+						
+							INSERT INTO expediente_meta_detalle ;
+								( ano_eje, sec_ejec, expediente, ciclo ,fase,;
+													   secuencia, correlativo, id_clasificador,;
+													   sec_func, id_centro_costo, id_gpr ,  monto_nacional);
+											VALUES ( gcano_eje, gcsec_ejec, m.expediente, m.ciclo,m.fase,;
+													 m.secuencia, m.correlativo, m.id_clasificador,;
+													 m.sec_func, m.id_centro_costo,m.id_gpr, expediente_meta.monto_nacional)
+															   
+						ENDIF 
+				 	
+				 	
+				 	ENDSCAN 
+				ENDSCAN 				
+			ENDSCAN 		
+		ENDSCAN
+	ENDSCAN
+
+
+CLOSE ALL
+
+*lSuccess=CURSORSETPROP("Buffering", 4, "certificado_detalle")
+*lSuccess=CURSORSETPROP("Buffering", 4, "expediente_meta_detalle")

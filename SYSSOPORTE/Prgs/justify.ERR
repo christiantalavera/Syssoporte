@@ -1,0 +1,4 @@
+taBloques(k) = SUBSTR(tcParrafo,lnInicio,LEN(tcParrafo)lnInicio)
+Error in line 83: Function name is missing ).
+laPalabras(k) = SUBSTR(tcParrafo,lnInicio,LEN(tcParrafo)lnInicio)
+Error in line 277: Function name is missing ).

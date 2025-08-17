@@ -1,0 +1,45 @@
+USE siaf!expediente					IN 0 ALIAS r_expediente				again ORDER tag expediente
+USE siaf!expediente_fase 			IN 0 ALIAS r_expediente_fase		again ORDER tag exp_fase
+USE siaf!expediente_secuencia		IN 0 ALIAS r_expediente_secuencia 	again ORDER tag exp_sec
+USE siaf!expediente_clasif			IN 0 ALIAS r_expediente_clasif		again ORDER tag EXPCLASIFP
+USE siaf!expediente_meta			IN 0 ALIAS r_expediente_meta		again ORDER tag exp_metap
+USE siaf!expediente_siaf_meta		IN 0 								again ORDER tag expmetap
+
+SELECT r_expediente_secuencia
+SET RELATION TO ano_eje+sec_ejec+expediente INTO r_expediente
+SET RELATION TO ano_eje+sec_ejec+expediente+ciclo+fase+secuencia INTO r_expediente_fase
+
+SELECT r_expediente_secuencia
+SEEK gcano_eje+gcsec_ejec
+SCAN WHILE ano_eje+sec_ejec = gcano_eje+gcsec_ejec
+	SCATTER MEMVAR 
+	m.origen 			 = r_expediente_fase.origen
+	m.fuente_financ 	 = r_expediente_fase.fuente_financ
+	m.secuencia_anterior = r_expediente_fase.secuencia_anterior
+	m.secuencia_padre 	 = r_expediente_fase.secuencia_padre
+	
+	SELECT r_expediente_clasif
+	SEEK gcano_eje+gcsec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo
+	SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo = gcano_eje+gcsec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo
+		SCATTER MEMVAR 
+		SELECT r_expediente_meta
+		SEEK gcano_eje+gcsec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo+m.id_clasificador
+		SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo+id_clasificador = gcano_eje+gcsec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo+m.id_clasificador
+			SCATTER MEMVAR 
+			m.estado = r_expediente_secuencia.estado
+			m.certificado = r_expediente_fase.certificado
+			m.certificado_secuencia = r_expediente_fase.certificado_secuencia
+			IF !SEEK(m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo+m.id_clasificador+m.sec_func,'expediente_siaf_meta') THEN 
+				INSERT INTO expediente_siaf_meta FROM MEMVAR 
+			ENDIF 
+		ENDSCAN 
+	ENDSCAN 
+	
+ENDSCAN 
+
+USE IN r_expediente
+USE IN r_expediente_fase
+USE IN r_expediente_secuencia
+USE IN r_expediente_clasif
+USE IN r_expediente_meta
+USE IN expediente_siaf_meta

@@ -1,0 +1,525 @@
+USE siaf!gasto							IN 0 SHARED AGAIN order tag mp_gastop
+USE siaf!meta							IN 0 SHARED AGAIN ORDER tag	meta
+USE siaf!fuente_financ					IN 0 SHARED AGAIN ORDER tag fuente_fin
+USE siaf!fuente_financ_agregada			IN 0 SHARED AGAIN ORDER tag fte_agreg
+USE siaf!maestro_clasificador			IN 0 SHARED AGAIN ORDER tag idclasif
+USE siaf!expediente_fase				IN 0 SHARED AGAIN ORDER tag exp_fase
+USE siaf!expediente_secuencia			IN 0 SHARED AGAIN ORDER tag fec_bd_ora
+USE siaf!expediente_clasif				IN 0 SHARED AGAIN ORDER tag expclasifp
+USE siaf!expediente_meta				IN 0 SHARED AGAIN ORDER tag exp_metap
+USE siaf!expediente						IN 0 SHARED AGAIN ORDER tag expediente
+USE siaf!sector							IN 0 SHARED AGAIN ORDER tag sector
+USE siaf!pliego							IN 0 SHARED AGAIN ORDER tag pliego
+USE siaf!ejecutora						IN 0 SHARED AGAIN ORDER tag sec_ejec 
+USE siaf!funcion						IN 0 SHARED AGAIN ORDER tag funcion
+USE siaf!programa_nombre				IN 0 SHARED AGAIN ORDER tag programa
+USE siaf!sub_programa_nombre			IN 0 SHARED AGAIN ORDER tag sub_prog
+USE siaf!programa_ppto_nombre			IN 0 SHARED AGAIN ORDER tag PROGPPTO_N
+USE siaf!act_proy_nombre				IN 0 SHARED AGAIN ORDER tag act_proy
+USE siaf!generica						IN 0 shared AGAIN ORDER tag generica
+USE siaf!tipo_transaccion				IN 0 SHARED AGAIN ORDER tag tipotrn
+USE siaf!subgenerica					IN 0 SHARED AGAIN ORDER tag sgenerica
+USE siaf!subgenerica_det				IN 0 SHARED AGAIN ORDER tag sgenericad
+USE siaf!especifica_det					IN 0 SHARED AGAIN ORDER tag idclasif
+USE siaf!categoria_gasto				IN 0 SHARED AGAIN ORDER tag categoria
+
+
+DO crea_cursores
+DO carga_cursor_general
+DO carga_ejecucion_mensual
+
+SELECT ejecutora
+SET RELATION TO 
+SET RELATION TO ano_eje+sector			INTO sector ADDITIVE 
+SET RELATION TO ano_eje+sector+pliego 	INTO pliego ADDITIVE 
+
+
+SELECT curGasto
+SET RELATION TO 
+SET RELATION TO ano_eje+'1'+fuente_financ INTO fuente_financ ADDITIVE 
+SET RELATION TO ano_eje+fuente_financ_agregada INTO fuente_financ_agregada ADDITIVE 
+SET RELATION TO ano_eje+sec_ejec INTO ejecutora ADDITIVE 
+SET RELATION TO ano_eje+funcion INTO funcion ADDITIVE 
+SET RELATION TO ano_eje+programa INTO programa_nombre ADDITIVE 
+SET RELATION TO ano_eje+sub_programa INTO sub_programa_nombre ADDITIVE 
+SET RELATION TO ano_eje+programa_ppto INTO programa_ppto_nombre ADDITIVE 
+SET RELATION TO ano_eje+act_proy	INTO act_proy_nombre ADDITIVE 
+SET RELATION TO ano_eje+categoria_gasto INTO categoria_gasto ADDITIVE 
+SET RELATION TO ano_eje+tipo_transaccion INTO tipo_transaccion ADDITIVE 
+SET RELATION TO ano_eje+tipo_transaccion+generica INTO generica ADDITIVE 
+SET RELATION TO ano_eje+tipo_transaccion+generica+subgenerica INTO subgenerica ADDITIVE 
+SET RELATION TO ano_eje+tipo_transaccion+generica+subgenerica+subgenerica_det INTO subgenerica_det ADDITIVE 
+
+
+
+
+SELECT curGasto
+SCAN ALL 
+	SCATTER MEMVAR 
+	m.sector 			= ejecutora.sector+'. '+sector.nombre
+	m.pliego			= ejecutora.pliego+'. '+pliego.nombre
+	m.ejecutora 		= ejecutora.ejecutora+'. '+ejecutora.nombre
+	m.funcion 			= m.funcion + '. '+funcion.nombre
+	m.programa  		= m.programa+ '. '+programa_nombre.nombre
+	m.subprograma 		= m.sub_programa + '. '+sub_programa_nombre.nombre
+	m.prog_ppto 		= m.programa_ppto+ '. '+programa_ppto_nombre.nombre
+	m.tip_act_proy		= act_proy_nombre.tipo_act_proy
+	m.activ_proyecto	= m.act_proy+'. '+act_proy_nombre.nombre
+	m.fuente			= m.fuente_financ_agregada+'. '+fuente_financ_agregada.nombre
+	m.rubro				= m.fuente_financ+'. '+fuente_financ.nombre
+	m.categoria 		= m.categoria_gasto+'. '+categoria_gasto.nombre
+	m.tipo_transaccion  = m.tipo_transaccion+'. '+tipo_transaccion.descripcion
+	m.generica			= m.generica+'. '+generica.descripcion
+	m.subgenerica		= m.subgenerica+'. '+subgenerica.descripcion
+	m.subgenerica_det	= m.subgenerica_det+'. '+subgenerica_det.descripcion
+	m.mod_pptales       = m.modificacion
+	m.com_anual			= m.monto_comprometido_anual
+	m.cert_anual		= m.monto_certificado
+	
+	INSERT INTO curgen FROM MEMVAR 
+
+
+ENDSCAN 
+
+
+
+
+PROCEDURE crea_cursores
+CREATE CURSOR curGasto(	ano_eje						c(0004),;
+						sec_ejec					c(0006),;
+						fuente_financ				c(0002),;
+						fuente_financ_agregada		c(0001),;
+						categoria_gasto				c(0001),;
+						tipo_transaccion 			c(0001),;
+						generica					c(0001),;
+						subgenerica					c(0002),;
+						subgenerica_det				c(0002),;
+						sec_func					c(0004),;
+					    programa_ppto      			C(0004),;
+					    act_proy           			C(0007),;
+					    componente      	   		C(0007),;
+						funcion						c(0002),;
+						programa					c(0003),;
+						sub_programa				c(0004),;
+						meta						c(0004),;
+						pia							N(19,2),;
+						modificacion				N(19,2),;
+						pim							N(19,2),;
+						monto_certificado			N(19,2),;
+						monto_comprometido_anual	N(19,2),;
+						eje01						N(19,2),;
+						eje02						N(19,2),;
+						eje03						N(19,2),;
+						eje04						N(19,2),;
+						eje05						N(19,2),;
+						eje06						N(19,2),;
+						eje07						N(19,2),;
+						eje08						N(19,2),;
+						eje09						N(19,2),;
+						eje10						N(19,2),;
+						eje11						N(19,2),;
+						eje12						N(19,2),;
+						dev01						N(19,2),;						
+						dev02						N(19,2),;						
+						dev03						N(19,2),;						
+						dev04						N(19,2),;						
+						dev05						N(19,2),;						
+						dev06						N(19,2),;						
+						dev07						N(19,2),;						
+						dev08						N(19,2),;						
+						dev09						N(19,2),;						
+						dev10						N(19,2),;						
+						dev11						N(19,2),;						
+						dev12						N(19,2),;						
+						gir01						N(19,2),;
+						gir02						N(19,2),;
+						gir03						N(19,2),;
+						gir04						N(19,2),;
+						gir05						N(19,2),;
+						gir06						N(19,2),;
+						gir07						N(19,2),;
+						gir08						N(19,2),;
+						gir09						N(19,2),;
+						gir10						N(19,2),;
+						gir11						N(19,2),;
+						gir12						N(19,2),;	
+						pag01						N(19,2),;
+						pag02						N(19,2),;
+						pag03						N(19,2),;
+						pag04						N(19,2),;
+						pag05						N(19,2),;
+						pag06						N(19,2),;
+						pag07						N(19,2),;
+						pag08						N(19,2),;
+						pag09						N(19,2),;
+						pag10						N(19,2),;
+						pag11						N(19,2),;
+						pag12						N(19,2),;
+						monto_compromiso			N(19,2),;
+						monto_devengado				N(19,2),;
+						monto_girado				N(19,2),;
+						monto_pagado				N(19,2))
+
+						
+						
+INDEX on ano_eje+sec_ejec+fuente_financ+categoria_gasto+tipo_transaccion+generica+subgenerica+subgenerica_det+sec_func TAG inxGasto
+
+
+
+CREATE CURSOR curgen(	Nivel_gob						c(0030),;
+						sector							c(0150),;
+						pliego							c(0150),;
+						ejecutora						c(0150),;
+						funcion							c(0150),;
+						programa						c(0150),;
+						subprograma						c(0150),;
+						prog_ppto						c(0150),;
+						tip_act_proy					c(0001),;
+						activ_proyecto					c(0150),;
+						fuente							c(0100),;
+						rubro							c(0100),;
+						categoria						c(0150),;
+						tipo_transaccion				c(0150),;
+						generica						c(0150),;
+						subgenerica						c(0150),;
+						subgenerica_det					c(0150),;
+						pia								N(19,2),;
+						mod_pptales						N(19,2),;
+						pim								N(19,2),;
+						com_anual						N(19,2),;
+						cert_anual						N(19,2),;
+						eje01							N(19,2),;
+						eje02							N(19,2),;
+						eje03							N(19,2),;
+						eje04							N(19,2),;
+						eje05							N(19,2),;
+						eje06							N(19,2),;
+						eje07							N(19,2),;
+						eje08							N(19,2),;
+						eje09							N(19,2),;
+						eje10							N(19,2),;
+						eje11							N(19,2),;
+						eje12							N(19,2),;
+						dev01							N(19,2),;						
+						dev02							N(19,2),;						
+						dev03							N(19,2),;						
+						dev04							N(19,2),;						
+						dev05							N(19,2),;						
+						dev06							N(19,2),;						
+						dev07							N(19,2),;						
+						dev08							N(19,2),;						
+						dev09							N(19,2),;						
+						dev10							N(19,2),;						
+						dev11							N(19,2),;						
+						dev12							N(19,2),;						
+						gir01							N(19,2),;
+						gir02							N(19,2),;
+						gir03							N(19,2),;
+						gir04							N(19,2),;
+						gir05							N(19,2),;
+						gir06							N(19,2),;
+						gir07							N(19,2),;
+						gir08							N(19,2),;
+						gir09							N(19,2),;
+						gir10							N(19,2),;
+						gir11							N(19,2),;
+						gir12							N(19,2),;	
+						pag01							N(19,2),;
+						pag02							N(19,2),;
+						pag03							N(19,2),;
+						pag04							N(19,2),;
+						pag05							N(19,2),;
+						pag06							N(19,2),;
+						pag07							N(19,2),;
+						pag08							N(19,2),;
+						pag09							N(19,2),;
+						pag10							N(19,2),;
+						pag11							N(19,2),;
+						pag12							N(19,2))
+
+
+
+ENDPROC 
+
+PROCEDURE carga_cursor_general
+	SELECT gasto
+	SET RELATION TO ano_eje+sec_ejec+sec_func 				INTO meta ADDITIVE 
+	SET RELATION TO ano_eje+'1'+fuente_financ				INTO fuente_financ ADDITIVE 
+
+	SELECT gasto
+	SEEK gcano_eje+gcsec_ejec
+	SCAN WHILE ano_eje+sec_ejec = gcano_eje+gcsec_ejec 
+		SCATTER MEMVAR
+		IF m.sec_func = '0000' THEN 
+			LOOP 
+		ENDIF 	  
+		
+		SELECT maestro_clasificador
+		IF SEEK(m.ano_eje+m.id_clasificador,'maestro_clasificador') THEN 
+			m.clasificador 		= maestro_clasificador.clasificador
+			m.tipo_transaccion	= SUBSTR(m.clasificador,1,1)
+			m.generica			= SUBSTR(m.clasificador,2,1)
+			m.subgenerica		= SUBSTR(m.clasificador,3,2)
+			m.subgenerica_det	= SUBSTR(m.clasificador,5,2)
+			m.especifica		= SUBSTR(m.clasificador,7,2)
+			m.especifica_det	= SUBSTR(m.clasificador,9,2)
+			llave1=m.ano_eje+m.tipo_transaccion+m.generica+m.subgenerica+m.subgenerica_det
+			IF SEEK(llave1,'subgenerica_det') THEN
+				m.categoria_gasto = subgenerica_det.categoria_gasto
+			ENDIF
+		ENDIF 
+		m.fuente_financ_agregada= fuente_financ.fuente_financ_agregada
+		m.pia 					= m.presupuesto
+		m.pim 					= m.pia + m.modificacion 
+		m.programa_ppto  		= meta.programa_ppto
+		m.act_proy				= meta.act_proy
+		m.componente			= meta.componente
+		m.funcion				= meta.funcion
+		m.programa				= meta.programa
+		m.sub_programa			= meta.sub_programa
+		m.meta					= meta.meta
+		
+		lcClave = m.ano_eje+m.sec_ejec+m.fuente_financ+m.categoria_gasto+m.tipo_transaccion+m.generica+;
+				  m.subgenerica+m.subgenerica_det+m.sec_func
+				  
+		IF !SEEK(lcClave,'curGasto') THEN 
+			INSERT INTO curGasto FROM MEMVAR 
+		ELSE
+			REPLACE pim WITH pim+ m.pim,;
+			pia WITH pia+ m.pia,;
+			modificacion  WITH modificacion + m.modificacion ,;
+			monto_certificado WITH monto_certificado + m.monto_certificado ,;
+			monto_comprometido_anual WITH monto_comprometido_anual + m.monto_comprometido_anual IN curGasto
+		ENDIF 
+
+		
+	ENDSCAN 
+	SELECT gasto 
+	SET RELATION TO 
+ENDPROC 
+
+PROCEDURE carga_ejecucion_mensual
+	SELECT expediente_secuencia
+	SET RELATION TO ano_eje+sec_ejec+expediente 						INTO expediente ADDITIVE 
+	SET RELATION TO ano_eje+sec_ejec+expediente+ciclo+fase+secuencia	INTO expediente_fase ADDITIVE 
+	SELECT expediente_fase
+	SET RELATION TO ano_eje+origen+fuente_financ						INTO fuente_financ ADDITIVE 
+	SELECT expediente_meta
+	SET RELATION TO ano_eje+sec_ejec+sec_func							INTO meta ADDITIVE 
+	
+	SELECT expediente_secuencia
+	SEEK gcsec_ejec+gcano_eje
+	SCAN WHILE sec_ejec+LEFT(DTOS(fecha_bd_oracle),4) = gcsec_ejec+gcano_eje
+		SCATTER MEMVAR 
+		IF  Expediente.tipo_operacion <> "EO" 	.AND. ; && No Muestra Encargos Recibidos
+			!EMPTY(Expediente.expediente_encargante) .AND. ;
+				!INLIST(Expediente.sec_ejec2,'005000')    THEN
+			LOOP
+		ENDIF
+		IF m.estado_envio <> 'A' THEN 
+			LOOP 
+		ENDIF 	
+		m.tipo_recurso  = expediente_fase.tipo_recurso
+		m.origen		= expediente_fase.origen
+		m.fuente_financ = expediente_fase.fuente_financ
+		lcClave_sec = m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo
+		SELECT expediente_clasif
+		SEEK lcClave_sec
+		SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo = lcClave_sec
+			SCATTER MEMVAR 
+			lcClave_clasif = lcClave_sec + m.id_clasificador
+			SELECT Expediente_meta
+			SEEK lcClave_clasif
+			SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo+id_clasificador = lcClave_clasif
+				SCATTER MEMVAR 
+				SELECT maestro_clasificador
+				IF SEEK(m.ano_eje+m.id_clasificador,'maestro_clasificador') THEN 
+					m.clasificador 		= maestro_clasificador.clasificador
+					m.tipo_transaccion	= SUBSTR(m.clasificador,1,1)
+					m.generica			= SUBSTR(m.clasificador,2,1)
+					m.subgenerica		= SUBSTR(m.clasificador,3,2)
+					m.subgenerica_det	= SUBSTR(m.clasificador,5,2)
+					m.especifica		= SUBSTR(m.clasificador,7,2)
+					m.especifica_det	= SUBSTR(m.clasificador,9,2)
+					llave1=m.ano_eje+m.tipo_transaccion+m.generica+m.subgenerica+m.subgenerica_det
+					IF SEEK(llave1,'subgenerica_det') THEN
+						m.categoria_gasto = subgenerica_det.categoria_gasto
+					ENDIF
+				ENDIF 
+				IF m.sec_func = '0000' THEN 
+					LOOP 
+				ENDIF 	  
+				
+				m.fuente_financ_agregada= fuente_financ.fuente_financ_agregada
+				m.programa_ppto  		= meta.programa_ppto
+				m.act_proy				= meta.act_proy
+				m.componente			= meta.componente
+				m.funcion				= meta.funcion
+				m.programa				= meta.programa
+				m.sub_programa			= meta.sub_programa
+				m.meta					= meta.meta
+				lcMes					= PADL(MONTH(fecha_doc),2,'0')
+				STORE 0.00 TO lcMonto_compromiso, lcMonto_devengado, lcMonto_girado, lcMonto_pagado
+				DO CASE 
+					CASE m.ciclo+m.fase = 'GC'
+						lcmonto_compromiso = m.monto_nacional
+					CASE m.ciclo+m.fase = 'GD'
+						lcmonto_devengado  = m.monto_nacional
+					CASE m.ciclo+m.fase = 'GG'
+						lcmonto_girado 	   = m.monto_nacional
+					CASE m.ciclo+m.fase = 'GP'											
+						lcmonto_pagado	   = m.monto_nacional
+				ENDCASE 
+				
+				lcClave = m.ano_eje+m.sec_ejec+m.fuente_financ+m.categoria_gasto+m.tipo_transaccion+m.generica+;
+				  m.subgenerica+m.subgenerica_det+m.sec_func
+				IF !SEEK(lcClave,'curGasto') THEN 
+					INSERT INTO curGasto FROM MEMVAR 			
+				ELSE
+					REPLACE curGasto.monto_compromiso 	WITH curGasto.monto_compromiso 	+ lcmonto_compromiso
+					REPLACE curGasto.monto_devengado  	WITH curGasto.monto_devengado  	+ lcmonto_devengado  
+					REPLACE curGasto.monto_girado 		WITH curGasto.monto_girado 		+ lcmonto_girado 
+					REPLACE curGasto.monto_pagado		WITH curGasto.monto_pagado		+ lcmonto_pagado
+					DO CASE 
+						CASE m.ciclo+m.fase = 'GC'
+							DO CASE
+								CASE lcMes = '01'
+									REPLACE curGasto.eje01	WITH curGasto.eje01 + m.monto_nacional
+								CASE lcMes = '02'
+									REPLACE curGasto.eje02	WITH curGasto.eje02 + m.monto_nacional							
+								CASE lcMes = '03'
+									REPLACE curGasto.eje03	WITH curGasto.eje03 + m.monto_nacional								
+								CASE lcMes = '04'
+									REPLACE curGasto.eje04	WITH curGasto.eje04 + m.monto_nacional								
+								CASE lcMes = '05'
+									REPLACE curGasto.eje05	WITH curGasto.eje05 + m.monto_nacional								
+								CASE lcMes = '06'
+									REPLACE curGasto.eje06	WITH curGasto.eje06 + m.monto_nacional								
+								CASE lcMes = '07'
+									REPLACE curGasto.eje07	WITH curGasto.eje07 + m.monto_nacional								
+								CASE lcMes = '08'
+									REPLACE curGasto.eje08	WITH curGasto.eje08 + m.monto_nacional								
+								CASE lcMes = '09'
+									REPLACE curGasto.eje09	WITH curGasto.eje09 + m.monto_nacional								
+								CASE lcMes = '10'
+									REPLACE curGasto.eje10	WITH curGasto.eje10 + m.monto_nacional								
+								CASE lcMes = '11'
+									REPLACE curGasto.eje11	WITH curGasto.eje11 + m.monto_nacional								
+								CASE lcMes = '12'																																																																																								
+									REPLACE curGasto.eje12	WITH curGasto.eje12 + m.monto_nacional
+							ENDCASE 
+						CASE m.ciclo+m.fase = 'GD'
+							DO CASE
+								CASE lcMes = '01'
+									REPLACE curGasto.dev01	WITH curGasto.dev01 + m.monto_nacional
+								CASE lcMes = '02'
+									REPLACE curGasto.dev02	WITH curGasto.dev02 + m.monto_nacional							
+								CASE lcMes = '03'
+									REPLACE curGasto.dev03	WITH curGasto.dev03 + m.monto_nacional								
+								CASE lcMes = '04'
+									REPLACE curGasto.dev04	WITH curGasto.dev04 + m.monto_nacional								
+								CASE lcMes = '05'
+									REPLACE curGasto.dev05	WITH curGasto.dev05 + m.monto_nacional								
+								CASE lcMes = '06'
+									REPLACE curGasto.dev06	WITH curGasto.dev06 + m.monto_nacional								
+								CASE lcMes = '07'
+									REPLACE curGasto.dev07	WITH curGasto.dev07 + m.monto_nacional								
+								CASE lcMes = '08'
+									REPLACE curGasto.dev08	WITH curGasto.dev08 + m.monto_nacional								
+								CASE lcMes = '09'
+									REPLACE curGasto.dev09	WITH curGasto.dev09 + m.monto_nacional								
+								CASE lcMes = '10'
+									REPLACE curGasto.dev10	WITH curGasto.dev10 + m.monto_nacional								
+								CASE lcMes = '11'
+									REPLACE curGasto.dev11	WITH curGasto.dev11 + m.monto_nacional								
+								CASE lcMes = '12'																																																																																								
+									REPLACE curGasto.dev12	WITH curGasto.dev12 + m.monto_nacional
+							ENDCASE 
+						
+						
+						CASE m.ciclo+m.fase = 'GG'
+							DO CASE
+								CASE lcMes = '01'
+									REPLACE curGasto.gir01	WITH curGasto.gir01 + m.monto_nacional
+								CASE lcMes = '02'
+									REPLACE curGasto.gir02	WITH curGasto.gir02 + m.monto_nacional							
+								CASE lcMes = '03'
+									REPLACE curGasto.gir03	WITH curGasto.gir03 + m.monto_nacional								
+								CASE lcMes = '04'
+									REPLACE curGasto.gir04	WITH curGasto.gir04 + m.monto_nacional								
+								CASE lcMes = '05'
+									REPLACE curGasto.gir05	WITH curGasto.gir05 + m.monto_nacional								
+								CASE lcMes = '06'
+									REPLACE curGasto.gir06	WITH curGasto.gir06 + m.monto_nacional								
+								CASE lcMes = '07'
+									REPLACE curGasto.gir07	WITH curGasto.gir07 + m.monto_nacional								
+								CASE lcMes = '08'
+									REPLACE curGasto.gir08	WITH curGasto.gir08 + m.monto_nacional								
+								CASE lcMes = '09'
+									REPLACE curGasto.gir09	WITH curGasto.gir09 + m.monto_nacional								
+								CASE lcMes = '10'
+									REPLACE curGasto.gir10	WITH curGasto.gir10 + m.monto_nacional								
+								CASE lcMes = '11'
+									REPLACE curGasto.gir11	WITH curGasto.gir11 + m.monto_nacional								
+								CASE lcMes = '12'																																																																																								
+									REPLACE curGasto.gir12	WITH curGasto.gir12 + m.monto_nacional
+							ENDCASE 
+						
+						
+						
+						CASE m.ciclo+m.fase = 'GP'
+							DO CASE
+								CASE lcMes = '01'
+									REPLACE curGasto.pag01	WITH curGasto.pag01 + m.monto_nacional
+								CASE lcMes = '02'
+									REPLACE curGasto.pag02	WITH curGasto.pag02 + m.monto_nacional							
+								CASE lcMes = '03'
+									REPLACE curGasto.pag03	WITH curGasto.pag03 + m.monto_nacional								
+								CASE lcMes = '04'
+									REPLACE curGasto.pag04	WITH curGasto.pag04 + m.monto_nacional								
+								CASE lcMes = '05'
+									REPLACE curGasto.pag05	WITH curGasto.pag05 + m.monto_nacional								
+								CASE lcMes = '06'
+									REPLACE curGasto.pag06	WITH curGasto.pag06 + m.monto_nacional								
+								CASE lcMes = '07'
+									REPLACE curGasto.pag07	WITH curGasto.pag07 + m.monto_nacional								
+								CASE lcMes = '08'
+									REPLACE curGasto.pag08	WITH curGasto.pag08 + m.monto_nacional								
+								CASE lcMes = '09'
+									REPLACE curGasto.pag09	WITH curGasto.pag09 + m.monto_nacional								
+								CASE lcMes = '10'
+									REPLACE curGasto.pag10	WITH curGasto.pag10 + m.monto_nacional								
+								CASE lcMes = '11'
+									REPLACE curGasto.pag11	WITH curGasto.pag11 + m.monto_nacional								
+								CASE lcMes = '12'																																																																																								
+									REPLACE curGasto.pag12	WITH curGasto.pag12 + m.monto_nacional
+							ENDCASE 
+						
+																							
+					ENDCASE 
+				ENDIF 
+			ENDSCAN 
+		ENDSCAN 
+	ENDSCAN 
+
+	SELECT expediente_secuencia
+	SET RELATION TO 
+	SELECT expediente_fase
+	SET RELATION TO 
+	SELECT expediente_meta
+	SET RELATION TO 
+
+ENDPROC 
+
+
+
+USE IN gasto
+USE IN meta
+USE IN fuente_financ
+USE IN maestro_clasificador
+USE IN especifica_det
+USE IN subgenerica_det
+USE IN expediente
+USE IN expediente_fase
+USE IN expediente_secuencia
+U

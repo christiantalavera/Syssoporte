@@ -1,0 +1,755 @@
+SET TALK OFF
+SET DATE TO british
+SET CENTURY ON
+SET DELETED ON
+lcsec_ejec = IIF(gctipo_ue='01',gcsec_ejec,'******')
+lnnivelcadena=7
+lnnivelclasif= 6
+lctipoarchivo=1
+lcNombreArchivo = 'listados\'+gcsec_ejec+'_Nota_modificatoria_'+DTOS(DATE())
+&&
+USE siaf!ejecutora 					IN 0 SHARED ALIAS ejecutora 			AGAIN ORDER TAG sec_ejec
+USE siaf!ejecutora 					IN 0 SHARED ALIAS ejecutora1 			AGAIN ORDER TAG sec_ejec
+USE siaf!sector 					IN 0 SHARED ALIAS sector 				AGAIN ORDER TAG sector
+USE siaf!pliego 					IN 0 SHARED ALIAS pliego 				AGAIN ORDER TAG pliego
+USE siaf!nota_modificatoria_cab 	IN 0 SHARED ALIAS nota_cab 				AGAIN ORDER TAG mp_notacab
+USE siaf!nota_modificatoria_sec 	IN 0 SHARED ALIAS nota_sec 				AGAIN ORDER TAG mp_notasec
+USE siaf!nota_modificatoria_det 	IN 0 SHARED ALIAS nota_det 				AGAIN ORDER TAG mpnotadetp
+USE siaf!nota_modificatoria_doc 	IN 0 SHARED ALIAS nota_doc 				AGAIN ORDER TAG mp_notadoc
+USE siaf!nota_modificatoria_doc_sec IN 0 SHARED ALIAS nota_docsec 			AGAIN ORDER TAG mp_notados
+USE siaf!nota_modificatoria_ing 	IN 0 SHARED ALIAS nota_ing 				AGAIN ORDER TAG mpnotaingp
+USE siaf!fuente_financ 				IN 0 SHARED ALIAS fuente_financ 		AGAIN ORDER TAG fuente_fin
+USE siaf!componente_nombre 			IN 0 SHARED ALIAS componente_nombre 	AGAIN ORDER TAG componente
+USE siaf!meta 						IN 0 SHARED ALIAS meta 					AGAIN ORDER TAG meta
+USE siaf!tipo_transaccion  			IN 0 SHARED ALIAS tipo_transaccion      AGAIN ORDER TAG tipotrn
+USE siaf!generica		  			IN 0 SHARED ALIAS generica      		AGAIN ORDER TAG generica
+USE siaf!subgenerica	  			IN 0 SHARED ALIAS subgenerica      		AGAIN ORDER TAG sgenerica
+USE siaf!subgenerica_det  			IN 0 SHARED ALIAS subgenerica_det  		AGAIN ORDER TAG sgenericad
+USE siaf!especifica		  			IN 0 SHARED ALIAS especifica  			AGAIN ORDER TAG especif
+USE siaf!especifica_det	  			IN 0 SHARED ALIAS especifica_det		AGAIN ORDER TAG especifdet
+USE siaf!maestro_detalle 			IN 0 SHARED ALIAS maestro_detalle1 		AGAIN ORDER TAG cod_det
+USE siaf!mes 						IN 0 SHARED ALIAS mes 					AGAIN ORDER TAG mes
+USE siaf!tipo_recurso				IN 0 SHARED ALIAS tipo_recurso			AGAIN ORDER TAG tipo
+USE siaf!departamento 				IN 0 SHARED ALIAS departamento			AGAIN ORDER TAG departamen
+USE siaf!provincia					IN 0 SHARED ALIAS provincia				AGAIN ORDER TAG provincia
+USE siaf!mensaje_error				IN 0 SHARED ALIAS mensaje_error			AGAIN ORDER TAG mensaje
+USE siaf!funcion				 	IN 0 SHARED AGAIN ORDER TAG funcion
+USE siaf!programa_nombre		 	IN 0 SHARED AGAIN ORDER TAG programa
+USE siaf!sub_programa_nombre 	 	IN 0 SHARED AGAIN ORDER TAG sub_prog
+USE siaf!programa_ppto_nombre 	 	IN 0 SHARED AGAIN ORDER TAG progppto_n
+USE siaf!act_proy_nombre		 	IN 0 SHARED AGAIN ORDER TAG act_proy
+USE siaf!finalidad 				 	IN 0 SHARED AGAIN ORDER TAG finalidad
+USE siaf!nota_modificatoria_fte 	IN 0 SHARED AGAIN ORDER TAG mp_notafte
+USE siaf!maestro_clasificador	 	IN 0 SHARED AGAIN ORDER TAG idclasif
+USE cert!matriz_minedu				IN 0 SHARED AGAIN ORDER tag sec_func
+
+
+CREATE CURSOR curgen(	ano_eje						c(04)	,;
+						sec_ejec					c(06)	,;
+						sec_ejec2					c(06)	,;
+						sec_nota					c(10)	,;
+						secuencia					c(04)	,;
+						mes_eje						c(02)	,;
+						fecha						d		,;
+						tipo_modificacion			c(03)	,;
+						ind_habilita				c(01)	,;
+						notas						c(150)	,;
+						cod_doc						c(03)	,;
+						num_doc						c(20)	,;
+						fecha_doc					d		,;
+						observacion					c(150)	,;
+						estado						c(01)	,;
+						estado_envio				c(01)	,;
+						estado_nombre				c(20)	,;
+						estado_envio_nombre			c(20)	,;
+						ciclo						c(01)	,;
+						origen						c(01)	,;
+						fuente_financ				c(02)	,;
+						tipo_recurso				c(02)	,;
+						tipo_procedencia			N(01)	,;
+						sec_ejec_procedencia		c(06)	,;
+						sec_func					c(04)	,;
+						tipo_transaccion			c(01)	,;
+						generica					c(01)	,;
+						subgenerica					c(02)	,;
+						subgenerica_det				c(02)	,;
+						especifica					c(02)	,;
+						especifica_det				c(02)	,;
+						funcion						c(02)	,;
+						programa					c(03)	,;
+						sub_programa				c(04)	,;
+						programa_ppto				c(04)	,;
+						act_proy					c(07)	,;
+						componente					c(07)	,;
+						meta						c(05)	,;
+						finalidad					c(07)	,;
+						monto_a						N(19)	,;
+						monto_de					N(19)	,;	
+						categoria					c(01)	,;
+						denominacion_tipo_organo		c(250),;
+						denominacion_estructura_padre	c(250),;
+						codigo							c(010),;
+						descripcion						c(250),;
+						denominacion_unidad_operativa	c(250),;
+						denominacion_actividad			c(250))
+
+
+SELECT curgen
+INDEX ON ano_eje+sec_ejec+sec_nota+origen+fuente_financ+tipo_recurso+;
+		ALLTRIM(programa_ppto)										+;
+		ALLTRIM(act_proy)+ALLTRIM(componente)						+;
+		ALLTRIM(funcion)+ALLTRIM(programa)+ALLTRIM(sub_programa)+ALLTRIM(meta)	+;
+		ALLTRIM(finalidad)+sec_func+ALLTRIM(tipo_transaccion)		+;
+		ALLTRIM(generica)+ALLTRIM(subgenerica)+ALLTRIM(subgenerica_det)	+;
+		ALLTRIM(especifica)+ALLTRIM(especifica_det) TAG gto
+INDEX ON ano_eje+sec_ejec+sec_nota+origen+fuente_financ+tipo_recurso+;
+		tipo_transaccion+generica+subgenerica+subgenerica_det		+;
+		especifica+especifica_det									 ;
+		TAG ing
+INDEX ON ano_eje+sec_ejec+sec_nota+ciclo+tipo_recurso+ALLTRIM(programa_ppto)	+;
+		ALLTRIM(funcion)	+	ALLTRIM(programa)+ALLTRIM(sub_programa) +;
+		ALLTRIM(act_proy)+ALLTRIM(componente)+ALLTRIM(meta)				+;
+		ALLTRIM(finalidad)+origen+fuente_financ+sec_func				+;
+		ALLTRIM(tipo_transaccion)+ALLTRIM(generica)+ALLTRIM(subgenerica)+;
+		ALLTRIM(especifica)+ALLTRIM(especifica_det) TAG NOTA
+		
+INDEX ON ano_eje+sec_ejec+sec_nota+ciclo+tipo_recurso+ALLTRIM(programa_ppto)	+;
+		ALLTRIM(act_proy)+ALLTRIM(componente)							+;
+		ALLTRIM(funcion)	+	ALLTRIM(programa)+ALLTRIM(sub_programa) +;
+		ALLTRIM(meta)				+;		
+		ALLTRIM(finalidad)+origen+fuente_financ+sec_func				+;
+		ALLTRIM(tipo_transaccion)+ALLTRIM(categoria)+ALLTRIM(generica)+ALLTRIM(subgenerica)+ALLTRIM(subgenerica_det)+;
+		ALLTRIM(especifica)+ALLTRIM(especifica_det) TAG REPORTS
+		
+SET ORDER TO gto
+
+CREATE CURSOR CurRpteC(	ano_eje						c(04)	,;
+						sec_ejec					c(06)	,;
+						sec_ejec2					c(06)	,;
+						sec_nota					c(10)	,;
+						secuencia					c(04)	,;
+						sector						c(02)	,;
+						sector_nombre				c(150)	,;
+						pliego						c(03)	,;
+						pliego_nombre				c(150)	,;
+						ejecutora					c(03)	,;
+						ejecutora_nombre			c(150)	,;
+						departamento				c(02)	,;
+						departamento_nombre			c(150)	,;
+						provincia					c(02)	,;
+						provincia_nombre			c(150)	,;
+						mes_eje						c(02)	,;
+						fecha						d		,;
+						tipo_modificacion			c(03)	,;
+						tipo_modificacion_nombre	c(60)	,;
+						ind_habilita				c(01)	,;
+						notas						c(150)	,;
+						cod_doc						c(03)	,;
+						num_doc						c(20)	,;
+						fecha_doc					d		,;
+						observacion					c(150)	,;
+						estado						c(01)	,;
+						estado_envio				c(01)	,;
+						estado_nombre				c(20)	,;
+						estado_envio_nombre			c(20)	,;
+						ciclo						c(01)	,;
+						origen						c(01)	,;
+						fuente_financ				c(02)	,;
+						tipo_recurso				c(02)	,;
+						tipo_procedencia			N(01)	,;
+						sec_ejec_procedencia		c(06)	,;
+						sec_func					c(04)	,;
+						tipo_transaccion			c(01)	,;
+						generica					c(01)	,;
+						subgenerica					c(02)	,;
+						subgenerica_det				c(02)	,;
+						especifica					c(02)	,;
+						especifica_det				c(02)	,;
+						clasificador_gasto			c(15)	,;
+						funcion						c(02)	,;
+						programa					c(03)	,;
+						sub_programa				c(04)	,;
+						programa_ppto				c(04)	,;
+						act_proy					c(07)	,;
+						componente					c(07)	,;
+						meta						c(05)	,;
+						finalidad					c(07)	,;
+						monto_a						N(19)	,;
+						monto_de					N(19)	,;	
+						categoria					c(01)	,;
+						denominacion_tipo_organo		c(250),;
+						denominacion_estructura_padre	c(250),;
+						codigo							c(010),;
+						descripcion						c(250),;
+						denominacion_unidad_operativa	c(250),;
+						denominacion_actividad			c(250))
+							
+
+
+
+SELECT CurRpteC
+INDEX ON ano_eje+sec_ejec+sec_nota+ciclo+tipo_recurso+ALLTRIM(programa_ppto)	+;
+		ALLTRIM(act_proy)+ALLTRIM(componente)							+;
+		ALLTRIM(funcion)	+	ALLTRIM(programa)+ALLTRIM(sub_programa) +;
+		ALLTRIM(meta)				+;		
+		ALLTRIM(finalidad)+origen+fuente_financ+sec_func				+;
+		ALLTRIM(tipo_transaccion)+ALLTRIM(categoria)+ALLTRIM(generica)+ALLTRIM(subgenerica)+ALLTRIM(subgenerica_det)+;
+		ALLTRIM(especifica)+ALLTRIM(especifica_det) TAG REPORTS
+
+
+SELECT meta
+SET RELATION TO ano_eje+sec_ejec+sec_func INTO matriz_minedu ADDITIVE 
+
+&&
+IF gctipo_ue='02'
+	lccond1	= 'gcano_eje'
+	lccond2	= 'ano_eje = gcano_eje'
+ELSE
+	lccond1	= 'gcano_eje+gcsec_ejec'
+	lccond2	= 'ano_eje+sec_ejec = gcano_eje+gcsec_ejec'
+ENDIF
+*!* Inicio de la creacion del cursor con las notas modificatorias que se van a usar en el reporte
+lccond	= ''
+lccond	= lccond + ' and b.ano_eje=gcano_eje'
+lccond	= lccond + IIF(LEFT(lcsec_ejec,1)='*','',' AND a.Sec_ejec="'+lcsec_ejec+'" ')
+
+SELECT	a.ano_eje, a.sec_ejec , a.sec_ejec2, a.sec_nota, a.secuencia, a.fecha, a.notas, ;
+	a.estado est_ue, a.estado_envio est_env_ue, a.cod_mensa,;
+	b.ind_habilita, b.tipo_modificacion, b.mes_eje, ;
+	b.tipo_procedencia, b.sec_ejec_procedencia, ;
+	SPACE(03) 	pli_cod_doc			,;
+	SPACE(20) 	pli_num_doc			,;
+	CTOD('//') 	pli_fecha_doc		,;
+	SPACE(01)	pli_estado			,;
+	SPACE(01)	pli_estado_envio	,;
+	SPACE(03) 	regu_cod_doc  		,;
+	SPACE(20) 	regu_num_doc		,;
+	CTOD('//') 	regu_fecha_doc		,;
+	SPACE(01)	regu_estado			,;
+	SPACE(01)	regu_estado_envio	,;
+	SPACE(150)	observacion			,;
+	a.sec_doc						,;
+	a.sec_doc_r						;
+	FROM nota_sec a, nota_cab b		;
+	WHERE a.ano_eje = b.ano_eje 	;
+	AND a.sec_ejec 	= b.sec_ejec 	;
+	AND a.sec_nota	= b.sec_nota 	;
+	AND a.secuencia = '0001' 		;
+	&lccond ;
+	ORDER BY 1,2,3 ;
+	INTO CURSOR curcab READWRITE
+SELECT curcab
+INDEX ON ano_eje+sec_ejec+sec_nota+secuencia TAG NOTA
+
+SELECT	a.ano_eje, a.sec_ejec sec_pliego, a.sec_ejec2 sec_ejec, a.sec_nota, a.secuencia, ;
+	a.sec_doc, a.estado est_doc, a.actual,;
+	b.ind_doc, b.cod_doc, b.num_doc, b.fecha_doc, ;
+	c.estado estado, b.estado_envio , b.observacion 	;
+	FROM nota_docsec a, nota_doc b, nota_sec c ;
+	WHERE 	a.ano_eje 	= b.ano_eje ;
+	AND a.sec_ejec 	= b.sec_ejec ;
+	AND a.sec_doc	= b.sec_doc ;
+	AND a.ano_eje	= gcano_eje ;
+	AND a.ano_eje	= c.ano_eje ;
+	AND a.sec_ejec2 = c.sec_ejec ;
+	AND a.sec_nota  = c.sec_nota ;
+	AND a.secuencia = c.secuencia ;
+	INTO CURSOR cdoc	READWRITE
+
+SELECT cdoc
+INDEX ON ano_eje+sec_ejec+sec_nota+secuencia+sec_doc+ind_doc+est_doc TAG DOC
+INDEX ON ano_eje+sec_ejec+sec_nota+secuencia+sec_doc+ind_doc+estado TAG doc_1 ADDITIVE
+
+SELECT curcab
+SCAN ALL
+	SCATTER MEMVAR
+	*!*	buscando si tiene documento de aprobacion en la nota inicial
+	lckey=M.ano_eje+M.sec_ejec+M.sec_nota+M.secuencia+m.sec_doc+'1'+'A'
+	IF SEEK(lckey,'CDOC','DOC')
+		REPLACE pli_cod_doc 		WITH cdoc.cod_doc	,;
+				pli_num_doc 		WITH cdoc.num_doc 	,;
+				pli_fecha_doc 		WITH cdoc.fecha_doc	,;
+				pli_estado  		WITH cdoc.estado	,;
+				pli_estado_envio 	WITH cdoc.estado_envio IN curcab
+	ELSE
+		REPLACE pli_estado	WITH curcab.est_env_ue IN curcab
+		LOOP
+	ENDIF
+	*!*	buscando si tiene documento de regularizacion
+	IF !EMPTY(m.sec_doc_r) AND m.tipo_modificacion='003'
+		lckey=M.ano_eje+M.sec_ejec+M.sec_nota+M.secuencia+m.sec_doc_r+'2'
+		IF SEEK(lckey,'CDOC','DOC')
+			REPLACE regu_cod_doc		WITH cdoc.cod_doc	,;
+					regu_num_doc 		WITH cdoc.num_doc	,;
+					regu_fecha_doc 		WITH cdoc.fecha_doc	,;
+					regu_estado  		WITH cdoc.estado	,;
+					regu_estado_envio 	WITH cdoc.estado_envio IN curcab
+		ENDIF
+	ENDIF
+	*!*	buscando si tiene anulacion en la nota
+	lckey=M.ano_eje+M.sec_ejec+m.sec_ejec2+M.sec_nota+'0002'
+	IF SEEK(lckey,'nota_sec','mp_notasec')
+		IF !EMPTY(nota_sec.sec_doc)
+			lckey=M.ano_eje+M.sec_ejec+M.sec_nota+'0002'+nota_sec.sec_doc+'1'+'A'
+			IF SEEK(lckey,'CDOC','DOC_1')
+				DELETE IN curcab
+			ENDIF
+		ENDIF
+	ENDIF
+ENDSCAN
+*!* Fin de la creacion del cursor con las notas modificatorias que se van a usar en el reporte
+
+SELECT nota_det
+SET RELATION TO ano_eje+sec_ejec+sec_func 									INTO meta
+SET RELATION TO ano_eje+origen+fuente_financ+tipo_recurso 					INTO tipo_recurso 			ADDITIVE
+SET RELATION TO ano_eje+sec_ejec+sec_ejec2+sec_nota+origen+fuente_financ 	INTO nota_modificatoria_fte ADDITIVE
+
+*!*	Iniciando la carga de las Modificaciones del Gasto
+SELECT curcab
+GO TOP
+SCAN ALL
+	SCATTER MEMVAR
+	m.estado		= IIF(!INLIST(m.pli_estado,'A','R'),'P',curcab.pli_estado)
+	m.observacion	= IIF(EMPTY(m.observacion),IIF(SEEK(m.cod_mensa,'mensaje_error'),mensaje_error.descripcion,''),m.observacion)
+	IF LEFT(lcsec_ejec,1) <> '*' AND m.sec_ejec<> lcsec_ejec
+		LOOP
+	ENDIF
+
+	IF tipo_recurso.es_presupuestal = 'N' THEN
+		m.tipo_recurso = '0 '
+	ENDIF
+	DO CASE
+		CASE m.estado='A'
+			m.estado_nombre	= 'APROBADO'
+		CASE m.estado='R'
+			m.estado_nombre	= 'RECHAZADO'
+		OTHERWISE
+			m.estado_nombre	= 'PENDIENTE'
+	ENDCASE
+	lckey_det	= m.ano_eje+m.sec_ejec+m.sec_ejec2+m.sec_nota
+	lccond_det	= 'ano_eje+sec_ejec+sec_ejec2+sec_nota = "'+lckey_det+'" '
+	IF SEEK(lckey_det,'nota_det','mpnotadetp')
+		SELECT nota_det
+		SCAN WHILE &lccond_det
+			SCATTER MEMVAR
+			=SEEK(gcano_eje+nota_det.id_clasificador,'maestro_clasificador')
+			lnivel = IIF (maestro_clasificador.origen_clasificador='3',6,4)
+*			wclasificador = oSiafRutina.clasificador_codigo(gcano_eje,nota_det.id_clasificador,lnivel,'T')
+			wclasificador = maestro_clasificador.clasificador
+			wnivel1 = SUBSTR(wclasificador,1,1)
+			wnivel2 = SUBSTR(wclasificador,2,1)
+			wnivel3 = SUBSTR(wclasificador,3,2)
+			wnivel4 = SUBSTR(wclasificador,5,2)
+			wnivel5 = SUBSTR(wclasificador,7,2)
+			wnivel6 = SUBSTR(wclasificador,9,2)
+			
+			=SEEK(gcano_eje+SUBSTR(wclasificador,1,6),'subgenerica_det')
+			wcategoria = subgenerica_det.categoria_gasto
+			
+			lckey	=	m.ano_eje			+;
+						m.sec_ejec			+;
+						m.sec_nota			+;
+						m.origen			+;
+						m.fuente_financ		+;
+						m.tipo_recurso		+;
+						m.sec_func			+;
+						m.wnivel1			+;
+						wcategoria			+;						
+						m.wnivel2			+;
+						m.wnivel3			+;
+						m.wnivel4			+;
+						m.wnivel5			+;
+						m.wnivel6
+
+			*-
+			m.tipo_recurso=IIF(EMPTY(nota_modificatoria_fte.tipo_recurso),'0 ',nota_modificatoria_fte.tipo_recurso)
+			*-hp
+			IF nota_modificatoria_fte.fuente_financ<>'13' THEN
+				m.tipo_procedencia		=	0
+				m.sec_ejec_procedencia	=	''
+			ENDIF
+			*-hp
+			m.cod_doc	=	m.pli_cod_doc
+			m.num_doc	=	m.pli_num_doc
+			m.fecha_doc	=	m.pli_fecha_doc
+			IF !EMPTY(m.sec_doc_r) AND m.tipo_modificacion='003'
+			    IF VAL(m.sec_doc_r)>0
+					m.cod_doc	=	m.regu_cod_doc
+					m.num_doc	=	m.regu_num_doc
+					m.fecha_doc	=	m.regu_fecha_doc
+				endif	
+			ENDIF
+			*-
+			IF !SEEK(lckey,'curgen','gto')
+				m.notas	= STRTRAN(M.notas,CHR(13),' ')
+				INSERT INTO curgen	(	ano_eje				,;
+										sec_ejec			,;
+										sec_ejec2			,;
+										sec_nota			,;
+										mes_eje				,;
+										fecha				,;
+										tipo_modificacion	,;
+										notas				,;
+										cod_doc				,;
+										num_doc				,;
+										fecha_doc			,;
+										observacion			,;
+										estado				,;
+										estado_nombre		,;
+										ciclo				,; 
+										origen				,;
+										fuente_financ		,;
+										tipo_recurso		,;
+										tipo_procedencia	,;
+										sec_ejec_procedencia,;
+										funcion				,;
+										programa			,;
+										sub_programa		,;
+										programa_ppto		,;
+										act_proy			,;
+										componente			,;
+										meta				,;
+										finalidad			,;
+										sec_func			,;
+										tipo_transaccion	,;
+										generica			,;
+										subgenerica 		,;
+										subgenerica_det		,;
+										especifica			,;
+										especifica_det		,;
+										monto_a				,; 
+										monto_de 			,;
+										categoria			,;
+										denominacion_tipo_organo		,;
+										denominacion_estructura_padre	,;
+										codigo							,;
+										descripcion						,;
+										denominacion_unidad_operativa	,;
+										denominacion_actividad			);
+							VALUES 	(	m.ano_eje			,; 
+										m.sec_ejec			,; 
+										m.sec_ejec2			,; 
+										m.sec_nota			,; 
+										m.mes_eje			,;
+										m.fecha				,; 
+										m.tipo_modificacion	,; 
+										m.notas				,; 
+										m.cod_doc			,;
+										m.num_doc			,;
+										m.fecha_doc			,; 
+										m.observacion		,;
+										m.estado			,;
+										m.estado_nombre		,;
+										'G'					,; 
+										m.origen			,; 
+										m.fuente_financ		,; 
+										m.tipo_recurso		,;
+										m.tipo_procedencia	,; 
+										m.sec_ejec_procedencia,;
+										IIF(lnnivelcadena>=4 AND lnnivelcadena<>8 ,meta.funcion,'')		,;
+										IIF(lnnivelcadena>=5 AND lnnivelcadena<>8 ,meta.programa,'') 	,;
+										IIF(lnnivelcadena>=6 AND lnnivelcadena<>8 ,meta.sub_programa,''),;
+										IIF(lnnivelcadena>=1 AND lnnivelcadena<>8 ,meta.programa_ppto,''),;
+										IIF(lnnivelcadena>=2 AND lnnivelcadena<>8 ,meta.act_proy,'') 	,;
+										IIF(lnnivelcadena>=3 AND lnnivelcadena<>8 ,meta.componente,'')	,;
+										IIF(lnnivelcadena=7 ,meta.meta,'')								,;
+										IIF(lnnivelcadena=7 ,meta.finalidad,'')							,;
+										IIF(lnnivelcadena=7 ,meta.sec_func,'')							,;
+										IIF(lnnivelclasif>=1,m.wnivel1,'')								,;
+										IIF(lnnivelclasif>=2,m.wnivel2,'')								,;
+										IIF(lnnivelclasif>=3,m.wnivel3,'')								,;
+										IIF(lnnivelclasif>=4,m.wnivel4,'')								,;
+										IIF(lnnivelclasif>=5,m.wnivel5,'')								,;
+										IIF(lnnivelclasif= 6,m.wnivel6,'')								,;
+										m.monto_a			,;
+										m.monto_de 			,;
+										wcategoria			,;
+										matriz_minedu.denominacion_tipo_organo		,;
+										matriz_minedu.denominacion_estructura_padre	,;
+										matriz_minedu.codigo							,;
+										matriz_minedu.descripcion						,;
+										matriz_minedu.denominacion_unidad_operativa	,;
+										matriz_minedu.denominacion_actividad			)
+
+			ENDIF
+		ENDSCAN
+	ENDIF
+	SELECT curcab
+ENDSCAN
+SELECT nota_det
+SET RELATION TO
+*-
+SELECT nota_ing
+SET RELATION TO ano_eje+sec_ejec+sec_ejec2+sec_nota+origen+fuente_financ INTO nota_modificatoria_fte ADDITIVE
+
+*-
+*!*	Iniciando la carga de las Modificaciones de Ingresos
+SELECT curcab
+GO TOP
+SCAN ALL
+	SCATTER MEMVAR
+	m.estado=IIF(!INLIST(curcab.pli_estado,'A','R'),'P',curcab.pli_estado)
+	m.observacion	= IIF(EMPTY(m.observacion),IIF(SEEK(m.cod_mensa,'mensaje_error'),mensaje_error.descripcion,''),m.observacion)
+	IF LEFT(lcsec_ejec,1) <> '*' 	AND m.sec_ejec<> lcsec_ejec
+		LOOP
+	ENDIF
+*!*		IF LEFT(lcmes,1) <> '*' 		AND m.mes_eje <> lcmes
+*!*			LOOP
+*!*		ENDIF
+*!*		IF LEFT(lcnota,1) <> '*' 		AND m.sec_nota<> lcnota
+*!*			LOOP
+*!*		ENDIF
+*!*		IF LEFT(lcestado,1) <> '*' 		AND m.estado<> lcestado
+*!*			LOOP
+*!*		ENDIF
+	IF tipo_recurso.es_presupuestal = 'N' THEN
+		m.tipo_recurso = '0 '
+	ENDIF
+	DO CASE
+		CASE m.estado='A'
+			m.estado_nombre='APROBADO'
+		CASE m.estado='R'
+			m.estado_nombre='RECHAZADO'
+		OTHERWISE
+			m.estado_nombre='PENDIENTE'
+	ENDCASE
+	lckey_det	= m.ano_eje+m.sec_ejec+m.sec_ejec2+m.sec_nota
+	lccond_det	= 'ano_eje+sec_ejec+sec_ejec2+sec_nota = "'+lckey_det+'" '
+	IF SEEK(lckey_det,'nota_ing','mpnotaingp')
+		SELECT nota_ing
+		SCAN WHILE &lccond_det
+			SCATTER MEMVAR
+			
+			=SEEK(gcano_eje+nota_ing.id_clasificador,'maestro_clasificador')
+			lnivel = IIF (maestro_clasificador.origen_clasificador='3',6,4)
+*			wclasificador = oSiafRutina.clasificador_codigo(gcano_eje,nota_ing.id_clasificador,lnivel,'T')
+			wclasificador = maestro_clasificador.clasificador			
+			wnivel1 = SUBSTR(wclasificador,1,1)
+			wnivel2 = SUBSTR(wclasificador,2,1)
+			wnivel3 = SUBSTR(wclasificador,3,2)
+			wnivel4 = SUBSTR(wclasificador,5,2)
+			wnivel5 = SUBSTR(wclasificador,7,2)
+			wnivel6 = SUBSTR(wclasificador,9,2)
+
+			=SEEK(gcano_eje+SUBSTR(wclasificador,1,6),'subgenerica_det')
+			wcategoria = subgenerica_det.categoria_gasto
+
+						
+			lckey	=	ano_eje			+;
+						sec_ejec		+;
+						sec_nota		+;
+						origen			+;
+						fuente_financ	+;
+						tipo_recurso	+;
+						wnivel1 		+;
+						wcategoria		+;						
+						wnivel2			+;
+						wnivel3			+;
+						wnivel4			+;
+						wnivel5			+;
+						wnivel6 
+			*-hp
+			m.tipo_recurso=IIF(EMPTY(nota_modificatoria_fte.tipo_recurso),'0 ',nota_modificatoria_fte.tipo_recurso)
+			*-
+			IF nota_modificatoria_fte.fuente_financ<>'13' THEN
+				m.tipo_procedencia		=	0
+				m.sec_ejec_procedencia	=	''
+			ENDIF
+			*-hp
+			m.cod_doc	=	m.pli_cod_doc
+			m.num_doc	=	m.pli_num_doc
+			m.fecha_doc	=	m.pli_fecha_doc
+			IF !EMPTY(m.sec_doc_r) AND m.tipo_modificacion='003'
+				m.cod_doc	=	m.regu_cod_doc
+				m.num_doc	=	m.regu_num_doc
+				m.fecha_doc	=	m.regu_fecha_doc
+			ENDIF
+			*-
+			IF !SEEK(lckey,'curgen','ing')
+				m.notas=STRTRAN(M.notas,CHR(13),' ')
+				INSERT INTO curgen	(	ano_eje				,; 
+										sec_ejec			,;
+										sec_ejec2			,; 
+										sec_nota			,; 
+										mes_eje				,;
+										fecha				,; 
+										tipo_modificacion	,; 
+										notas				,; 
+										cod_doc				,; 
+										num_doc				,; 
+										fecha_doc			,;
+										observacion			,; 
+										estado				,;
+										estado_nombre		,;
+										ciclo				,; 
+										origen 				,;	
+										fuente_financ		,;
+										tipo_recurso		,;
+										tipo_procedencia	,; 
+										sec_ejec_procedencia,;
+										tipo_transaccion	,;
+										generica 			,; 
+										subgenerica			,;
+										subgenerica_det		,;
+										especifica			,;
+										especifica_det		,;
+										monto_a				,; 
+										monto_de 			,;
+										categoria			);
+							VALUES 	(	m.ano_eje			,; 
+										m.sec_ejec			,; 
+										m.sec_ejec2			,; 
+										m.sec_nota			,; 
+										m.mes_eje			,;
+										m.fecha				,; 
+										m.tipo_modificacion	,; 
+										m.notas				,; 
+										m.cod_doc			,; 
+										m.num_doc			,;
+										m.fecha_doc			,; 
+										m.observacion		,;
+										m.estado			,;
+										m.estado_nombre		,;
+										'I'					,; 
+										m.origen			,;
+										m.fuente_financ		,;
+										m.tipo_recurso		,;
+										tipo_procedencia	,; 
+										sec_ejec_procedencia,;
+										IIF(lnnivelclasif>=1,m.wnivel1,'')	,;
+										IIF(lnnivelclasif>=2,m.wnivel2,'')	,;
+										IIF(lnnivelclasif>=3,m.wnivel3,'')	,;
+										IIF(lnnivelclasif>=4,m.wnivel4,'')	,;
+										IIF(lnnivelclasif>=5,m.wnivel5,'')	,;
+										IIF(lnnivelclasif>=6,m.wnivel6,'')	,;
+										m.monto_a			,;
+										m.monto_de 			,;
+										wcategoria)
+			ENDIF
+		ENDSCAN
+	ENDIF
+	SELECT curcab
+ENDSCAN
+*-
+SELECT nota_ing
+SET RELATION TO
+*-
+SELECT curgen
+REPLACE fecha 		WITH IIF(fecha= CTOD('01/01/1901'),CTOD('  /  /    '),fecha), ;
+		fecha_doc	WITH IIF(fecha_doc= CTOD('01/01/1901'),CTOD('  /  /    '),fecha_doc) ALL
+&&
+=SEEK(gcano_eje+gcsec_ejec,'ejecutora')
+
+&&
+SELECT ejecutora
+SET RELATION TO ano_eje+sector 			INTO sector
+SET RELATION TO ano_eje+sector+pliego 	INTO pliego 		ADDITIVE
+SET RELATION TO departamento 			INTO departamento 	ADDITIVE
+SET RELATION TO departamento+provincia 	INTO provincia 		ADDITIVE
+
+&&
+SELECT curgen
+&&SET ORDER TO NOTA
+SET ORDER TO REPORTS
+
+SET RELATION TO ano_eje+sec_ejec 																			INTO ejecutora
+SET RELATION TO ano_eje+origen+fuente_financ 																INTO fuente_financ 		ADDITIVE
+SET RELATION TO ano_eje+origen+fuente_financ+tipo_recurso													INTO tipo_recurso 		ADDITIVE
+SET RELATION TO ano_eje+sec_ejec+sec_func 																	INTO meta 				ADDITIVE
+SET RELATION TO ano_eje+funcion 																			INTO funcion				ADDITIVE
+SET RELATION TO ano_eje+programa 																			INTO programa_nombre		ADDITIVE
+SET RELATION TO ano_eje+sub_programa 																		INTO sub_programa_nombre	ADDITIVE
+SET RELATION TO ano_eje+programa_ppto																		INTO programa_ppto_nombre	ADDITIVE
+SET RELATION TO ano_eje+act_proy 																			INTO act_proy_nombre		ADDITIVE
+SET RELATION TO ano_eje+componente 																			INTO componente_nombre		ADDITIVE
+SET RELATION TO ano_eje+tipo_transaccion																	INTO tipo_transaccion		ADDITIVE
+SET RELATION TO ano_eje+tipo_transaccion+generica															INTO generica  		     	ADDITIVE
+SET RELATION TO ano_eje+tipo_transaccion+generica+subgenerica												INTO subgenerica	     	ADDITIVE
+SET RELATION TO ano_eje+tipo_transaccion+generica+subgenerica+subgenerica_det								INTO subgenerica_det     	ADDITIVE
+SET RELATION TO ano_eje+tipo_transaccion+generica+subgenerica+subgenerica_det+especifica					INTO especifica    			ADDITIVE
+SET RELATION TO ano_eje+tipo_transaccion+generica+subgenerica+subgenerica_det+especifica+especifica_det		INTO especifica_det    		ADDITIVE
+
+
+SET RELATION TO ano_eje+finalidad INTO finalidad ADDITIVE
+
+SET RELATION TO PADR('TIPO_MODIFICACION',20,' ')+tipo_modificacion 						INTO maestro_detalle1 	ADDIT
+SET RELATION TO mes_eje 																INTO mes				ADDIT
+GO TOP
+
+SELECT curgen
+GO top
+SCAN ALL 
+	SCATTER MEMVAR 
+	m.sector				= ejecutora.sector
+	m.pliego 				= ejecutora.pliego
+	m.ejecutora				= ejecutora.ejecutora
+	m.ejecutora_nombre		= ejecutora.nombre
+	m.departamento			= ejecutora.departamento
+	m.provincia				= ejecutora.provincia
+	m.sector_nombre 		= sector.nombre
+	m.pliego_nombre			= pliego.nombre
+	m.departamento_nombre	= departamento.nombre
+	m.provincia_nombre		= provincia.nombre
+	m.tipo_modificacion_nombre = maestro_detalle1.nombre
+	m.clasificador_gasto    = especifica_det.tipo_transaccion+'.'+especifica_det.generica+'.'+especifica_det.subgenerica+'.'+especifica_det.subgenerica_det+'.'+especifica_det.especifica+'.'+especifica_det.especifica_det
+	INSERT INTO CurRpteC FROM MEMVAR 
+
+
+ENDSCAN 
+
+
+SELECT CurRpteC 
+IF lcTipoArchivo = 1
+	COPY TO &lcNombreArchivo. TYPE XL5
+ENDIF 
+IF lcTipoArchivo = 2
+	COPY TO &lcNombreArchivo.
+ENDIF
+
+SELECT curgen
+GO TOP
+
+DO ejecutar
+DO cierra_tablas
+
+
+
+PROCEDURE cierra_tablas
+ DIMENSION aTablas(1)
+   nTablas = AUSED(aTablas)
+
+   IF nTablas > 0 
+  FOR EACH oTabla IN aTablas
+     SELECT (oTabla)
+     USE 
+  ENDFOR 
+   ENDIF
+
+ENDPROC 
+
+PROCEDURE ejecutar
+*!*	lcTipoArchivo=0
+*!*	do form frmarchivo_new to lcTipoArchivo
+SELECT CurRpteC 
+IF EMPTY(ALLTRIM(lcNombreArchivo))  THEN 
+	 RETURN 
+ENDIF 
+
+*!*	IF lcTipoArchivo = 0
+*!*		COPY TO &lcNombreArchivo.
+*!*	ENDIF
+*!*	IF lcTipoArchivo = 1
+	COPY TO &lcNombreArchivo. TYPE XL5
+*!*	ENDIF 
+*!*	IF lcTipoArchivo = 2
+*!*		COPY TO &lcNombreArchivo.
+*!*	ENDIF
+MESSAGEBOX('Se ha generado el Archivo : ' + lcNombreArchivo,0+64,"Aviso del Sistema")
+
+lcTipoArchivo=0
+RETURN 
+
+ENDPROC 
+
+
+

@@ -1,0 +1,26 @@
+lcsec_ejec = gcsec_ejec
+lnnivelClasif 	= 7
+lnnivelcadena 	= 6
+lcfuncion	 	= '*'
+lcprograma	 	= '*'
+lcsubprograma	= '*'
+lcprograma_ppto = '*'
+lcPrd_pry 		= '*'
+lccomponente	= '*'
+lcactproy		= '*'
+lctransaccion	= '*'
+lcgenerica		= '*'
+lcsubgenerica	= '*'
+lcsubgenericadet= '*'
+lcespecifica	= '*'
+lcespecificadet = '*'
+lcsec_func		= '*'
+lcfuenteagregada= '*'
+lcfuente		= '*'
+lcAct_acc_inv 	= '*'
+lctipo_reporte  = 1
+lnnivelfinanc   = 2
+lctipoarchi		= 0
+lnniveldetalle  = 1
+lcmes			= PADL(MONTH(DATE()),2,'0')
+REPORT FORM reports\r_ejecucion_x_fases_2012 NOEJECT NOCONSOLE PREVIEW

@@ -1,0 +1,1858 @@
+* RELACION
+SELECT exp_fase
+SET RELATION TO ano_eje+sec_ejec+expediente INTO EXP
+
+* CREA CURSORES
+CREATE CURSOR cur_bco ( expediente		c(00010), ciclo     c(00001), ;
+	fecha_doc		d(00008), cod_doc   c(00003), ;
+	num_doc			c(00020), nombre    c(00060), ;
+	debe_ori		N(19,02), haber_ori	N(19,02), ;
+	saldo_ori      	N(19,02), debe_nac	N(19,02), ;
+	haber_nac		N(19,02), saldo_nac	N(19,02), ;
+	moneda      	c(00005), estado	c(00001), ;
+	ano_entorno		c(00004), sec_ejec	c(00006), ;
+	tipo_operacion	c(00002), orden_ciclo	c(00001))
+INDEX ON expediente+ciclo+cod_doc+num_doc+nombre+estado+STR(debe_ori+haber_ori,19,02)+DTOS(fecha_doc) TAG ord01 UNIQUE
+*
+CREATE CURSOR cur_bco1 ( expediente c(00010), ciclo     c(00001), ;
+	cod_doc    c(00003), num_doc	c(00020), ;
+	nombre     c(00060), estado	c(00001), ;
+	debe		c(00019), haber		c(00019), ;
+	fecha_doc	c(00008) )
+INDEX ON expediente+ciclo+cod_doc+num_doc+nombre+estado+debe+haber+fecha_doc TAG ord01 UNIQUE
+*
+CREATE CURSOR cur_acum ( debe_ori  N(19,02), haber_ori N(19,02), debe_nac N(19,02), haber_nac N(19,02), tipo  c(00001) )
+*
+llsaldonotas = .F.
+SELECT cta_cte
+SET RELATION TO banco INTO banco
+INSERT INTO cur_acum VALUES ( 00, 00, 00, 00, gs_tipo )
+SELECT saldo_banco
+SET ORDER TO TAG saldo_bco
+SEEK ano_cta+gs_banco+gs_cta_cte+lsec_ejec
+SCAN WHILE ano_cta_cte+banco+cta_cte+sec_ejec == ;
+		ano_cta+gs_banco+gs_cta_cte+lsec_ejec
+		
+*!*		IF saldo_banco.banco <> '999'
+*!*			LOOP 
+*!*		ENDIF 
+		
+	IF ano_eje+mes_eje < gcano_eje+lmes_eje THEN
+		IF ano_eje = gcano_eje
+			IF !llsaldonotas
+				=actualizacion_x_notas('SALDO')
+				=ctb_actualizacion_x_notas_2009('')
+				IF gcano_eje>='2011'
+					=ctb_actualizacion_x_notas('SALDO')
+				ENDIF 
+				llsaldonotas = .T.
+			ENDIF
+		ENDIF
+		SELECT saldo_banco
+		REPLACE cur_acum.debe_ori  WITH cur_acum.debe_ori  + saldo_banco.debe_mes , ;
+			cur_acum.haber_ori WITH cur_acum.haber_ori + saldo_banco.haber_mes
+		REPLACE cur_acum.debe_nac  WITH cur_acum.debe_nac  + saldo_banco.debe_nac , ;
+			cur_acum.haber_nac WITH cur_acum.haber_nac + saldo_banco.haber_nac
+		IF ano_eje < gcano_eje
+			DO CASE
+			CASE cur_acum.debe_ori - cur_acum.haber_ori >= 0
+				REPLACE cur_acum.debe_ori  WITH cur_acum.debe_ori - cur_acum.haber_ori, ;
+					cur_acum.haber_ori WITH 0
+			CASE cur_acum.debe_ori - cur_acum.haber_ori <  0
+				REPLACE cur_acum.haber_ori WITH cur_acum.haber_ori - cur_acum.debe_ori, ;
+					cur_acum.debe_ori  WITH 0
+			ENDCASE
+			DO CASE
+			CASE cur_acum.debe_nac - cur_acum.haber_nac >= 0
+				REPLACE cur_acum.debe_nac  WITH cur_acum.debe_nac - cur_acum.haber_nac, ;
+					cur_acum.haber_nac WITH 0
+			CASE cur_acum.debe_nac - cur_acum.haber_nac <  0
+				REPLACE cur_acum.haber_nac WITH cur_acum.haber_nac - cur_acum.debe_nac, ;
+					cur_acum.debe_nac  WITH 0
+			ENDCASE
+		ENDIF
+	ENDIF
+ENDSCAN
+*
+
+SELECT exp_sec
+SET ORDER TO TAG cuenta
+SEEK lsec_ejec+ano_cta+gs_banco+gs_cta_cte
+SCAN WHILE sec_ejec+ano_cta_cte+banco+cta_cte = lsec_ejec+ano_cta+gs_banco+gs_cta_cte
+	*	consistencia entre dos año
+	SCATTER MEMVAR
+*!*		IF exp_sec.banco <> '999'
+*!*			LOOP 
+*!*		ENDIF 
+
+	*TODO: C.RUBDIO para el tratamiento de la cta tesoro igual a las otras
+	DO CASE
+	CASE gcano_eje < '2003'
+		lcif = "EXP_SEC.BANCO+EXP_SEC.CTA_CTE <> '001001' and "
+		lcif = lcif + "year(EXP_SEC.fecha_doc) > val(ano_cta) and ano_cta = gcano_eje"
+	OTHER
+		lcif = "year(EXP_SEC.fecha_doc) > val(ano_cta) and ano_cta = gcano_eje"
+	ENDCASE
+	IF &lcif. THEN
+		wcllave_sec  = 	exp_sec.ano_eje+exp_sec.sec_ejec+;
+			exp_sec.expediente+exp_sec.ciclo+;
+			exp_sec.fase+exp_sec.secuencia+;
+			exp_sec.correlativo
+		IF SEEK(wcllave_sec,'EXP_DOC','exp_doc') THEN
+			IF YEAR(exp_doc.fecha_doc) > VAL(ano_cta) THEN
+				SELE exp_sec
+				LOOP
+			ENDIF
+		ELSE
+			LOOP
+		ENDIF
+	ENDIF
+
+	lcexpdoc = exp_sec.ano_eje+exp_sec.sec_ejec+;
+		exp_sec.expediente+exp_sec.ciclo+;
+		exp_sec.fase+exp_sec.secuencia+;
+		exp_sec.correlativo
+
+*!*		&&PC(08/07/2010) No considerar si es ingreso y sea Anulacion de Devolucion o Devolucion sin documento B
+*!*		IF m.ciclo='I' AND m.fase='R' AND INLIST(m.estado,'Y','D') AND !SEEK(lcexpdoc,'exp_doc','exp_doc')
+*!*			LOOP
+*!*		ENDIF
+	
+	&& Cambio realizado por JM el 28-09-2012
+	IF m.ciclo='I' AND m.fase='R' AND m.estado = 'D' AND !SEEK(lcexpdoc,'exp_doc','exp_doc')
+		LOOP
+	ENDIF
+	IF m.ciclo='I' AND m.fase='R' AND m.estado = 'Y' AND !SEEK(lcexpdoc,'exp_doc','exp_doc')
+		llExisteEnlace = .f.
+		lcLlaveEnlace = m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo
+		SELECT Expediente_enlace
+		SEEK lcLlaveEnlace
+		SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo==lcLlaveEnlace ;
+			FOR estado=='Y' AND !DELETED()
+			lcexpdoc = Expediente_enlace.ano_eje + ;
+					   Expediente_enlace.sec_ejec + ;
+					   Expediente_enlace.expediente + ;
+					   Expediente_enlace.ciclo_gen + ;
+					   Expediente_enlace.fase_gen + ;
+					   Expediente_enlace.secuencia_gen + ;
+					   Expediente_enlace.correlativo_gen
+			llExisteEnlace = .t.
+		ENDSCAN
+		IF !llExisteEnlace
+			LOOP
+		ENDIF
+	ENDIF
+	
+	
+	* no operaciones de ano y cuenta anterior
+	IF YEAR(exp_sec.fecha_doc) < VAL(gcano_eje) AND exp_sec.ano_eje == ano_cta THEN
+		LOOP
+	ENDIF
+
+	* no anulaciones por error *
+	IF INLIST(exp_sec.estado, "X" ) THEN
+		LOOP
+	ENDIF
+	* solo GG, GP o IR *
+	IF !INLIST(exp_sec.ciclo+exp_sec.fase, "GG", "GP", "IR")
+		LOOP
+	ENDIF
+	* no modificados *
+	IF exp_sec.edicion == "R" THEN    && "R" = Reasignado
+		LOOP
+	ENDIF
+	=SEEK(exp_sec.ano_eje+exp_sec.sec_ejec+exp_sec.expediente+;
+		exp_sec.ciclo+exp_sec.fase+exp_sec.secuencia,;
+		'EXP_FASE','EXP_FASE')
+	***
+	lano_eje       = exp_sec.ano_eje
+	ls_ciclo       = exp_sec.ciclo
+	ls_fase        = exp_sec.fase
+	ls_expediente  = exp_sec.expediente
+	ls_secuencia   = exp_sec.secuencia
+	***
+	ls_correlativo = exp_sec.correlativo
+	ls_moneda      = exp_sec.moneda
+	ls_tipo_cambio = exp_sec.tipo_cambio
+	ls_estado      = exp_sec.estado
+	***
+	DO CASE
+	CASE ls_ciclo+ls_fase == "IR"
+		lorden_ciclo = "1"
+		IF exp_sec.estado == "D" THEN
+			=procesa_ir_d() && D = Devolución
+		ELSE
+			IF INLIST(exp_fase.origen+exp_fase.fuente_financ,'101','103','104',;
+					'107','108','109','111','112','113') THEN && EJERCICIOS ANTERIORES "421001"
+				=procesa_ir_ej_ant()
+			ENDIF
+			*
+			IF EXP.tipo_operacion <> "YT" THEN
+				SELECT exp_sec
+				IF EMPTY(exp_sec.serie_doc) THEN
+					ls_num_doc = exp_sec.num_doc
+				ELSE
+					ls_num_doc = LEFT(exp_sec.serie_doc+"-"+exp_sec.num_doc, 20 )
+				ENDIF
+				ls_cod_doc = exp_sec.cod_doc
+				ls_fec_doc = exp_sec.fecha_doc
+				STORE SPACE(60) TO ls_nombre
+				*
+				*
+				IF EXP.tipo_operacion == "YV" THEN
+					=procesa_ir_yv() && por las operaciones YV ( REBAJA DE IGV )
+				ELSE
+					IF exp_sec.estado = 'R' THEN
+						=procesa_ir_r()  && por las rebajas
+					ELSE
+						=procesa_ir_an() && por las anulaciones
+					ENDIF
+				ENDIF
+			ELSE
+				SELECT exp_sec
+				IF exp_sec.monto > 0 AND INLIST(exp_sec.estado, "A" ) THEN
+					=procesa_ir_tr_an() && por anulaciones de transfrencias
+				ELSE
+					=procesa_ir_tr()    && por las transferencias
+				ENDIF
+			ENDIF
+		ENDIF
+	CASE ls_ciclo+ls_fase == "GG"
+		lorden_ciclo = "2"
+		control_neg = 'N'
+		IF exp_sec.monto < 00 AND INLIST(exp_sec.estado, "A" ) THEN
+			ls_correlativo = "0001"
+			control_neg = 'S'
+		ENDIF
+		IF exp_sec.edicion == "E" THEN
+			ls_correlativo = "0001"
+			control_neg = 'S'
+		ENDIF
+		IF SEEK(lano_eje+lsec_ejec+ls_expediente+ls_ciclo+ls_fase+ls_secuencia+ls_correlativo,'EXP_DOC','exp_doc') THEN
+			IF 		 ( YEAR(exp_doc.fecha_doc) = VAL(gcano_eje) AND control_neg = 'N' ) ;
+					.OR. ( YEAR(exp_sec.fecha_doc) = VAL(gcano_eje) AND control_neg = 'S' ) ;
+					.OR. ( YEAR(exp_sec.fecha_doc) = VAL(gcano_eje) AND exp_sec.estado == 'D' ) THEN
+				DO CASE
+				CASE 	exp_sec.estado == "D" AND ;
+						!(exp_fase.origen+exp_fase.fuente_financ $ '100/114/116') AND ;
+						!(exp_fase.origen+exp_fase.fuente_financ+exp_fase.tipo_recurso $ '113S ') AND ;
+						!(INLIST(exp_fase.fuente_financ+exp_fase.tipo_recurso,'18D ','18E ','18H ','18I ','18J ','18K ','18L ','18M ','18N ','18Ñ ')) and ;
+						!(INLIST(exp_fase.fuente_financ+exp_fase.tipo_recurso,'18O ','18P ','18Q ','18R ','18S ','18T ','18U ','18V ','18W ','18Y ')) AND ;&& * cambio solicitado por EM 10/02/2011. realizado por PC
+						!(INLIST(exp_fase.fuente_financ+exp_fase.tipo_recurso,'1810','1811','1812','0010','1310','1818')) && LGM 23052014 (RB 00,13,18 y TR 10 y 18)
+					IF YEAR(exp_sec.fecha_doc) = VAL(gcano_eje) THEN
+						=procesa_gg() 	 && Devoluciones FF <> 00, 14, 16, 13-S
+					ENDIF
+				CASE 	exp_sec.estado <> "D"
+					=procesa_gg_otros() && OPeraciones diferentes de Devolucion y Fuente 09
+				ENDCASE
+			ENDIF
+		ELSE
+			IF ( YEAR(exp_sec.fecha_doc) = VAL(gcano_eje) AND exp_sec.estado == 'D' ) THEN
+				DO CASE
+				CASE 	exp_sec.estado == "D" AND ;
+						!(exp_fase.origen+exp_fase.fuente_financ $ '100/114/116') AND;
+						!(exp_fase.origen+exp_fase.fuente_financ+exp_fase.tipo_recurso $ '113S ') AND;
+						!(INLIST(exp_fase.fuente_financ+exp_fase.tipo_recurso,'18D ','18E ','18H ','18I ','18J ','18K ','18L ','18M ','18N ','18Ñ ')) and ;
+						!(INLIST(exp_fase.fuente_financ+exp_fase.tipo_recurso,'18O ','18P ','18Q ','18R ','18S ','18T ','18U ','18V ','18W ','18Y ')) AND ; && * cambio solicitado por EM 10/02/2011. realizado por PC
+						!(INLIST(exp_fase.fuente_financ+exp_fase.tipo_recurso,'1810','1811','1812','0010','1310','1818')) && LGM 23052014 (RB 00,13,18 y TR 10 y 18)
+					=procesa_gg() 	 	&& Devoluciones FF <> 00, 14, 16, 13-S
+				OTHERWISE
+					=procesa_gg_otros() && OPeraciones diferentes de Devolucion y Fuente 09
+				ENDCASE
+			ENDIF
+		ENDIF
+	CASE ls_ciclo+ls_fase == "GP"
+		lorden_ciclo = "2"
+		* Pagado FF 00 *
+		lcondicion01 = "(EXP_FASE.origen+EXP_FASE.fuente_financ $ '100/114/116' .and. EXP_FASE.sec_ejec <> '000047' )"
+		lcondicion02 = "EXP_FASE.sec_ejec = '000047' "
+		lcondicion03 = "INLIST(EXP_FASE.origen+EXP_FASE.fuente_financ+EXP_FASE.tipo_recurso,'1121 ','1127 ','1128 ')"
+		lcondicion04 = "INLIST(EXP_FASE.origen+EXP_FASE.fuente_financ+EXP_FASE.tipo_recurso,'113S ','1131 ','1132 ','1133 ','113N ')"
+		lcondicion05 = "gctipo_unidad+EXP_FASE.origen+EXP_FASE.fuente_financ+EXP_FASE.tipo_recurso = 'M113J '"
+		lcondicion06 = "EXP_FASE.origen+EXP_FASE.fuente_financ+EXP_FASE.tipo_recurso = '1151 '"
+		lcondicion07 = "(EXP_FASE.origen+EXP_FASE.fuente_financ = '117' AND EXP_FASE.tipo_recurso != '0 ')"
+		* cambio solicitado por EM 10/02/2011. realizado por PC
+		lcondicion08 = "INLIST(exp_fase.fuente_financ+exp_fase.tipo_recurso,'18D ','18E ','18H ','18I ','18J ','18K ','18L ','18M ','18N ','18Ñ ')"
+		lcondicion09 = "INLIST(exp_fase.fuente_financ+exp_fase.tipo_recurso,'18O ','18P ','18Q ','18R ','18S ','18T ','18U ','18V ','18W ','18Y ','00D ','00I ')"
+		lcondicion10 = "inlist(EXP_FASE.fuente_financ+EXP_FASE.tipo_recurso,'07A ','19A ','0010','1310','1818','198')"  && LGM 23052014 (RB 00,13,18 y TR 10 y 18)
+		lcondicion11 = "inlist(EXP_FASE.fuente_financ+EXP_FASE.tipo_recurso,'1810','1811','1812')" && Solicitado por Maguiña								
+	
+		IF &lcondicion01. OR ;
+				&lcondicion02. OR ;
+				&lcondicion03. OR ;
+				&lcondicion04. OR ;
+				&lcondicion05. OR ;
+				&lcondicion06. OR ;
+				&lcondicion07. OR ;
+				&lcondicion08. OR ;
+				&lcondicion09. OR ;
+				&lcondicion10. OR ;
+				&lcondicion11. THEN
+			SELECT exp_doc
+			SEEK lano_eje+lsec_ejec+ls_expediente+ls_ciclo+ls_fase+ls_secuencia+ls_correlativo
+			IF FOUND() THEN
+				=procesa_gp_n()		&& Pagados Normales
+			ELSE
+				IF exp_sec.estado = 'O' THEN
+					=procesa_gp_extorno()	&& Extorno de Pagos
+				ELSE
+					=procesa_gp_reas()	&& Pagados Reasignados
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDCASE
+ENDSCAN
+
+* CREA OTROS INDICES
+SELECT cur_bco
+INDEX ON num_doc+orden_ciclo+estado 		TAG i_bco
+INDEX ON DTOS(fecha_doc)+orden_ciclo+estado TAG f_bco ADDITIVE
+INDEX ON expediente+orden_ciclo+estado 		TAG e_bco ADDITIVE
+
+* SELECCIONA INDICE CON QUE SE MUESTRA EL REPORTE
+DO CASE
+CASE lopt = '1'
+	SET ORDER TO TAG f_bco
+CASE lopt = '2'
+	SET ORDER TO TAG i_bco
+CASE lopt = '3'
+	SET ORDER TO TAG e_bco
+ENDCASE
+
+* POR LAS NOTAS CONTABLES QUE SALDAN EL LIBRO BANCO
+IF !llsaldonotas
+	=actualizacion_x_notas('SALDO')
+	=ctb_actualizacion_x_notas_2009('')
+	IF gcano_eje>='2011'
+		=ctb_actualizacion_x_notas('SALDO')
+	ENDIF 
+	llsaldonotas = .T.
+ENDIF
+=ctb_actualizacion_x_notas('NOTAS')
+
+* ACTUALIZA SALDO
+STORE 00 TO ln_saldo_ori, ln_saldo_nac
+SELECT cur_bco
+SCAN ALL
+	ln_saldo_ori = ln_saldo_ori+(cur_bco.debe_ori-cur_bco.haber_ori)
+	ln_saldo_nac = ln_saldo_nac+(cur_bco.debe_nac-cur_bco.haber_nac)
+	REPLACE saldo_ori WITH ln_saldo_ori
+	REPLACE saldo_nac WITH ln_saldo_nac
+ENDSCAN
+
+* NUEVAS RELACIONES
+SET RELATION TO cod_doc 							INTO maestro_documento
+SET RELATION TO cod_doc 							INTO maestro_documento_ref  ADDITIVE
+SET RELATION TO lmes_eje							INTO mes 		ADDITIVE
+
+* UBICA EJECUTORA
+SELECT ejecutora
+SEEK gcano_eje+lsec_ejec
+
+* ACTIVA INDICE DE SECUENCIA
+SELE exp_sec
+SET ORDER TO TAG exp_sec
+SELE cur_bco
+
+*
+SELECT cur_bco
+IF RECCOUNT() = 0 THEN
+	INSERT INTO cur_bco ( expediente, ciclo, fecha_doc, cod_doc, ;
+		num_doc, debe_ori, haber_ori, debe_nac, haber_nac, ;
+		estado, ano_entorno, sec_ejec ) ;
+		VALUES ( SPACE(10), SPACE(01), CTOD('01/'+lmes_eje+'/'+gcano_eje), SPACE(03), ;
+		SPACE(20), 0, 0, 0, 0, ;
+		SPACE(01), gcano_eje, lsec_ejec )
+ENDIF
+DO CASE
+CASE lopt = '1'
+	SET ORDER TO TAG f_bco
+CASE lopt = '2'
+	SET ORDER TO TAG i_bco
+CASE lopt = '3'
+	SET ORDER TO TAG e_bco
+ENDCASE
+
+
+* CONVIERTIENDO A EXCEL *
+IF opcion = "A" AND larchivo = "H" THEN
+	ll_name	  = lsalida + SUBSTR(TIME(),01,02) + SUBSTR(TIME(),04,02) + SUBSTR(TIME(),07,02)
+	ll_comando = "Copy To LISTADOS\"+ll_name+"."+gchoja_calculo+" TYPE "+gchoja_calculo
+	&ll_comando
+	MESSAGEBOX(" Se ha generado el Archivo : LISTADOS\"+ll_name+"."+gchoja_calculo)
+ELSE
+	IF opcion = "A" AND larchivo="T" THEN
+		ll_name	  = lsalida + SUBSTR(TIME(),01,02) + SUBSTR(TIME(),04,02) + SUBSTR(TIME(),07,02)
+		ll_comando = "Copy To LISTADOS\"+ll_name+".DBF TYPE FOXPLUS"
+		&ll_comando
+	ENDIF
+ENDIF
+SELECT cur_bco
+GO TOP
+
+*---------------------
+FUNCTION procesa_ir_d
+*---------------------
+SELECT exp_doc
+SEEK lano_eje+lsec_ejec+ls_expediente+ls_ciclo+ls_fase+ls_secuencia+ls_correlativo
+SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo == ;
+		lano_eje+lsec_ejec+ls_expediente+ls_ciclo+ls_fase+ls_secuencia+ls_correlativo
+	* No Fecha Vacia *
+	IF EMPTY(exp_doc.fecha_doc) THEN
+		LOOP
+	ENDIF
+	* Documentos Permitidos *
+	IF !INLIST(exp_doc.cod_doc, '020', '025', '026', '033', '044', '049', ;
+			'061', '064', '065', '066', '068', '089') THEN
+		LOOP
+	ENDIF
+	****
+	ls_nombre 	= exp_doc.nombre
+	ls_cod_doc	= exp_doc.cod_doc
+	ls_num_doc	= exp_doc.num_doc
+	ls_fec_doc	= exp_doc.fecha_doc
+	ls_nombre	= exp_doc.nombre
+	* LLENA CUR_BCO1
+	IF !SEEK(ls_expediente+'I'+exp_doc.cod_doc+;
+			exp_doc.num_doc+exp_doc.nombre+;
+			'N'+STR(0,19,02)+STR(exp_doc.monto,19,02)+;
+			DTOS(exp_doc.fecha_doc),'Cur_bco1','Ord01') THEN
+		INSERT INTO cur_bco1 VALUES (ls_expediente,				;
+			'I',						;
+			exp_doc.cod_doc,			;
+			exp_doc.num_doc,			;
+			exp_doc.nombre,				;
+			'N',						;
+			STR(0,19,02),				;
+			STR(exp_doc.monto,19,02),	;
+			DTOS(exp_doc.fecha_doc) 	)
+		* Ingreso pero se pone G para ubicar documento *
+		IF MONTH(exp_doc.fecha_doc) ==  VAL(lmes_eje) AND ;
+				YEAR(exp_doc.fecha_doc) = VAL(gcano_eje) THEN
+			INSERT INTO cur_bco VALUES ( ls_expediente, 		 ;
+				"I", 					 ;
+				exp_doc.fecha_doc, 	 ;
+				exp_doc.cod_doc, 		 ;
+				exp_doc.num_doc, 		 ;
+				exp_doc.nombre, 		 ;
+				00, 					 ;
+				exp_doc.monto, 		 ;
+				00, 					 ;
+				00,					 ;
+				exp_doc.monto_nacional, ;
+				00,					 ;
+				ls_moneda, 			 ;
+				'N', 					 ;
+				exp_doc.ano_eje, 		 ;
+				lsec_ejec, 			 ;
+				EXP.tipo_operacion,	 ;
+				lorden_ciclo )
+		ENDIF
+	ENDIF
+ENDSCAN
+RETURN
+
+*--------------------------
+FUNCTION procesa_ir_ej_ant
+*--------------------------
+* Saldo de Ejercicios Anteriores *
+IF EXP.tipo_operacion == "Y " THEN
+	IF SEEK(lano_eje+lsec_ejec+exp_fase.expediente+exp_fase.ciclo+   ;
+			exp_fase.fase+exp_fase.secuencia+						 ;
+			exp_sec.correlativo, "EXP_ING") THEN
+		IF  exp_ing.clase_ingreso+exp_ing.tipo_ingreso+ ;
+				exp_ing.sub_tipo_ingreso+exp_ing.elemento_ingreso=="421001" THEN
+			STORE SPACE(60) TO ls_nombre
+			*	LLENA CUR_BCO1
+			IF !SEEK(ls_expediente+ls_ciclo+exp_sec.cod_doc+;
+					exp_sec.num_doc+ls_nombre+;
+					'N'+STR(0,19,02)+STR(exp_sec.monto,19,02)+;
+					DTOS(exp_sec.fecha_doc),'Cur_bco1','Ord01') THEN
+				INSERT INTO cur_bco1 VALUES (ls_expediente,				;
+					ls_ciclo,					;
+					exp_sec.cod_doc,			;
+					exp_sec.num_doc,			;
+					ls_nombre,					;
+					'N',						;
+					STR(0,19,02),				;
+					STR(exp_sec.monto,19,02),	;
+					DTOS(exp_sec.fecha_doc) )
+				*
+				IF MONTH(exp_sec.fecha_doc) == VAL(lmes_eje) AND ;
+						YEAR(exp_sec.fecha_doc) == VAL(gcano_eje) THEN
+					INSERT INTO cur_bco VALUES ( exp_fase.expediente, 	;
+						exp_fase.ciclo, 		;
+						exp_sec.fecha_doc, 	;
+						exp_sec.cod_doc, 		;
+						exp_sec.num_doc, 		;
+						ls_nombre, 			;
+						exp_sec.monto, 		;
+						00, 					;
+						00, 					;
+						exp_sec.monto_nacional,;
+						00, 					;
+						00, 					;
+						ls_moneda, 			;
+						'N', 					;
+						exp_sec.ano_eje, 		;
+						lsec_ejec, 			;
+						EXP.tipo_operacion,	;
+						lorden_ciclo )
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+RETURN
+
+*---------------------
+FUNCTION procesa_ir_yv
+*---------------------
+* anulaciones *
+IF exp_sec.monto > 00 .AND. exp_sec.estado == "A" THEN
+	ls_estado="A"
+ENDIF
+*******
+SELECT exp_doc
+SEEK lano_eje+lsec_ejec+ls_expediente+ls_ciclo+ls_fase+ls_secuencia+"0001"
+SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo == ;
+		lano_eje+lsec_ejec+ls_expediente+ls_ciclo+ls_fase+ls_secuencia+"0001"
+	* Documentos Permitidos *
+	IF INLIST(exp_doc.cod_doc, '000', '020', '025', '026', '033', '044', '049', ;
+			'061', '064', '065', '066', '068', '089') THEN
+		ls_num_doc = exp_doc.num_doc
+		ls_nombre = exp_doc.nombre
+		*	LLENA CUR_BCO1
+		IF !SEEK(ls_expediente+ls_ciclo+exp_doc.cod_doc+;
+				ls_num_doc+ls_nombre+ls_estado+STR(0,19,02)+;
+				STR(exp_doc.monto,19,02)+;
+				DTOS(exp_doc.fecha_doc),'Cur_bco1','Ord01') THEN
+			INSERT INTO cur_bco1 VALUES (ls_expediente,			ls_ciclo,					;
+				exp_doc.cod_doc,		ls_num_doc,					;
+				ls_nombre,				ls_estado,					;
+				STR(0,19,02),			STR(exp_doc.monto,19,02),	;
+				DTOS(exp_doc.fecha_doc) )
+			*
+			IF ls_estado == "A" THEN
+				IF MONTH(exp_sec.fecha_doc) == VAL(lmes_eje)  AND ;
+						YEAR(exp_sec.fecha_doc) == VAL(gcano_eje) THEN && agregado
+					SELECT exp_sec
+					x = RECNO()
+					=SEEK(lano_eje+lsec_ejec+ls_expediente+ls_ciclo+ls_fase+ls_secuencia,'exp_sec','exp_sec')
+					IF PADL(YEAR(exp_sec.fecha_doc),4,'0')+PADL(MONTH(exp_sec.fecha_doc),2,'0') <> PADL(YEAR(ls_fec_doc),4,'0')+PADL(MONTH(ls_fec_doc),2,'0') THEN
+						GO x
+						INSERT INTO cur_bco VALUES (ls_expediente,	 		;
+							ls_ciclo, 				;
+							exp_sec.fecha_doc, 		;
+							exp_doc.cod_doc, 		;
+							ls_num_doc, 			;
+							ls_nombre, 				;
+							exp_doc.monto, 			;
+							00, 					;
+							00, 					;
+							exp_doc.monto_nacional, ;
+							00,						;
+							00, 					;
+							ls_moneda,	 			;
+							ls_estado,				;
+							exp_sec.ano_eje,		;
+							lsec_ejec, 				;
+							EXP.tipo_operacion,		;
+							lorden_ciclo )
+					ELSE
+						GO x
+						INSERT INTO cur_bco VALUES (ls_expediente , 			;
+							ls_ciclo , 					;
+							exp_sec.fecha_doc , 		;
+							exp_doc.cod_doc , 			;
+							ls_num_doc , 				;
+							ls_nombre , 				;
+							00 , 						;
+							exp_doc.monto*-1 , 			;
+							00 , 						;
+							00,							;
+							exp_doc.monto_nacional*-1,  ;
+							00, 						;
+							ls_moneda , 				;
+							ls_estado ,					;
+							exp_sec.ano_eje,			;
+							lsec_ejec, 					;
+							EXP.tipo_operacion,			;
+							lorden_ciclo )
+					ENDIF
+					GO x
+				ENDIF
+			ELSE
+				IF MONTH(exp_doc.fecha_doc) == VAL(lmes_eje)  AND ;
+						YEAR(exp_doc.fecha_doc) == VAL(gcano_eje) THEN && agregado
+					INSERT INTO cur_bco VALUES (ls_expediente , 		;
+						ls_ciclo , 				;
+						exp_doc.fecha_doc , 	;
+						exp_doc.cod_doc , 		;
+						ls_num_doc , 			;
+						ls_nombre , 			;
+						00 , 					;
+						exp_doc.monto , 		;
+						00 , 					;
+						00,						;
+						exp_doc.monto_nacional, ;
+						00, 					;
+						ls_moneda , 			;
+						ls_estado,				;
+						exp_sec.ano_eje,		;
+						lsec_ejec, 				;
+						EXP.tipo_operacion,		;
+						lorden_ciclo )
+					* IIF(ls_estado='N',' ',ls_estado)
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+ENDSCAN
+RETURN
+
+*--------------------------
+FUNCTION procesa_ir_r
+*--------------------------
+* Ingreso Normal Rebaja *
+ls_nombre = 'NOTA DE CARGO '+SPACE(44)
+IF exp_sec.monto < 00 .AND. INLIST(exp_sec.estado, "A", "D" ) THEN
+	ls_estado="A"
+ENDIF
+IF SEEK(lano_eje+lsec_ejec+exp_fase.expediente+exp_fase.ciclo+ ;
+		exp_fase.fase+exp_fase.secuencia+						 ;
+		exp_sec.correlativo, "EXP_ING") THEN
+	IF exp_ing.clase_ingreso+exp_ing.tipo_ingreso+ ;
+			exp_ing.sub_tipo_ingreso+exp_ing.elemento_ingreso<>"421001" THEN
+		*	LLENA CUR_BCO1
+		IF !SEEK(ls_expediente+ls_ciclo+exp_sec.cod_doc+;
+				ls_num_doc+ls_nombre+ls_estado+STR(0,19,02)+;
+				STR(exp_sec.monto,19,02)+;
+				DTOS(exp_sec.fecha_doc),'Cur_bco1','Ord01') THEN
+			INSERT INTO cur_bco1 VALUES (ls_expediente,				;
+				ls_ciclo,					;
+				exp_sec.cod_doc,			;
+				ls_num_doc,					;
+				ls_nombre,					;
+				ls_estado,					;
+				STR(0,19,02),				;
+				STR(exp_sec.monto,19,02),	;
+				DTOS(exp_sec.fecha_doc) )
+			*
+			IF MONTH(exp_sec.fecha_doc) == VAL(lmes_eje) AND ;
+					YEAR(exp_sec.fecha_doc) = VAL(gcano_eje) THEN
+				INSERT INTO cur_bco VALUES (ls_expediente ,				;
+					ls_ciclo ,					;
+					exp_sec.fecha_doc,			;
+					exp_sec.cod_doc,			;
+					ls_num_doc,					;
+					ls_nombre,					;
+					00,							;
+					exp_sec.monto*-1,			;
+					00, 						;
+					00,							;
+					exp_sec.monto_nacional*-1,  ;
+					00, 						;
+					ls_moneda,					;
+					ls_estado,				;
+					exp_sec.ano_eje,			;
+					lsec_ejec,					;
+					EXP.tipo_operacion,			;
+					lorden_ciclo )
+				* IIF(ls_estado='N',' ',ls_estado)
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+RETURN
+
+*---------------------
+FUNCTION procesa_ir_an
+*---------------------
+* anulaciones *
+IF exp_sec.monto < 00 .AND. INLIST(exp_sec.estado, "A", "D" ) THEN
+	ls_estado="A"
+ENDIF
+*******
+IF SEEK(lano_eje+lsec_ejec+exp_fase.expediente+exp_fase.ciclo+ ;
+		exp_fase.fase+exp_fase.secuencia+						 ;
+		exp_sec.correlativo, "EXP_ING") THEN
+	IF exp_ing.clase_ingreso+exp_ing.tipo_ingreso+ ;
+			exp_ing.sub_tipo_ingreso+exp_ing.elemento_ingreso<>"421001" THEN
+		*	LLENA CUR_BCO1
+		IF !SEEK(ls_expediente+ls_ciclo+exp_sec.cod_doc+;
+				ls_num_doc+ls_nombre+ls_estado+STR(0,19,02)+;
+				STR(exp_sec.monto,19,02)+;
+				DTOS(exp_sec.fecha_doc),'Cur_bco1','Ord01') THEN
+			INSERT INTO cur_bco1 VALUES (ls_expediente,				;
+				ls_ciclo,					;
+				exp_sec.cod_doc,			;
+				ls_num_doc,					;
+				ls_nombre,					;
+				ls_estado,					;
+				STR(0,19,02),				;
+				STR(exp_sec.monto,19,02),	;
+				DTOS(exp_sec.fecha_doc) )
+			*
+			IF MONTH(exp_sec.fecha_doc) == VAL(lmes_eje)  AND ;
+					YEAR(exp_sec.fecha_doc) == VAL(gcano_eje) THEN && agregado
+				INSERT INTO cur_bco VALUES (ls_expediente , 		;
+					ls_ciclo , 				;
+					exp_sec.fecha_doc , 	;
+					exp_sec.cod_doc , 		;
+					ls_num_doc , 			;
+					ls_nombre , 			;
+					exp_sec.monto , 		;
+					00 , 					;
+					00 , 					;
+					exp_sec.monto_nacional, ;
+					00 , 					;
+					00 , 					;
+					ls_moneda , 			;
+					ls_estado,				;
+					exp_sec.ano_eje,		;
+					lsec_ejec, 				;
+					EXP.tipo_operacion,		;
+					lorden_ciclo )
+				* IIF(ls_estado='N',' ',ls_estado)
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+RETURN
+
+*------------------------
+FUNCTION procesa_ir_tr_an
+*------------------------
+ls_estado="A"
+SELECT exp_doc
+SEEK lano_eje+lsec_ejec+ls_expediente+ls_ciclo+ls_fase+ls_secuencia+"0001"
+SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo == ;
+		lano_eje+lsec_ejec+ls_expediente+ls_ciclo+ls_fase+ls_secuencia+"0001"
+	* Documentos Permitidos *
+	IF INLIST(exp_doc.cod_doc, '000', '020', '025', '026', '033', '044', '049', ;
+			'061', '064', '065', '066', '068', '089') THEN
+		****
+		ls_num_doc = exp_doc.num_doc
+		ls_nombre = exp_doc.nombre
+		*******
+		IF SEEK(lano_eje+					;
+				lsec_ejec+					;
+				exp_fase.expediente+	;
+				exp_fase.ciclo+		;
+				exp_fase.fase+		;
+				exp_fase.secuencia+	;
+				exp_sec.correlativo , "EXP_ING") THEN
+			IF MONTH(exp_sec.fecha_doc) == VAL(lmes_eje) AND ;
+					YEAR(exp_sec.fecha_doc) == VAL(gcano_eje) THEN
+				IF  YEAR(exp_sec.fecha_doc) == YEAR(exp_doc.fecha_doc) AND ;
+						MONTH(exp_sec.fecha_doc) == MONTH(exp_doc.fecha_doc) THEN
+					SELECT exp_ing
+					*	LLENA CUR_BCO1
+					IF !SEEK(ls_expediente+ls_ciclo+exp_doc.cod_doc+;
+							exp_doc.num_doc+exp_doc.nombre+;
+							'A'+STR(0,19,02)+STR(exp_doc.monto*-1,19,02)+;
+							DTOS(exp_sec.fecha_doc),'Cur_bco1','Ord01') THEN
+						INSERT INTO cur_bco1 VALUES (ls_expediente,				 ;
+							ls_ciclo,					 ;
+							exp_doc.cod_doc,			 ;
+							exp_doc.num_doc,			 ;
+							exp_doc.nombre,				 ;
+							'A',						 ;
+							STR(0,19,02),				 ;
+							STR(exp_doc.monto*-1,19,02), ;
+							DTOS(exp_sec.fecha_doc) )
+						*
+						INSERT INTO cur_bco VALUES (exp_fase.expediente, 		 ;
+							exp_fase.ciclo, 			 ;
+							exp_sec.fecha_doc, 			 ;
+							exp_doc.cod_doc, 			 ;
+							exp_doc.num_doc, 			 ;
+							exp_doc.nombre, 			 ;
+							00, 						 ;
+							(exp_doc.monto)*-1,	 		 ;
+							00, 						 ;
+							00, 						 ;
+							(exp_doc.monto_nacional)*-1, ;
+							00, 						 ;
+							ls_moneda, 					 ;
+							'A',						 ;
+							exp_sec.ano_eje, 			 ;
+							lsec_ejec, 					 ;
+							EXP.tipo_operacion,			 ;
+							lorden_ciclo )
+					ENDIF
+				ENDIF
+				IF ( MONTH(exp_sec.fecha_doc) > MONTH(exp_doc.fecha_doc) AND ;
+						YEAR(exp_sec.fecha_doc) = YEAR(exp_doc.fecha_doc) ) OR ; && agregado
+					( YEAR(exp_sec.fecha_doc) > YEAR(exp_doc.fecha_doc) ) THEN && agregado
+					SELECT exp_ing
+					*	LLENA CUR_BCO1
+					IF !SEEK(ls_expediente+ls_ciclo+exp_doc.cod_doc+;
+							exp_doc.num_doc+exp_doc.nombre+;
+							'A'+STR(0,19,02)+STR(exp_doc.monto,19,02)+;
+							DTOS(exp_sec.fecha_doc),'Cur_bco1','Ord01') THEN
+						WAIT CLEAR
+						INSERT INTO cur_bco1 VALUES (ls_expediente,			  ;
+							ls_ciclo,				  ;
+							exp_doc.cod_doc,		  ;
+							exp_doc.num_doc,		  ;
+							exp_doc.nombre,			  ;
+							'A',					  ;
+							STR(0,19,02),			  ;
+							STR(exp_doc.monto,19,02), ;
+							DTOS(exp_sec.fecha_doc) )
+						*
+						INSERT INTO cur_bco VALUES (exp_fase.expediente , 	  ;
+							exp_fase.ciclo, 		  ;
+							exp_sec.fecha_doc, 		  ;
+							exp_doc.cod_doc, 		  ;
+							exp_doc.num_doc, 		  ;
+							exp_doc.nombre, 		  ;
+							(exp_doc.monto),		  ;
+							00, 					  ;
+							00, 					  ;
+							(exp_doc.monto_nacional), ;
+							00, 					  ;
+							00, 					  ;
+							ls_moneda, 				  ;
+							'A', 					  ;
+							exp_sec.ano_eje, 		  ;
+							lsec_ejec, 				  ;
+							EXP.tipo_operacion,		  ;
+							lorden_ciclo )
+					ENDIF
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+ENDSCAN
+RETURN
+
+*---------------------
+FUNCTION procesa_ir_tr
+*---------------------
+IF !INLIST(exp_sec.estado,"R","D") THEN
+	IF exp_sec.monto < 0 THEN
+		****
+		SELECT exp_doc
+		SEEK lano_eje+lsec_ejec+ls_expediente+ls_ciclo+ls_fase+ls_secuencia+ls_correlativo
+		SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo == ;
+				lano_eje+lsec_ejec+ls_expediente+ls_ciclo+ls_fase+ls_secuencia+ls_correlativo
+			* Documentos Permitidos *
+			IF INLIST(exp_doc.cod_doc, '000','020','025','026','033','044','049',;
+					'061','064','065','066','068','089') THEN
+				**
+				ls_num_doc = exp_doc.num_doc
+				ls_nombre = exp_doc.nombre
+				* ingreso por transferencia *
+				IF FOUND() THEN
+					IF SEEK(lano_eje+			;
+							lsec_ejec+			;
+							exp_fase.expediente+;
+							exp_fase.ciclo+		;
+							exp_fase.fase+		;
+							exp_fase.secuencia+	;
+							exp_sec.correlativo , "EXP_ING") THEN
+						SELECT exp_ing
+						*	LLENA CUR_BCO1
+						IF !SEEK(ls_expediente+ls_ciclo+exp_doc.cod_doc+;
+								exp_doc.num_doc+exp_doc.nombre+;
+								'N'+STR(0,19,02)+STR(exp_doc.monto,19,02)+;
+								DTOS(exp_doc.fecha_doc),'Cur_bco1','Ord01') THEN
+							INSERT INTO cur_bco1 VALUES (ls_expediente,				  ;
+								ls_ciclo,					  ;
+								exp_doc.cod_doc,			  ;
+								exp_doc.num_doc,			  ;
+								exp_doc.nombre,				  ;
+								'N',						  ;
+								STR(0,19,02),				  ;
+								STR(ABS(exp_doc.monto),19,02),;
+								DTOS(exp_doc.fecha_doc) )
+							*
+							IF  YEAR(exp_doc.fecha_doc) == VAL(gcano_eje) AND ;
+									MONTH(exp_doc.fecha_doc) == VAL(lmes_eje) THEN
+								INSERT INTO cur_bco VALUES (exp_fase.expediente, 		;
+									exp_fase.ciclo, 			;
+									exp_doc.fecha_doc,			;
+									exp_doc.cod_doc, 			;
+									exp_doc.num_doc, 			;
+									exp_doc.nombre, 			;
+									00, 						;
+									ABS(exp_doc.monto), 		;
+									00, 						;
+									00, 						;
+									ABS(exp_doc.monto_nacional),;
+									00 , 						;
+									ls_moneda , 				;
+									'N', 						;
+									exp_doc.ano_eje, 			;
+									lsec_ejec, 					;
+									EXP.tipo_operacion,			;
+									lorden_ciclo )
+							ENDIF
+						ENDIF
+					ENDIF
+				ENDIF
+			ENDIF
+		ENDSCAN
+	ENDIF
+ENDIF
+RETURN
+
+*------------------
+FUNCTION procesa_gg
+*------------------
+IF INLIST(exp_sec.cod_doc,'009','034') AND gs_banco+gs_cta_cte == exp_sec.banco+exp_sec.cta_cte THEN
+	=SEEK(exp_sec.cod_doc,'maestro_documento','cod_doc')
+	ls_cod_doc = exp_sec.cod_doc
+	ls_nombre  = SUBSTR(UPPER(maestro_documento.nombre),01,60)
+	ls_num_doc = exp_sec.num_doc
+	ls_fec_doc = exp_sec.fecha_doc
+	*	LLENA CUR_BCO1
+	IF !SEEK(ls_expediente+ls_ciclo+ls_cod_doc+;
+			ls_num_doc+ls_nombre+;
+			'N'+STR(0,19,02)+STR(exp_sec.monto,19,02)+;
+			DTOS(ls_fec_doc),'Cur_bco1','Ord01') THEN
+		INSERT INTO cur_bco1 VALUES (ls_expediente,;
+			ls_ciclo,;
+			ls_cod_doc,;
+			ls_num_doc,;
+			ls_nombre,;
+			'N',;
+			STR(0,19,02),;
+			STR(ABS(exp_sec.monto),19,02),;
+			DTOS(ls_fec_doc) )
+		*
+		IF MONTH(exp_sec.fecha_doc) = VAL(lmes_eje)  AND ;
+				YEAR(exp_sec.fecha_doc)  = VAL(gcano_eje) THEN
+			* asigna moneda y tc inicial *
+			SELECT exp_sec
+			STORE (exp_sec.moneda) TO ls_moneda_d
+			STORE (RECNO()) TO ls_numrec
+			STORE (01) TO ln_tc
+			GO ls_numrec
+			INSERT INTO cur_bco VALUES ( ls_expediente, 			 ;
+				ls_ciclo, 					 ;
+				ls_fec_doc, 				 ;
+				ls_cod_doc, 				 ;
+				ls_num_doc, 				 ;
+				ls_nombre, 				 ;
+				ABS(exp_sec.monto), 		 ;
+				00, 						 ;
+				00, 						 ;
+				ABS(exp_sec.monto_nacional),;
+				00, 						 ;
+				00, 						 ;
+				exp_sec.moneda, 			 ;
+				'N', 						 ;
+				exp_sec.ano_eje, 			 ;
+				lsec_ejec, 				 ;
+				EXP.tipo_operacion,		 ;
+				lorden_ciclo )
+		ENDIF
+	ENDIF
+ENDIF
+RETURN
+
+*------------------------
+FUNCTION procesa_gg_otros
+*------------------------
+* OPeraciones diferentes de Devolucion y Fuente 09
+SELECT exp_doc
+SEEK lano_eje+lsec_ejec+ls_expediente+ls_ciclo+ls_fase+ls_secuencia+ls_correlativo
+SCAN WHILE lano_eje+lsec_ejec+ls_expediente+;
+		ls_ciclo+ls_fase+ls_secuencia+ls_correlativo == ;
+		ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo
+	* documentos permitidos *
+	*!*		If !InList(EXP_DOC.cod_doc, '025','026','033','044','049','061', ;
+	*!*								    '064','065','066','068','077','081','089') Then
+	*!*			Loop
+	*!*		ENDIF
+	*PC 09/07/2010 se incorpora doc 084 pedido de CC MHidalgo
+	IF !INLIST(exp_doc.cod_doc, '025','026','033','044','049','061', ;
+			'064','065','066','068','077','081','084','089') THEN
+		LOOP
+	ENDIF
+	* no fecha vacia o año diferente a año de ejecucion *
+	IF EMPTY(exp_doc.fecha_doc) THEN
+		LOOP
+	ENDIF
+	***
+	ls_num_doc = exp_doc.num_doc
+	ls_nombre  = exp_doc.nombre
+	***
+	IF gs_banco+gs_cta_cte == exp_sec.banco+exp_sec.cta_cte THEN
+		ls_cod_doc = exp_doc.cod_doc
+		ls_num_doc = exp_doc.num_doc
+		ls_fec_doc = exp_doc.fecha_doc
+		ls_nombre  = exp_doc.nombre
+		* anulacion de cheque *
+		IF exp_sec.monto < 00 AND INLIST(exp_sec.estado, "A") THEN
+			IF (MONTH(exp_sec.fecha_doc) = VAL(lmes_eje) AND ;
+					YEAR(exp_sec.fecha_doc)  = VAL(gcano_eje) ) THEN
+				IF MONTH(exp_sec.fecha_doc) > MONTH(exp_doc.fecha_doc) ;
+						OR YEAR(exp_sec.fecha_doc) > YEAR(exp_doc.fecha_doc) THEN && agregado
+					*	LLENA CUR_BCO1
+					IF !SEEK(ls_expediente+ls_ciclo+exp_doc.cod_doc+;
+							exp_doc.num_doc+exp_doc.nombre+;
+							'A'+STR(0,19,02)+STR(exp_doc.monto,19,02)+;
+							DTOS(exp_doc.fecha_doc),'Cur_bco1','Ord01') THEN
+						INSERT INTO cur_bco1 VALUES (ls_expediente,			 ;
+							ls_ciclo,				 ;
+							exp_doc.cod_doc,		 ;
+							exp_doc.num_doc,		 ;
+							exp_doc.nombre,			 ;
+							'A',					 ;
+							STR(0,19,02),			 ;
+							STR(exp_doc.monto,19,02),;
+							DTOS(exp_doc.fecha_doc) )
+						*
+						INSERT INTO cur_bco VALUES ( ls_expediente, 		;
+							ls_ciclo, 				;
+							exp_sec.fecha_doc, 	;
+							exp_doc.cod_doc, 		;
+							exp_doc.num_doc, 		;
+							exp_doc.nombre, 		;
+							exp_doc.monto,			;
+							00, 					;
+							00, 					;
+							exp_doc.monto_nacional,;
+							00, 					;
+							00, 					;
+							exp_sec.moneda,	 	;
+							'A', 					;
+							exp_sec.ano_eje,		;
+							lsec_ejec, 			;
+							EXP.tipo_operacion,	;
+							lorden_ciclo )
+					ENDIF
+				ELSE
+					*	LLENA CUR_BCO1
+					IF !SEEK(ls_expediente+ls_ciclo+exp_doc.cod_doc+;
+							exp_doc.num_doc+exp_doc.nombre+;
+							'A'+STR(0,19,02)+STR(exp_doc.monto*-1,19,02)+;
+							DTOS(exp_doc.fecha_doc),'Cur_bco1','Ord01') THEN
+						INSERT INTO cur_bco1 VALUES (ls_expediente,				;
+							ls_ciclo,					;
+							exp_doc.cod_doc,			;
+							exp_doc.num_doc,			;
+							exp_doc.nombre,				;
+							'A',						;
+							STR(0,19,02),				;
+							STR(exp_doc.monto*-1,19,02),;
+							DTOS(exp_doc.fecha_doc) )
+						*
+						INSERT INTO cur_bco VALUES ( ls_expediente, 			 ;
+							ls_ciclo, 					 ;
+							exp_sec.fecha_doc, 		 ;
+							exp_doc.cod_doc, 			 ;
+							exp_doc.num_doc, 			 ;
+							exp_doc.nombre, 			 ;
+							00, 						 ;
+							(exp_doc.monto*-1), 		 ;
+							00, 						 ;
+							00, 						 ;
+							(exp_doc.monto_nacional*-1),;
+							00, 						 ;
+							ls_moneda, 				 ;
+							'A', 						 ;
+							exp_sec.ano_eje, 			 ;
+							lsec_ejec, 				 ;
+							EXP.tipo_operacion,		 ;
+							lorden_ciclo )
+					ENDIF
+				ENDIF
+			ENDIF &&
+		ELSE
+			* cheque anulado de ejercicios anteriores *
+			IF SEEK(lano_eje+						;
+					lsec_ejec+						;
+					exp_fase.expediente+			;
+					exp_fase.ciclo+					;
+					exp_fase.fase+					;
+					exp_fase.secuencia+				;
+					exp_sec.correlativo ,'EXP_CLASIF') THEN
+				SELECT exp_clasif
+				IF INLIST(exp_clasif.categ_gasto+		;
+						exp_clasif.grupo_gasto+		;
+						exp_clasif.modalidad_gasto+	;
+						exp_clasif.elemento_gasto+	;
+						exp_clasif.secuencia_to, "000000030", "000000031") THEN
+					*	LLENA CUR_BCO1
+					IF !SEEK(ls_expediente+ls_ciclo+exp_doc.cod_doc+;
+							exp_doc.num_doc+exp_doc.nombre+;
+							'N'+STR(0,19,02)+STR(exp_doc.monto,19,02)+;
+							DTOS(exp_doc.fecha_doc),'Cur_bco1','Ord01') THEN
+						INSERT INTO cur_bco1 VALUES (ls_expediente,				;
+							ls_ciclo,					;
+							exp_doc.cod_doc,			;
+							exp_doc.num_doc,			;
+							exp_doc.nombre,				;
+							'N',						;
+							STR(0,19,02),				;
+							STR(exp_doc.monto,19,02),	;
+							DTOS(exp_doc.fecha_doc) )
+						*
+						IF MONTH(exp_doc.fecha_doc) == VAL(lmes_eje) AND ;
+								YEAR(exp_doc.fecha_doc) == VAL(gcano_eje) THEN  && agregado
+							INSERT INTO cur_bco VALUES (exp_fase.expediente, 	;
+								exp_fase.ciclo, 		;
+								exp_doc.fecha_doc, 		;
+								exp_doc.cod_doc, 		;
+								exp_doc.num_doc, 		;
+								exp_doc.nombre,			;
+								exp_doc.monto, 			;
+								00, 					;
+								00, 					;
+								exp_doc.monto_nacional, ;
+								00, 					;
+								00, 					;
+								exp_sec.moneda, 		;
+								'N', 					;
+								exp_doc.ano_eje, 		;
+								lsec_ejec, 				;
+								EXP.tipo_operacion,		;
+								lorden_ciclo )
+						ENDIF
+					ENDIF
+				ELSE
+					*	LLENA CUR_BCO1
+					IF !SEEK(ls_expediente+ls_ciclo+exp_doc.cod_doc+;
+							exp_doc.num_doc+exp_doc.nombre+;
+							'N'+STR(0,19,02)+STR(exp_doc.monto,19,02)+;
+							DTOS(exp_doc.fecha_doc),'Cur_bco1','Ord01') THEN
+						INSERT INTO cur_bco1 VALUES ( ls_expediente,			;
+							ls_ciclo,					;
+							exp_doc.cod_doc,			;
+							exp_doc.num_doc,			;
+							exp_doc.nombre,			;
+							'N',						;
+							STR(0,19,02),				;
+							STR(exp_doc.monto,19,02), ;
+							DTOS(exp_doc.fecha_doc) )
+						*
+						IF !(exp_sec.estado == "D" AND exp_fase.origen+exp_fase.fuente_financ $ "100/114/116") AND ;
+								!(exp_sec.estado == "D" AND exp_fase.origen+exp_fase.fuente_financ+exp_fase.tipo_recurso $ "113S") THEN
+							* no se consideran las Devoluciones en fuente 00, 14, 16, 13-S *
+							IF MONTH(exp_doc.fecha_doc) == VAL(lmes_eje)  AND ;
+									YEAR(exp_doc.fecha_doc) == VAL(gcano_eje) AND ;	&&&& 29/01/2001
+								YEAR(exp_sec.fecha_doc) = YEAR(exp_doc.fecha_doc) THEN
+								INSERT INTO cur_bco VALUES ( ls_expediente, 		 ;
+									ls_ciclo, 				 ;
+									exp_doc.fecha_doc, 	 ;
+									exp_doc.cod_doc, 		 ;
+									exp_doc.num_doc, 		 ;
+									exp_doc.nombre, 		 ;
+									00, 					 ;
+									exp_doc.monto, 		 ;
+									00, 					 ;
+									00, 					 ;
+									exp_doc.monto_nacional, ;
+									00, 					 ;
+									exp_sec.moneda, 		 ;
+									'N', 					 ;
+									exp_doc.ano_eje, 		 ;
+									lsec_ejec, 			 ;
+									EXP.tipo_operacion,	 ;
+									lorden_ciclo )
+							ENDIF
+						ENDIF
+					ENDIF
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+ENDSCAN
+RETURN
+
+*--------------------
+FUNCTION procesa_gp_n
+*--------------------
+SCAN WHILE lano_eje+lsec_ejec+ls_expediente+ls_ciclo+	;
+		ls_fase+ls_secuencia+ls_correlativo == 		;
+		ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo
+	* Consistencia año de Entorno
+	IF YEAR(exp_doc.fecha_doc) <> VAL(gcano_eje) THEN
+		LOOP
+	ENDIF
+	*	LLENA CUR_BCO1
+	IF !SEEK(ls_expediente+ls_ciclo+exp_doc.cod_doc+;
+			exp_doc.num_doc+exp_doc.nombre+;
+			'Z'+STR(exp_doc.monto,19,02)+STR(0,19,02)+;
+			DTOS(exp_sec.fecha_doc),'Cur_bco1','Ord01') THEN
+		INSERT INTO cur_bco1 VALUES (	ls_expediente,			 ;
+			ls_ciclo,				 ;
+			exp_doc.cod_doc,		 ;
+			exp_doc.num_doc,		 ;
+			exp_doc.nombre,			 ;
+			'Z',					 ;
+			STR(exp_doc.monto,19,02),;
+			STR(0,19,02),			 ;
+			DTOS(exp_sec.fecha_doc) )
+		IF MONTH(exp_sec.fecha_doc) == VAL(lmes_eje) AND ;
+				YEAR(exp_sec.fecha_doc)  == VAL(gcano_eje) THEN
+			INSERT INTO cur_bco VALUES ( ls_expediente, 		 ;
+				ls_ciclo,	 			 ;
+				exp_sec.fecha_doc, 	 ;
+				exp_doc.cod_doc,   	 ;
+				exp_doc.num_doc,   	 ;
+				exp_doc.nombre, 		 ;
+				exp_doc.monto, 		 ;
+				00, 					 ;
+				00,					 ;
+				exp_doc.monto_nacional, ;
+				00, 					 ;
+				00,					 ;
+				exp_sec.moneda, 		 ;
+				"Z",					 ;
+				exp_sec.ano_eje,   	 ;
+				lsec_ejec, 			 ;
+				EXP.tipo_operacion,	 ;
+				lorden_ciclo )
+		ENDIF
+	ENDIF
+ENDSCAN
+RETURN
+
+*---------------------------
+FUNCTION procesa_gp_extorno
+*---------------------------
+ls_correlativo = "0001"
+IF YEAR(exp_sec.fecha_doc) = VAL(gcano_eje) THEN && Consistencia año de Entorno
+	SEEK lano_eje+lsec_ejec+ls_expediente+ls_ciclo+ls_fase+ls_secuencia+ls_correlativo
+	SCAN WHILE lano_eje+lsec_ejec+ls_expediente+ls_ciclo+;
+			ls_fase+ls_secuencia+ls_correlativo == ;
+			ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo
+		IF MONTH(exp_sec.fecha_doc) == VAL(lmes_eje) THEN
+			IF MONTH(exp_sec.fecha_doc) > MONTH(exp_doc.fecha_doc) ;
+					OR YEAR(exp_sec.fecha_doc) > YEAR(exp_doc.fecha_doc) THEN && agregado
+				* LLENA CUR_BCO1
+				IF !SEEK(ls_expediente+ls_ciclo+exp_doc.cod_doc+;
+						exp_doc.num_doc+exp_doc.nombre+;
+						'Z'+STR(0,19,02)+STR(exp_doc.monto,19,02)+;
+						DTOS(exp_sec.fecha_doc),'Cur_bco1','Ord01') THEN
+					INSERT INTO cur_bco1 VALUES (ls_expediente, 			;
+						ls_ciclo, 					;
+						exp_doc.cod_doc, 			;
+						exp_doc.num_doc, 			;
+						exp_doc.nombre, 			;
+						'Z', 						;
+						STR(0,19,02),				;
+						STR(exp_doc.monto,19,02),;
+						DTOS(exp_sec.fecha_doc) )
+					*
+					INSERT INTO cur_bco VALUES ( ls_expediente, 	;
+						ls_ciclo, 			;
+						exp_sec.fecha_doc, ;
+						exp_doc.cod_doc,   ;
+						exp_doc.num_doc,   ;
+						exp_doc.nombre,	;
+						00,			  	;
+						exp_doc.monto,		;
+						00,			  	;
+						00,			  	;
+						exp_doc.monto_nacional, ;
+						00,			  	;
+						exp_sec.moneda,  	;
+						"Z", 				;
+						exp_sec.ano_eje, 	;
+						lsec_ejec, 		;
+						EXP.tipo_operacion,;
+						lorden_ciclo )
+				ENDIF
+			ELSE
+				* LLENA CUR_BCO1
+				IF !SEEK(ls_expediente+ls_ciclo+exp_doc.cod_doc+;
+						exp_doc.num_doc+exp_doc.nombre+;
+						'Z'+STR(exp_doc.monto*-1,19,02)+STR(0,19,02)+;
+						DTOS(exp_sec.fecha_doc),'Cur_bco1','Ord01') THEN
+					INSERT INTO cur_bco1 VALUES (ls_expediente, 			;
+						ls_ciclo, 					;
+						exp_doc.cod_doc, 			;
+						exp_doc.num_doc, 			;
+						exp_doc.nombre, 			;
+						'Z', 						;
+						STR(exp_doc.monto*-1,19,02),;
+						STR(0,19,02),				;
+						DTOS(exp_sec.fecha_doc) )
+					*
+					INSERT INTO cur_bco VALUES ( ls_expediente, 	;
+						ls_ciclo, 			;
+						exp_sec.fecha_doc, ;
+						exp_doc.cod_doc,   ;
+						exp_doc.num_doc,   ;
+						exp_doc.nombre,	;
+						exp_doc.monto*-1,	;
+						00,			  	;
+						00,			  	;
+						exp_doc.monto_nacional*-1, ;
+						00,			  	;
+						00,			  	;
+						exp_sec.moneda,  	;
+						"Z", 				;
+						exp_sec.ano_eje, 	;
+						lsec_ejec, 		;
+						EXP.tipo_operacion,;
+						lorden_ciclo )
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDSCAN
+ENDIF
+RETURN
+
+
+*------------------------
+FUNCTION procesa_gp_reas
+*------------------------
+IF exp_sec.edicion == "E" THEN
+	ls_correlativo = "0001"
+ENDIF
+IF YEAR(exp_sec.fecha_doc) = VAL(gcano_eje) THEN && Consistencia año de Entorno
+	SEEK lano_eje+lsec_ejec+ls_expediente+ls_ciclo+'G'+ls_secuencia+ls_correlativo
+	SCAN WHILE lano_eje+lsec_ejec+ls_expediente+ls_ciclo+;
+			'G'+ls_secuencia+ls_correlativo == ;
+			ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo
+		* LLENA CUR_BCO1
+		IF !SEEK(ls_expediente+ls_ciclo+exp_doc.cod_doc+;
+				exp_doc.num_doc+exp_doc.nombre+;
+				'Z'+STR(exp_doc.monto,19,02)+STR(0,19,02)+;
+				DTOS(exp_sec.fecha_doc),'Cur_bco1','Ord01') THEN
+			INSERT INTO cur_bco1 VALUES (ls_expediente, 			;
+				ls_ciclo, 					;
+				exp_doc.cod_doc, 			;
+				exp_doc.num_doc, 			;
+				exp_doc.nombre, 			;
+				'Z', 						;
+				STR(exp_doc.monto,19,02), 	;
+				STR(0,19,02), 				;
+				DTOS(exp_sec.fecha_doc) )
+			*
+			IF MONTH(exp_sec.fecha_doc) == VAL(lmes_eje) AND ;
+					YEAR(exp_sec.fecha_doc)  == VAL(gcano_eje) THEN
+				INSERT INTO cur_bco VALUES ( ls_expediente, 	;
+					ls_ciclo, 			;
+					exp_sec.fecha_doc, ;
+					exp_doc.cod_doc,   ;
+					exp_doc.num_doc,   ;
+					exp_doc.nombre,	;
+					exp_doc.monto,		;
+					00,			  	;
+					00,			  	;
+					exp_doc.monto_nacional, ;
+					00,			  	;
+					00,			  	;
+					exp_sec.moneda,  	;
+					"Z", 				;
+					exp_sec.ano_eje, 	;
+					lsec_ejec, 		;
+					EXP.tipo_operacion,;
+					lorden_ciclo )
+			ENDIF
+		ENDIF
+	ENDSCAN
+ENDIF
+RETURN
+
+
+*------------------------------
+FUNCTION ctb_actualizacion_x_notas
+*------------------------------
+LPARAMETERS lparm1
+IF ALLTRIM(cta_cte.moneda) <> 'S/.'
+	x = VAL(gcano_eje)-1999
+	Y = 0
+	DIMENSION cmyarray(x)
+	DO WHILE Y < x
+		cmyarray[y+1] = VAL(gcano_eje)-(x-Y)
+		Y = Y+1
+		a = VAL(gcano_eje)-(x-Y)
+	ENDDO
+	IF lparm1 = 'SALDO' THEN
+		FOR EACH cmyvar IN cmyarray
+			SELECT ctb_nota_contable_new
+			* CARGA : CC 040000-002 EN EL DEBE
+			wkeynota = PADL(cmyvar,4,'0')+lsec_ejec+'C'+'040000'+'002'
+			SEEK wkeynota
+			SCAN WHILE ano_ctb+sec_ejec+ciclo+tipo_complementaria+elemento_complementaria+secuencia_to = wkeynota ;
+					FOR PADL(YEAR(ctb_nota_contable_new.fecha_doc),4,'0') < gcano_eje AND ctb_nota_contable_new.estado<>'A'
+				=SEEK(ctb_nota_contable_new.ano_ctb+ctb_nota_contable_new.sec_ejec+ctb_nota_contable_new.nota_contable,'ctb_oper_ctb','OPER_DIV2')
+				wkeyctabco = ctb_oper_ctb.ano_ctb+ctb_oper_ctb.sec_ejec+ctb_oper_ctb.secuencia_oper
+				SELECT ctb_ast_cta_bco
+				SEEK wkeyctabco
+				SCAN WHILE ano_ctb+sec_ejec+secuencia_oper == wkeyctabco
+					IF mayor+ano_cta_cte+banco+cta_cte == '1101'+ano_cta+gs_banco+gs_cta_cte THEN
+						REPLACE cur_acum.debe_nac WITH cur_acum.debe_nac + (ctb_ast_cta_bco.monto_debe-ctb_ast_cta_bco.monto_haber)
+						DO CASE
+						CASE  cur_acum.debe_nac - cur_acum.haber_nac >= 0
+							REPLACE cur_acum.debe_nac  WITH cur_acum.debe_nac - cur_acum.haber_nac, ;
+								cur_acum.haber_nac WITH 0
+						CASE cur_acum.debe_nac  - cur_acum.haber_nac <  0
+							REPLACE cur_acum.haber_nac WITH cur_acum.haber_nac - cur_acum.debe_nac, ;
+								cur_acum.debe_nac  WITH 0
+						ENDCASE
+					ENDIF
+				ENDSCAN
+			ENDSCAN
+			* CARGA : CC 050000-006 EN EL HABER
+			wkeynota = PADL(cmyvar,4,'0')+lsec_ejec+'C'+'050000'+'006'
+			SEEK wkeynota
+			SCAN WHILE ano_ctb+sec_ejec+ciclo+tipo_complementaria+elemento_complementaria+secuencia_to = wkeynota ;
+					FOR PADL(YEAR(ctb_nota_contable_new.fecha_doc),4,'0') < gcano_eje AND ctb_nota_contable_new.estado<>'A'
+				=SEEK(ctb_nota_contable_new.ano_ctb+ctb_nota_contable_new.sec_ejec+ctb_nota_contable_new.nota_contable,'ctb_oper_ctb')
+				wkeyctabco = ctb_oper_ctb.ano_ctb+ctb_oper_ctb.sec_ejec+ctb_oper_ctb.secuencia_oper
+				SELECT ctb_ast_cta_bco
+				SEEK wkeyctabco
+				SCAN WHILE ano_ctb+sec_ejec+secuencia_oper == wkeyctabco
+					IF mayor+ano_cta_cte+banco+cta_cte == '1101'+ano_cta+gs_banco+gs_cta_cte THEN
+						REPLACE cur_acum.haber_nac WITH cur_acum.haber_nac + (ctb_ast_cta_bco.monto_haber-ctb_ast_cta_bco.monto_debe)
+						DO CASE
+						CASE cur_acum.debe_nac - cur_acum.haber_nac >= 0
+							REPLACE cur_acum.debe_nac  WITH cur_acum.debe_nac - cur_acum.haber_nac, ;
+								cur_acum.haber_nac WITH 0
+						CASE cur_acum.debe_nac - cur_acum.haber_nac <  0
+							REPLACE cur_acum.haber_nac WITH cur_acum.haber_nac - cur_acum.debe_nac, ;
+								cur_acum.debe_nac  WITH 0
+						ENDCASE
+					ENDIF
+				ENDSCAN
+			ENDSCAN
+		NEXT cmyvar
+	ELSE
+		SELECT ctb_nota_contable_new
+		* CARGA : CC 040000-002 EN EL DEBE
+		wkeynota = gcano_eje+lsec_ejec+'C'+'040000'+'002'
+		SEEK wkeynota
+		SCAN WHILE ano_ctb+sec_ejec+ciclo+tipo_complementaria+elemento_complementaria+secuencia_to = wkeynota ;
+				FOR PADL(YEAR(ctb_nota_contable_new.fecha_doc),4,'0') = gcano_eje AND ctb_nota_contable_new.estado<>'A'
+			=SEEK(ctb_nota_contable_new.ano_ctb+ctb_nota_contable_new.sec_ejec+ctb_nota_contable_new.nota_contable,'ctb_oper_ctb','OPER_DIV2')
+			wkeyctabco = ctb_oper_ctb.ano_ctb+ctb_oper_ctb.sec_ejec+ctb_oper_ctb.secuencia_oper
+			SELECT ctb_ast_cta_bco
+			SEEK wkeyctabco
+			SCAN WHILE ano_ctb+sec_ejec+secuencia_oper == wkeyctabco
+				IF mayor+ano_cta_cte+banco+cta_cte == '1101'+ano_cta+gs_banco+gs_cta_cte THEN
+					IF SUBSTR(DTOS(ctb_nota_contable_new.fecha_doc),5,2) == lmes_eje THEN
+						IF !SEEK('1001000000'+'C'+'028'+RIGHT(ctb_nota_contable_new.nota_contable,8)+SPACE(12)+LEFT(ctb_nota_contable_new.comentario,60)+'Z'+STR(00+00,19,02)+DTOS(ctb_nota_contable_new.fecha_doc),'CUR_BCO','ORD01')
+							INSERT INTO cur_bco VALUES ( "1001000000", 				;
+								"C", 						;
+								ctb_nota_contable_new.fecha_doc, 	;
+								"028",		 				;
+								RIGHT(ctb_nota_contable_new.nota_contable,8),;
+								LEFT(ctb_nota_contable_new.comentario,60),;
+								00,						;
+								00,						;
+								00, 						;
+								(ctb_ast_cta_bco.monto_debe-ctb_ast_cta_bco.monto_haber),	 ;
+								00, 						;
+								00,						;
+								cta_cte.moneda,			;
+								"Z", 						;
+								ctb_nota_contable_new.ano_ctb, 	;
+								ctb_nota_contable_new.sec_ejec,	;
+								' ',						;
+								' ' )
+						ELSE
+							REPLACE cur_bco.debe_nac  WITH cur_bco.debe_nac  + (ctb_ast_cta_bco.monto_debe-ctb_ast_cta_bco.monto_haber)
+						ENDIF
+					ENDIF
+					IF SUBSTR(DTOS(ctb_nota_contable_new.fecha_doc),5,2) < lmes_eje THEN
+						REPLACE cur_acum.debe_nac WITH cur_acum.debe_nac + (ctb_ast_cta_bco.monto_debe-ctb_ast_cta_bco.monto_haber)
+					ENDIF
+				ENDIF
+			ENDSCAN
+		ENDSCAN
+		* CARGA : CC 050000-006 EN EL HABER
+		wkeynota = gcano_eje+lsec_ejec+'C'+'050000'+'006'
+		SEEK wkeynota
+		SCAN WHILE ano_ctb+sec_ejec+ciclo+tipo_complementaria+elemento_complementaria+secuencia_to = wkeynota ;
+				FOR PADL(YEAR(ctb_nota_contable_new.fecha_doc),4,'0') = gcano_eje AND ctb_nota_contable_new.estado<>'A'
+			=SEEK(ctb_nota_contable_new.ano_ctb+ctb_nota_contable_new.sec_ejec+ctb_nota_contable_new.nota_contable,'ctb_oper_ctb')
+			wkeyctabco = ctb_oper_ctb.ano_ctb+ctb_oper_ctb.sec_ejec+ctb_oper_ctb.secuencia_oper
+			SELECT ctb_ast_cta_bco
+			SEEK wkeyctabco
+			SCAN WHILE ano_ctb+sec_ejec+secuencia_oper == wkeyctabco
+				IF mayor+ano_cta_cte+banco+cta_cte == '1101'+ano_cta+gs_banco+gs_cta_cte THEN
+					IF SUBSTR(DTOS(ctb_nota_contable_new.fecha_doc),5,2) == lmes_eje THEN
+						IF !SEEK('2002000000'+'C'+'028'+RIGHT(ctb_nota_contable_new.nota_contable,8)+SPACE(12)+LEFT(ctb_nota_contable_new.comentario,60)+'N'+STR(00+00,19,02)+DTOS(ctb_nota_contable_new.fecha_doc),'CUR_BCO','ORD01')
+							INSERT INTO cur_bco VALUES ( "2002000000", 				;
+								"C", 						;
+								ctb_nota_contable_new.fecha_doc, 	;
+								"028",		 				;
+								RIGHT(ctb_nota_contable_new.nota_contable,8),;
+								LEFT(ctb_nota_contable_new.comentario,60),;
+								00,						;
+								00,						;
+								00, 						;
+								00, 						;
+								(ctb_ast_cta_bco.monto_haber-ctb_ast_cta_bco.monto_debe),	 ;
+								00,						;
+								cta_cte.moneda,			;
+								"N", 						;
+								ctb_nota_contable_new.ano_ctb, 	;
+								ctb_nota_contable_new.sec_ejec,	;
+								' ',						;
+								' ' )
+						ELSE
+							REPLACE cur_bco.haber_nac WITH cur_bco.haber_nac + (ctb_ast_cta_bco.monto_haber-ctb_ast_cta_bco.monto_debe)
+						ENDIF
+					ENDIF
+					IF SUBSTR(DTOS(ctb_nota_contable_new.fecha_doc),5,2) < lmes_eje THEN
+						REPLACE cur_acum.haber_nac WITH cur_acum.haber_nac + (ctb_ast_cta_bco.monto_haber-ctb_ast_cta_bco.monto_debe)
+					ENDIF
+				ENDIF
+			ENDSCAN
+		ENDSCAN
+	ENDIF
+ENDIF
+RETURN
+
+*----------------------------------------
+FUNCTION ctb_actualizacion_x_notas_2009
+*----------------------------------------
+LPARAMETERS lparm1
+IF ALLTRIM(cta_cte.moneda) <> 'S/.'
+	x = VAL(gcano_eje)-1999
+	Y = 0
+	DIMENSION cmyarray(x)
+	DO WHILE Y < x
+		cmyarray[y+1] = VAL(gcano_eje)-(x-Y)
+		Y = Y+1
+		a = VAL(gcano_eje)-(x-Y)
+	ENDDO
+	IF lparm1 = 'SALDO' THEN
+		FOR EACH cmyvar IN cmyarray
+			SELECT ctb_nota_contable
+			* CARGA : CC 040000-002 EN EL DEBE
+			wkeynota = PADL(cmyvar,4,'0')+lsec_ejec+'C'+'040000'+'002'
+			SEEK wkeynota
+			SCAN WHILE ano_ctb+sec_ejec+ciclo+tipo_complementaria+elemento_complementaria+secuencia = wkeynota ;
+					FOR PADL(YEAR(ctb_nota_contable.fecha_doc),4,'0') < gcano_eje AND ctb_nota_contable.estado<>'A'
+				=SEEK(ctb_nota_contable.ano_ctb+ctb_nota_contable.sec_ejec+ctb_nota_contable.nota_contable,'ctb_oper_ctb','OPER_DIV2')
+				wkeyctabco = ctb_oper_ctb.ano_ctb+ctb_oper_ctb.sec_ejec+ctb_oper_ctb.secuencia_oper
+				SELECT ctb_ast_cta_bco
+				SEEK wkeyctabco
+				SCAN WHILE ano_ctb+sec_ejec+secuencia_oper == wkeyctabco
+					IF mayor+ano_cta_cte+banco+cta_cte == '1101'+ano_cta+gs_banco+gs_cta_cte THEN
+						REPLACE cur_acum.debe_nac WITH cur_acum.debe_nac + (ctb_ast_cta_bco.monto_debe-ctb_ast_cta_bco.monto_haber)
+						DO CASE
+						CASE  cur_acum.debe_nac - cur_acum.haber_nac >= 0
+							REPLACE cur_acum.debe_nac  WITH cur_acum.debe_nac - cur_acum.haber_nac, ;
+								cur_acum.haber_nac WITH 0
+						CASE cur_acum.debe_nac  - cur_acum.haber_nac <  0
+							REPLACE cur_acum.haber_nac WITH cur_acum.haber_nac - cur_acum.debe_nac, ;
+								cur_acum.debe_nac  WITH 0
+						ENDCASE
+					ENDIF
+				ENDSCAN
+			ENDSCAN
+			* CARGA : CC 050000-006 EN EL HABER
+			wkeynota = PADL(cmyvar,4,'0')+lsec_ejec+'C'+'050000'+'006'
+			SEEK wkeynota
+			SCAN WHILE ano_ctb+sec_ejec+ciclo+tipo_complementaria+elemento_complementaria+secuencia = wkeynota ;
+					FOR PADL(YEAR(ctb_nota_contable.fecha_doc),4,'0') < gcano_eje AND ctb_nota_contable.estado<>'A'
+				=SEEK(ctb_nota_contable.ano_ctb+ctb_nota_contable.sec_ejec+ctb_nota_contable.nota_contable,'ctb_oper_ctb')
+				wkeyctabco = ctb_oper_ctb.ano_ctb+ctb_oper_ctb.sec_ejec+ctb_oper_ctb.secuencia_oper
+				SELECT ctb_ast_cta_bco
+				SEEK wkeyctabco
+				SCAN WHILE ano_ctb+sec_ejec+secuencia_oper == wkeyctabco
+					IF mayor+ano_cta_cte+banco+cta_cte == '1101'+ano_cta+gs_banco+gs_cta_cte THEN
+						REPLACE cur_acum.haber_nac WITH cur_acum.haber_nac + (ctb_ast_cta_bco.monto_haber-ctb_ast_cta_bco.monto_debe)
+						DO CASE
+						CASE cur_acum.debe_nac - cur_acum.haber_nac >= 0
+							REPLACE cur_acum.debe_nac  WITH cur_acum.debe_nac - cur_acum.haber_nac, ;
+								cur_acum.haber_nac WITH 0
+						CASE cur_acum.debe_nac - cur_acum.haber_nac <  0
+							REPLACE cur_acum.haber_nac WITH cur_acum.haber_nac - cur_acum.debe_nac, ;
+								cur_acum.debe_nac  WITH 0
+						ENDCASE
+					ENDIF
+				ENDSCAN
+			ENDSCAN
+		NEXT cmyvar
+	ELSE
+		SELECT ctb_nota_contable
+		* CARGA : CC 040000-002 EN EL DEBE
+		wkeynota = gcano_eje+lsec_ejec+'C'+'040000'+'002'
+		SEEK wkeynota
+		SCAN WHILE ano_ctb+sec_ejec+ciclo+tipo_complementaria+elemento_complementaria+secuencia = wkeynota ;
+				FOR PADL(YEAR(ctb_nota_contable.fecha_doc),4,'0') = gcano_eje AND ctb_nota_contable.estado<>'A'
+			=SEEK(ctb_nota_contable.ano_ctb+ctb_nota_contable.sec_ejec+ctb_nota_contable.nota_contable,'ctb_oper_ctb','OPER_DIV2')
+			wkeyctabco = ctb_oper_ctb.ano_ctb+ctb_oper_ctb.sec_ejec+ctb_oper_ctb.secuencia_oper
+			SELECT ctb_ast_cta_bco
+			SEEK wkeyctabco
+			SCAN WHILE ano_ctb+sec_ejec+secuencia_oper == wkeyctabco
+				IF mayor+ano_cta_cte+banco+cta_cte == '1101'+ano_cta+gs_banco+gs_cta_cte THEN
+					IF SUBSTR(DTOS(ctb_nota_contable.fecha_doc),5,2) == lmes_eje THEN
+						IF !SEEK('1001000000'+'C'+'028'+RIGHT(ctb_nota_contable.nota_contable,8)+SPACE(12)+LEFT(ctb_nota_contable.comentario,60)+'Z'+STR(00+00,19,02)+DTOS(ctb_nota_contable.fecha_doc),'CUR_BCO','ORD01')
+							INSERT INTO cur_bco VALUES ( "1001000000", 				;
+								"C", 						;
+								ctb_nota_contable.fecha_doc, 	;
+								"028",		 				;
+								RIGHT(ctb_nota_contable.nota_contable,8),;
+								LEFT(ctb_nota_contable.comentario,60),;
+								00,						;
+								00,						;
+								00, 						;
+								(ctb_ast_cta_bco.monto_debe-ctb_ast_cta_bco.monto_haber),	 ;
+								00, 						;
+								00,						;
+								cta_cte.moneda,			;
+								"Z", 						;
+								ctb_nota_contable.ano_ctb, 	;
+								ctb_nota_contable.sec_ejec,	;
+								' ',						;
+								' ' )
+						ELSE
+							REPLACE cur_bco.debe_nac  WITH cur_bco.debe_nac  + (ctb_ast_cta_bco.monto_debe-ctb_ast_cta_bco.monto_haber)
+						ENDIF
+					ENDIF
+					IF SUBSTR(DTOS(ctb_nota_contable.fecha_doc),5,2) < lmes_eje THEN
+						REPLACE cur_acum.debe_nac WITH cur_acum.debe_nac + (ctb_ast_cta_bco.monto_debe-ctb_ast_cta_bco.monto_haber)
+					ENDIF
+				ENDIF
+			ENDSCAN
+		ENDSCAN
+		* CARGA : CC 050000-006 EN EL HABER
+		wkeynota = gcano_eje+lsec_ejec+'C'+'050000'+'006'
+		SEEK wkeynota
+		SCAN WHILE ano_ctb+sec_ejec+ciclo+tipo_complementaria+elemento_complementaria+secuencia = wkeynota ;
+				FOR PADL(YEAR(ctb_nota_contable.fecha_doc),4,'0') = gcano_eje AND ctb_nota_contable.estado<>'A'
+			=SEEK(ctb_nota_contable.ano_ctb+ctb_nota_contable.sec_ejec+ctb_nota_contable.nota_contable,'ctb_oper_ctb')
+			wkeyctabco = ctb_oper_ctb.ano_ctb+ctb_oper_ctb.sec_ejec+ctb_oper_ctb.secuencia_oper
+			SELECT ctb_ast_cta_bco
+			SEEK wkeyctabco
+			SCAN WHILE ano_ctb+sec_ejec+secuencia_oper == wkeyctabco
+				IF mayor+ano_cta_cte+banco+cta_cte == '1101'+ano_cta+gs_banco+gs_cta_cte THEN
+					IF SUBSTR(DTOS(ctb_nota_contable.fecha_doc),5,2) == lmes_eje THEN
+						IF !SEEK('2002000000'+'C'+'028'+RIGHT(ctb_nota_contable.nota_contable,8)+SPACE(12)+LEFT(ctb_nota_contable.comentario,60)+'N'+STR(00+00,19,02)+DTOS(ctb_nota_contable.fecha_doc),'CUR_BCO','ORD01')
+							INSERT INTO cur_bco VALUES ( "2002000000", 				;
+								"C", 						;
+								ctb_nota_contable.fecha_doc, 	;
+								"028",		 				;
+								RIGHT(ctb_nota_contable.nota_contable,8),;
+								LEFT(ctb_nota_contable.comentario,60),;
+								00,						;
+								00,						;
+								00, 						;
+								00, 						;
+								(ctb_ast_cta_bco.monto_haber-ctb_ast_cta_bco.monto_debe),	 ;
+								00,						;
+								cta_cte.moneda,			;
+								"N", 						;
+								ctb_nota_contable.ano_ctb, 	;
+								ctb_nota_contable.sec_ejec,	;
+								' ',						;
+								' ' )
+						ELSE
+							REPLACE cur_bco.haber_nac WITH cur_bco.haber_nac + (ctb_ast_cta_bco.monto_haber-ctb_ast_cta_bco.monto_debe)
+						ENDIF
+					ENDIF
+					IF SUBSTR(DTOS(ctb_nota_contable.fecha_doc),5,2) < lmes_eje THEN
+						REPLACE cur_acum.haber_nac WITH cur_acum.haber_nac + (ctb_ast_cta_bco.monto_haber-ctb_ast_cta_bco.monto_debe)
+					ENDIF
+				ENDIF
+			ENDSCAN
+		ENDSCAN
+	ENDIF
+ENDIF
+RETURN
+
+*------------------------------
+FUNCTION actualizacion_x_notas
+*------------------------------
+LPARAMETERS lparm1
+IF ALLTRIM(cta_cte.moneda) <> 'S/.'
+	x = VAL(gcano_eje)-1998
+	Y = 0
+	DIMENSION cmyarray(x)
+	DO WHILE Y < x
+		cmyarray[y+1] = VAL(gcano_eje)-(x-Y)
+		Y = Y+1
+		a = VAL(gcano_eje)-(x-Y)
+	ENDDO
+	IF lparm1 = 'SALDO' THEN
+		FOR EACH cmyvar IN cmyarray
+			SELECT nota_contable
+			* CARGA : CC 040000-002 EN EL DEBE
+			wkeynota = PADL(cmyvar,4,'0')+lsec_ejec+'C'+'C'+'040000'+'002'
+			SEEK wkeynota
+			SCAN WHILE ano_eje+sec_ejec+ciclo+fase+clasificador+secuencia == wkeynota ;
+					FOR SUBSTR(DTOS(nota_contable.fecha_doc),1,04) < gcano_eje
+				=SEEK(nota_contable.ano_eje+nota_contable.sec_ejec+nota_contable.NOTA,'OPER_CTB','OPER_DIV2')
+				wkeyctabco = oper_ctb.ano_eje+oper_ctb.sec_ejec+oper_ctb.secuencia_oper
+				SELECT ast_cta_bco
+				SEEK wkeyctabco
+				SCAN WHILE ano_eje+sec_ejec+secuencia_oper == wkeyctabco
+					IF mayor+ano_cta_cte+banco+cta_cte == '10'+ano_cta+gs_banco+gs_cta_cte THEN
+						REPLACE cur_acum.debe_nac WITH cur_acum.debe_nac + (ast_cta_bco.monto_debe-ast_cta_bco.monto_haber)
+						DO CASE
+						CASE  cur_acum.debe_nac - cur_acum.haber_nac >= 0
+							REPLACE cur_acum.debe_nac  WITH cur_acum.debe_nac - cur_acum.haber_nac, ;
+								cur_acum.haber_nac WITH 0
+						CASE cur_acum.debe_nac  - cur_acum.haber_nac <  0
+							REPLACE cur_acum.haber_nac WITH cur_acum.haber_nac - cur_acum.debe_nac, ;
+								cur_acum.debe_nac  WITH 0
+						ENDCASE
+					ENDIF
+				ENDSCAN
+			ENDSCAN
+			* CARGA : CC 050000-006 EN EL HABER
+			wkeynota = PADL(cmyvar,4,'0')+lsec_ejec+'C'+'C'+'050000'+'006'
+			SEEK wkeynota
+			SCAN WHILE ano_eje+sec_ejec+ciclo+fase+clasificador+secuencia == wkeynota ;
+					FOR SUBSTR(DTOS(nota_contable.fecha_doc),1,04) < gcano_eje
+				=SEEK(nota_contable.ano_eje+nota_contable.sec_ejec+nota_contable.NOTA,'OPER_CTB')
+				wkeyctabco = oper_ctb.ano_eje+oper_ctb.sec_ejec+oper_ctb.secuencia_oper
+				SELECT ast_cta_bco
+				SEEK wkeyctabco
+				SCAN WHILE ano_eje+sec_ejec+secuencia_oper == wkeyctabco
+					IF mayor+ano_cta_cte+banco+cta_cte == '10'+ano_cta+gs_banco+gs_cta_cte THEN
+						REPLACE cur_acum.haber_nac WITH cur_acum.haber_nac + (ast_cta_bco.monto_haber-ast_cta_bco.monto_debe)
+						DO CASE
+						CASE cur_acum.debe_nac - cur_acum.haber_nac >= 0
+							REPLACE cur_acum.debe_nac  WITH cur_acum.debe_nac - cur_acum.haber_nac, ;
+								cur_acum.haber_nac WITH 0
+						CASE cur_acum.debe_nac - cur_acum.haber_nac <  0
+							REPLACE cur_acum.haber_nac WITH cur_acum.haber_nac - cur_acum.debe_nac, ;
+								cur_acum.debe_nac  WITH 0
+						ENDCASE
+					ENDIF
+				ENDSCAN
+			ENDSCAN
+			*
+			SELECT ctb_nota_contable
+			* CARGA : CC 040000-002 EN EL DEBE
+			wkeynota = PADL(cmyvar,4,'0')+lsec_ejec+'C'+'040000'+'002'
+			SEEK wkeynota
+			SCAN WHILE ano_ctb+sec_ejec+ciclo+tipo_complementaria+elemento_complementaria+secuencia = wkeynota ;
+					FOR PADL(YEAR(ctb_nota_contable.fecha_doc),4,'0') < gcano_eje AND ctb_nota_contable.estado<>'A'
+				=SEEK(ctb_nota_contable.ano_ctb+ctb_nota_contable.sec_ejec+ctb_nota_contable.nota_contable,'ctb_oper_ctb','OPER_DIV2')
+				wkeyctabco = ctb_oper_ctb.ano_ctb+ctb_oper_ctb.sec_ejec+ctb_oper_ctb.secuencia_oper
+				SELECT ctb_ast_cta_bco
+				SEEK wkeyctabco
+				SCAN WHILE ano_ctb+sec_ejec+secuencia_oper == wkeyctabco
+					IF mayor+ano_cta_cte+banco+cta_cte == '1101'+ano_cta+gs_banco+gs_cta_cte THEN
+						REPLACE cur_acum.debe_nac WITH cur_acum.debe_nac + (ctb_ast_cta_bco.monto_debe-ctb_ast_cta_bco.monto_haber)
+						DO CASE
+						CASE  cur_acum.debe_nac - cur_acum.haber_nac >= 0
+							REPLACE cur_acum.debe_nac  WITH cur_acum.debe_nac - cur_acum.haber_nac, ;
+								cur_acum.haber_nac WITH 0
+						CASE cur_acum.debe_nac  - cur_acum.haber_nac <  0
+							REPLACE cur_acum.haber_nac WITH cur_acum.haber_nac - cur_acum.debe_nac, ;
+								cur_acum.debe_nac  WITH 0
+						ENDCASE
+					ENDIF
+				ENDSCAN
+			ENDSCAN
+			* CARGA : CC 050000-006 EN EL HABER
+			wkeynota = PADL(cmyvar,4,'0')+lsec_ejec+'C'+'050000'+'006'
+			SEEK wkeynota
+			SCAN WHILE ano_ctb+sec_ejec+ciclo+tipo_complementaria+elemento_complementaria+secuencia = wkeynota ;
+					FOR PADL(YEAR(ctb_nota_contable.fecha_doc),4,'0') < gcano_eje AND ctb_nota_contable.estado<>'A'
+				=SEEK(ctb_nota_contable.ano_ctb+ctb_nota_contable.sec_ejec+ctb_nota_contable.nota_contable,'ctb_oper_ctb')
+				wkeyctabco = ctb_oper_ctb.ano_ctb+ctb_oper_ctb.sec_ejec+ctb_oper_ctb.secuencia_oper
+				SELECT ctb_ast_cta_bco
+				SEEK wkeyctabco
+				SCAN WHILE ano_ctb+sec_ejec+secuencia_oper == wkeyctabco
+					IF mayor+ano_cta_cte+banco+cta_cte == '1101'+ano_cta+gs_banco+gs_cta_cte THEN
+						REPLACE cur_acum.haber_nac WITH cur_acum.haber_nac + (ctb_ast_cta_bco.monto_haber-ctb_ast_cta_bco.monto_debe)
+						DO CASE
+						CASE cur_acum.debe_nac - cur_acum.haber_nac >= 0
+							REPLACE cur_acum.debe_nac  WITH cur_acum.debe_nac - cur_acum.haber_nac, ;
+								cur_acum.haber_nac WITH 0
+						CASE cur_acum.debe_nac - cur_acum.haber_nac <  0
+							REPLACE cur_acum.haber_nac WITH cur_acum.haber_nac - cur_acum.debe_nac, ;
+								cur_acum.debe_nac  WITH 0
+						ENDCASE
+					ENDIF
+				ENDSCAN
+			ENDSCAN
+		NEXT cmyvar
+	ELSE
+		SELECT ctb_nota_contable
+		* CARGA : CC 040000-002 EN EL DEBE
+		wkeynota = gcano_eje+lsec_ejec+'C'+'040000'+'002'
+		SEEK wkeynota
+		SCAN WHILE ano_ctb+sec_ejec+ciclo+tipo_complementaria+elemento_complementaria+secuencia = wkeynota ;
+				FOR PADL(YEAR(ctb_nota_contable.fecha_doc),4,'0') = gcano_eje AND ctb_nota_contable.estado<>'A'
+			=SEEK(ctb_nota_contable.ano_ctb+ctb_nota_contable.sec_ejec+ctb_nota_contable.nota_contable,'ctb_oper_ctb','OPER_DIV2')
+			wkeyctabco = ctb_oper_ctb.ano_ctb+ctb_oper_ctb.sec_ejec+ctb_oper_ctb.secuencia_oper
+			SELECT ctb_ast_cta_bco
+			SEEK wkeyctabco
+			SCAN WHILE ano_ctb+sec_ejec+secuencia_oper == wkeyctabco
+				IF mayor+ano_cta_cte+banco+cta_cte == '1101'+ano_cta+gs_banco+gs_cta_cte THEN
+					IF SUBSTR(DTOS(ctb_nota_contable.fecha_doc),5,2) == lmes_eje THEN
+						IF !SEEK('1001000000'+'C'+'028'+RIGHT(ctb_nota_contable.nota_contable,8)+SPACE(12)+LEFT(ctb_nota_contable.comentario,60)+'Z'+STR(00+00,19,02)+DTOS(ctb_nota_contable.fecha_doc),'CUR_BCO','ORD01')
+							INSERT INTO cur_bco VALUES ( "1001000000", 				;
+								"C", 						;
+								ctb_nota_contable.fecha_doc, 	;
+								"028",		 				;
+								RIGHT(ctb_nota_contable.nota_contable,8),;
+								LEFT(ctb_nota_contable.comentario,60),;
+								00,						;
+								00,						;
+								00, 						;
+								(ctb_ast_cta_bco.monto_debe-ctb_ast_cta_bco.monto_haber),	 ;
+								00, 						;
+								00,						;
+								cta_cte.moneda,			;
+								"Z", 						;
+								ctb_nota_contable.ano_ctb, 	;
+								ctb_nota_contable.sec_ejec,	;
+								' ',						;
+								' ' )
+						ELSE
+							REPLACE cur_bco.debe_nac  WITH cur_bco.debe_nac  + (ctb_ast_cta_bco.monto_debe-ctb_ast_cta_bco.monto_haber)
+						ENDIF
+					ENDIF
+					IF SUBSTR(DTOS(ctb_nota_contable.fecha_doc),5,2) < lmes_eje THEN
+						REPLACE cur_acum.debe_nac WITH cur_acum.debe_nac + (ctb_ast_cta_bco.monto_debe-ctb_ast_cta_bco.monto_haber)
+					ENDIF
+				ENDIF
+			ENDSCAN
+		ENDSCAN
+		* CARGA : CC 050000-006 EN EL HABER
+		wkeynota = gcano_eje+lsec_ejec+'C'+'050000'+'006'
+		SEEK wkeynota
+		SCAN WHILE ano_ctb+sec_ejec+ciclo+tipo_complementaria+elemento_complementaria+secuencia = wkeynota ;
+				FOR PADL(YEAR(ctb_nota_contable.fecha_doc),4,'0') = gcano_eje AND ctb_nota_contable.estado<>'A'
+			=SEEK(ctb_nota_contable.ano_ctb+ctb_nota_contable.sec_ejec+ctb_nota_contable.nota_contable,'ctb_oper_ctb')
+			wkeyctabco = ctb_oper_ctb.ano_ctb+ctb_oper_ctb.sec_ejec+ctb_oper_ctb.secuencia_oper
+			SELECT ctb_ast_cta_bco
+			SEEK wkeyctabco
+			SCAN WHILE ano_ctb+sec_ejec+secuencia_oper == wkeyctabco
+				IF mayor+ano_cta_cte+banco+cta_cte == '1101'+ano_cta+gs_banco+gs_cta_cte THEN
+					IF SUBSTR(DTOS(ctb_nota_contable.fecha_doc),5,2) == lmes_eje THEN
+						IF !SEEK('2002000000'+'C'+'028'+RIGHT(ctb_nota_contable.nota_contable,8)+SPACE(12)+LEFT(ctb_nota_contable.comentario,60)+'N'+STR(00+00,19,02)+DTOS(ctb_nota_contable.fecha_doc),'CUR_BCO','ORD01')
+							INSERT INTO cur_bco VALUES ( "2002000000", 				;
+								"C", 						;
+								ctb_nota_contable.fecha_doc, 	;
+								"028",		 				;
+								RIGHT(ctb_nota_contable.nota_contable,8),;
+								LEFT(ctb_nota_contable.comentario,60),;
+								00,						;
+								00,						;
+								00, 						;
+								00, 						;
+								(ctb_ast_cta_bco.monto_haber-ctb_ast_cta_bco.monto_debe),	 ;
+								00,						;
+								cta_cte.moneda,			;
+								"N", 						;
+								ctb_nota_contable.ano_ctb, 	;
+								ctb_nota_contable.sec_ejec,	;
+								' ',						;
+								' ' )
+						ELSE
+							REPLACE cur_bco.haber_nac WITH cur_bco.haber_nac + (ctb_ast_cta_bco.monto_haber-ctb_ast_cta_bco.monto_debe)
+						ENDIF
+					ENDIF
+					IF SUBSTR(DTOS(ctb_nota_contable.fecha_doc),5,2) < lmes_eje THEN
+						REPLACE cur_acum.haber_nac WITH cur_acum.haber_nac + (ctb_ast_cta_bco.monto_haber-ctb_ast_cta_bco.monto_debe)
+					ENDIF
+				ENDIF
+			ENDSCAN
+		ENDSCAN
+	ENDIF
+ENDIF
+RETURN

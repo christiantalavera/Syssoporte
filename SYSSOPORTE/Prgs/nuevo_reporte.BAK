@@ -1,0 +1,364 @@
+gcId_rep = 'R01-00001'
+lcRubro = 'T'
+lcidclasificador = '*******'
+lcsec_func = '****'
+
+Use siaf!SECTOR		              	In 0 Shared Alias SECTOR   				Again Order Tag SECTOR		&& ANO_EJE+SECTOR
+Use siaf!PLIEGO   				  	In 0 Shared Alias PLIEGO   				Again Order Tag PLIEGO   	&& ANO_EJE+SECTOR+PLIEGO
+Use siaf!DEPARTAMENTO             	In 0 Shared Alias DEPARTAMENTO   		Again Order Tag DEPARTAMEN  && DEPARTAMENTO
+Use siaf!PROVINCIA		          	In 0 Shared Alias PROVINCIA	   			Again Order Tag PROVINCIA   && DEPARTAMENTO+PROVINCIA
+Use siaf!DISTRITO				  	In 0 Shared Alias DISTRITO				Again Order Tag DISTRITO  	&& DEPARTAMENTO+PROVINCIA+DISTRITO
+Use siaf!EJECUTORA				  	In 0 Shared Alias EJECUTORA				Again Order Tag SEC_EJEC  	&& ANO_EJE+SEC_EJEC
+
+Use siaf!certificado		  		In 0 Shared Alias certificado			Again Order Tag CERTI   	 && ANO_EJE+SEC_EJEC+CERTIFICADO
+Use siaf!certificado_fase	  		In 0 Shared Alias certificado_fase1		Again Order Tag CERTI_FASE   && ANO_EJE+SEC_EJEC+CERTIFICADO+SECUENCIA
+Use siaf!certificado_secuencia 		In 0 Shared Alias certificado_secuencia	Again Order Tag CERTI_SEC    && ANO_EJE+SEC_EJEC+CERTIFICADO+SECUENCIA+CORRELATIVO
+Use siaf!certificado_clasif  		In 0 Shared Alias certificado_clasif	Again Order Tag CERTI_CLAS   && ANO_EJE+SEC_EJEC+CERTIFICADO+SECUENCIA+CORRELATIVO+ID_CLASIFICADOR
+Use siaf!certificado_meta	  		In 0 Shared Alias certificado_meta		Again Order Tag CERTI_META   && ANO_EJE+SEC_EJEC+CERTIFICADO+SECUENCIA+CORRELATIVO+ID_CLASIFICADOR+SEC_FUNC
+
+Use siaf!especifica_det		  		In 0 Shared Alias especifica_det		Again Order Tag IDCLASIF   && ANO_EJE+CATEG_GASTO
+
+Use siaf!categoria_gasto		  	In 0 Shared Alias categoria_gasto		Again Order Tag CATEGORIA   && ANO_EJE+CATEG_GASTO
+Use siaf!tipo_transaccion		  	In 0 Shared Alias tipo_transaccion		Again Order Tag TIPOTRN     && ANO_EJE+TIPO_TRANSACCION
+Use siaf!generica				  	In 0 Shared Alias generica				Again Order Tag generica    && ANO_EJE+TIPO_TRANSACCION+GENERICA
+Use siaf!fuente_financ			  	In 0 Shared Alias fuente_financ			Again Order Tag FUENTE_FIN   && ANO_EJE+ORIGEN+FUENTE_FINANC
+USE siaf!maestro_clasificador		IN 0 shared 							again ORDER tag idclasif 
+USE siaf!expediente_fase			IN 0 shared								Again ORDER tag cer_fase
+USE siaf!expediente_secuencia		IN 0 SHARED 							Again ORDER tag exp_sec
+USE siaf!expediente_clasif			IN 0 SHARED								Again ORDER tag exp_clasif
+USE siaf!expediente_meta			IN 0 SHARED 							again ORDER tag exp_metap 
+USE siaf!meta						IN 0 SHARED 							again ORDER tag meta
+USE siaf!mes						IN 0 SHARED 							again ORDER tag mes
+
+*===========================================================================
+*===========================CREANDO CURSOR==================================
+*===========================================================================
+
+
+Create Cursor cur_prin(ano_eje					c(004),	;
+	SEC_EJEC					c(006),	;
+	certificado					c(010),	;
+	rubro						c(002),	;
+	cod_doc						c(003),	;
+	num_doc						c(020),;
+	fecha_doc					d,;
+	clasificador				c(015),;
+	id_clasificador				c(007),;
+	sec_func					c(004),;
+	tipo_transaccion			c(001),;
+	generica					c(001),;
+	monto_certificado			n(19,2),;
+	monto_ca					n(19,2),;
+	monto_compromiso			n(19,2),;
+	monto_devengado				n(19,2),;
+	monto_girado				n(19,2),;
+	glosa						c(250),;
+	saldo_1						n(19,2),;
+	saldo_2						n(19,2),;
+	saldo_3						n(19,2),;
+	sec_area					c(0004),;
+	mes_01						N(19,2),;
+	mes_02						N(19,2),;
+	mes_03						N(19,2),;
+	mes_04						N(19,2),;
+	mes_05						N(19,2),;
+	mes_06						N(19,2),;
+	mes_07						N(19,2),;
+	mes_08						N(19,2),;
+	mes_09						N(19,2),;
+	mes_10						N(19,2),;
+	mes_11						N(19,2),;
+	mes_12						N(19,2))
+
+
+INDEX on ano_eje+sec_ejec+rubro+tipo_transaccion+generica+certificado+clasificador+sec_func TAG inx1 ADDITIVE 
+INDEX on ano_eje+sec_ejec+rubro+certificado+id_clasificador+sec_func TAG inx2 ADDITIVE 
+INDEX on ano_eje+sec_ejec+rubro+certificado+clasificador+sec_func TAG inx3 ADDITIVE 
+
+lcMoneda = ''
+lcTipoCambio=''
+lcDesTipocerti=''
+lcDesTipoReg =''
+lcfecha_autorizacion=''
+lcfecha_bd_oracle=''
+
+lcEstado_Anulacion=''
+lcCondicionCer=''
+lcCondicionM=''
+lcCondicionR=''
+lcCondicionE=''
+lcAnd = ' And '
+lcCondicion=''
+
+
+
+&& LEE CERTIFICADOS
+SELECT certificado
+SEEK gcano_eje+gcsec_ejec
+SCAN WHILE ano_eje+sec_ejec = gcano_eje+gcsec_ejec
+	SCATTER MEMVAR
+		lcKeyFase = m.ano_eje+m.SEC_EJEC+m.certificado
+		SELECT certificado_fase1
+		SEEK lcKeyFase
+		SCAN WHILE ano_eje+SEC_EJEC+certificado = lcKeyFase
+			lcKeySec = certificado_fase1.ano_eje+certificado_fase1.SEC_EJEC+certificado_fase1.certificado+certificado_fase1.secuencia
+
+			lcRubroFte=certificado_fase1.fuente_financ
+			lcRuc=certificado_fase1.ruc
+			lcEstado_Anulacion=certificado_fase1.ind_anulacion
+			lcGlosa = certificado_fase1.glosa
+			IF LEFT(lcRubro,1) <> 'T' THEN 					
+				IF certificado_fase1.fuente_financ <> lcRubro THEN 
+					LOOP 
+				ENDIF 
+			ENDIF 
+			
+			SELECT certificado_secuencia
+			SEEK lcKeySec
+			SCAN WHILE ano_eje+SEC_EJEC+certificado+secuencia = lcKeySec
+
+				lcKeySecuencia = certificado_secuencia.ano_eje+certificado_secuencia.SEC_EJEC+certificado_secuencia.certificado+certificado_secuencia.secuencia+certificado_secuencia.correlativo
+				lcCod_Doc 	= certificado_secuencia.cod_doc
+				lcNum_Doc 	= certificado_secuencia.num_doc
+				lcFecha_doc = certificado_secuencia.fecha_doc
+					
+				IF certificado_secuencia.estado_registro <> 'A' THEN 
+					LOOP 
+				ENDIF 
+					
+				IF PADL(YEAR(certificado_secuencia.fecha_doc),4,'0') <> gcano_eje THEN 
+					LOOP 
+				ENDIF 
+				IF PADL(MONTH(certificado_secuencia.fecha_doc),2,'0') > lcMes THEN 
+					LOOP 
+				ENDIF 
+
+					
+				SELECT certificado_clasif
+				SEEK lcKeySecuencia
+				SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo = lcKeySecuencia 
+					SCATTER MEMVAR
+						SELECT maestro_clasificador
+						IF SEEK(m.ano_eje+m.id_clasificador,'maestro_clasificador') THEN 
+							m.clasificador = maestro_clasificador.clasificador
+							*-
+							lctipo_transaccion	= SUBSTR(m.clasificador,1,1)
+							lcgenerica			= SUBSTR(m.clasificador,2,1)
+						ENDIF 
+						=SEEK(gcano_eje+m.id_clasificador,"especifica_det")
+						lcDesClasif = especifica_det.tipo_transaccion + '.' + especifica_det.generica + '.' +  especifica_det.subgenerica +  especifica_det.subgenerica_det + '.'+ especifica_det.especifica + especifica_det.especifica_det
+						lcClasificador = lcDesClasif
+						lcKeyClasif = lcKeySecuencia + certificado_clasif.id_clasificador
+						IF LEFT(lcIdclasificador,1) <> '*' THEN 
+							IF certificado_clasif.id_clasificador <> lcIdclasificador THEN 
+								LOOP 
+							ENDIF 
+						ENDIF 
+						SELECT Certificado_meta
+						lcMonto = 0 
+						lcMonto_nacional = 0
+						SEEK lcKeyClasif
+						SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo+id_clasificador =  lcKeyClasif
+								lcMonto 		 = Certificado_meta.monto_nacional + Certificado_meta.monto_nacional_ajuste
+								lcMonto_nacional = Certificado_meta.monto_nacional + Certificado_meta.monto_nacional_ajuste
+								IF lcsec_func <> '****' THEN 
+									IF certificado_meta.sec_func <> lcsec_func THEN 
+										LOOP 
+									ENDIF 
+								ENDIF 
+								IF !SEEK(m.ano_eje+m.SEC_EJEC+certificado_fase1.fuente_financ+Certificado_meta.certificado+certificado_clasif.id_Clasificador+Certificado_meta.sec_func,'cur_prin','inx2') THEN 
+
+
+										INSERT INTO cur_prin(ano_eje ,;
+											SEC_EJEC,;
+											certificado,;
+											rubro,	;
+											cod_doc,	;
+											num_doc,;
+											fecha_doc,;
+											clasificador,;
+											id_clasificador,;
+											sec_func,;
+											tipo_transaccion,;
+											generica,;
+											monto_certificado,;
+											monto_ca	,;
+											glosa)VALUES (;
+											Certificado_meta.ano_eje,;
+											Certificado_meta.SEC_EJEC,;
+											Certificado_meta.certificado,;
+											certificado_fase1.fuente_financ,;
+											lcCod_Doc,;
+											lcNum_Doc,;
+											lcFecha_Doc,;
+											lcClasificador,;
+											certificado_clasif.id_clasificador,;
+											certificado_meta.sec_func,;
+											lctipo_transaccion,;
+											lcgenerica,;
+											IIF(certificado_fase1.etapa = '1',lcMonto_nacional,0.00),;
+											IIF(certificado_fase1.etapa = '2',lcMonto_nacional,0.00),;
+											lcGlosa)
+								ELSE
+									Replace cur_prin.monto_certificado 	WITH cur_prin.monto_certificado + IIF(certificado_fase1.etapa = '1',lcMonto_nacional,0.00)
+									Replace cur_prin.monto_ca			WITH cur_prin.monto_ca 			+ IIF(certificado_fase1.etapa='2',lcMonto_nacional,0.00)
+								ENDIF
+						ENDSCAN 
+				ENDSCAN
+			ENDSCAN
+			SELEC certificado_fase1
+		ENDSCAN
+		SELECT certificado
+ENDSCAN
+
+ 
+
+SELECT distinct ano_eje, sec_ejec, certificado FROM cur_prin INTO CURSOR cur_ca
+
+SELECT EXPEDIENTE_FASE
+SET ORDER TO CER_FASE
+
+SELECT cur_prin 
+SET ORDER TO INX3  
+
+SELECT cur_CA
+GO TOP 
+SCAN ALL 
+	SELECT expediente_fase
+	SEEK cur_ca.ano_eje+cur_ca.sec_ejec+cur_ca.certificado
+	SCAN WHILE ano_eje+sec_ejec+certificado = cur_ca.ano_eje+cur_ca.sec_ejec+cur_ca.certificado
+		clave_fase = expediente_fase.ano_eje+expediente_fase.sec_ejec+expediente_fase.expediente+expediente_fase.ciclo+expediente_fase.fase+expediente_fase.secuencia	
+		IF LEFT(lcRubro,1) <> 'T' THEN 					
+			IF expediente_fase.fuente_financ <> lcRubro THEN 
+				LOOP 
+			ENDIF 
+		ENDIF 
+		
+		SELECT expediente_secuencia
+		SEEK clave_fase
+		SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia = clave_fase
+			clave_sec = clave_fase + expediente_secuencia.correlativo 
+			IF expediente_secuencia.estado_envio <> 'A' THEN 
+				LOOP 
+			ENDIF 
+			IF PADL(YEAR(expediente_secuencia.fecha_doc),4,'0') <> gcano_eje THEN 
+				LOOP 
+			ENDIF 
+
+			IF PADL(MONTH(expediente_secuencia.fecha_doc),2,'0') > lcMes THEN 
+				LOOP 
+			ENDIF 
+
+			
+			SELECT expediente_clasif
+			SEEK clave_sec
+			SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo = clave_sec
+				clave_clasif = clave_sec + expediente_clasif.id_clasificador
+				IF expediente_clasif.estado_envio <> 'A' THEN 
+					LOOP 
+				ENDIF 
+				=SEEK(gcano_eje+expediente_clasif.id_clasificador,"especifica_det")
+				lcDesClasif 	= especifica_det.tipo_transaccion + '.' + especifica_det.generica + '.' +  especifica_det.subgenerica +  especifica_det.subgenerica_det + '.'+ especifica_det.especifica + especifica_det.especifica_det
+				lcClasificador 	= lcDesClasif
+				IF LEFT(lcIdclasificador,1) <> '*' THEN 
+					IF expediente_clasif.id_clasificador <> lcIdclasificador THEN 
+						LOOP 
+					ENDIF 
+				ENDIF 
+				
+				SELECT expediente_meta
+				SEEK clave_clasif
+				SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo+id_clasificador = clave_clasif
+				 	IF expediente_meta.estado_envio <> 'A' THEN 
+				 		LOOP 
+				 	ENDIF 	
+					IF lcsec_func <> '****' THEN 
+						IF expediente_meta.sec_func <> lcsec_func THEN 
+							LOOP 
+						ENDIF 
+					ENDIF 
+				 	
+					IF SEEK(cur_ca.ano_eje+cur_ca.sec_ejec+expediente_fase.fuente_financ+cur_ca.certificado+expediente_meta.id_clasificador+expediente_meta.sec_func,'cur_prin','inx2') THEN 
+					 	DO CASE 
+					 		CASE expediente_meta.ciclo+expediente_meta.fase = 'GC'
+								Replace cur_prin.monto_compromiso 	WITH cur_prin.monto_compromiso 	+ 	expediente_meta.monto_nacional
+					 		CASE expediente_meta.ciclo+expediente_meta.fase = 'GD'
+								Replace cur_prin.monto_devengado 	WITH cur_prin.monto_devengado 	+ 	expediente_meta.monto_nacional						 		
+					 		CASE expediente_meta.ciclo+expediente_meta.fase = 'GG'					 							 
+								Replace cur_prin.monto_girado	 	WITH cur_prin.monto_girado 		+ 	expediente_meta.monto_nacional						 								
+					 	ENDCASE 
+						IF 	expediente_meta.ciclo+expediente_meta.fase = 'GC' THEN 
+							lcmes_eje = PADL(MONTH(expediente_secuencia.fecha_doc),2,'0')
+							DO CASE 
+								CASE lcmes_eje = '01' 
+									REPLACE cur_prin.mes_01 	WITH cur_prin.mes_01 + expediente_meta.monto_nacional								
+								CASE lcmes_eje = '02' 
+									REPLACE cur_prin.mes_02 	WITH cur_prin.mes_02 + expediente_meta.monto_nacional								
+								CASE lcmes_eje = '03' 
+									REPLACE cur_prin.mes_03 	WITH cur_prin.mes_03 + expediente_meta.monto_nacional								
+								CASE lcmes_eje = '04' 
+									REPLACE cur_prin.mes_04 	WITH cur_prin.mes_04 + expediente_meta.monto_nacional								
+								CASE lcmes_eje = '05' 
+									REPLACE cur_prin.mes_05 	WITH cur_prin.mes_05 + expediente_meta.monto_nacional								
+								CASE lcmes_eje = '06' 
+									REPLACE cur_prin.mes_06 	WITH cur_prin.mes_06 + expediente_meta.monto_nacional								
+								CASE lcmes_eje = '07' 
+									REPLACE cur_prin.mes_07 	WITH cur_prin.mes_07 + expediente_meta.monto_nacional								
+								CASE lcmes_eje = '08' 
+									REPLACE cur_prin.mes_08 	WITH cur_prin.mes_08 + expediente_meta.monto_nacional								
+								CASE lcmes_eje = '09' 
+									REPLACE cur_prin.mes_09 	WITH cur_prin.mes_09 + expediente_meta.monto_nacional								
+								CASE lcmes_eje = '10' 
+									REPLACE cur_prin.mes_10 	WITH cur_prin.mes_10 + expediente_meta.monto_nacional								
+								CASE lcmes_eje = '11' 
+									REPLACE cur_prin.mes_11 	WITH cur_prin.mes_11 + expediente_meta.monto_nacional								
+								CASE lcmes_eje = '12' 
+									REPLACE cur_prin.mes_12 	WITH cur_prin.mes_12 + expediente_meta.monto_nacional								
+
+							ENDCASE
+							
+
+						ENDIF 										
+					ENDIF 
+				ENDSCAN 
+
+			ENDSCAN 			
+		ENDSCAN 	
+	ENDSCAN 
+ENDSCAN 
+SELECT cur_prin
+SCAN ALL 
+	SCATTER MEMVAR 
+	REPLACE saldo_1 WITH m.monto_certificado - m.monto_ca
+
+ENDSCAN 
+
+
+
+Use IN sector 
+Use IN PLIEGO
+Use IN DEPARTAMENTO    
+Use IN PROVINCIA		 
+Use IN DISTRITO				 
+Use IN EJECUTORA				 
+
+Use IN certificado		 
+Use IN certificado_fase1
+Use IN certificado_secuencia
+Use IN certificado_clasif  
+Use IN certificado_meta	 
+
+Use IN especifica_det		  		
+
+Use IN categoria_gasto		  	
+Use IN tipo_transaccion		  	
+Use IN generica				  	
+Use IN fuente_financ			  	
+USE IN maestro_clasificador		
+USE IN expediente_fase			
+USE IN expediente_secuencia		
+USE IN expediente_clasif			
+USE IN expediente_meta			
+USE IN meta						
+USE IN mes						
+

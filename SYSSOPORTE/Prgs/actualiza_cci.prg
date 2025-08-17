@@ -1,0 +1,34 @@
+USE siaf!persona			IN 0 ORDER tag ruc
+USE siaf!persona_cci_ejec	IN 0 ORDER tag cci_ejec &&tipo_id+ruc+sec_ejec+secuencia
+
+
+SELECT persona
+SCAN all
+	SCATTER MEMVAR 
+	IF m.estado_envio <>'A' THEN 
+		LOOP 
+	ENDIF 
+	IF m.estado<>'A' THEN 
+		LOOP 
+	ENDIF 
+	lcCCI = persona.cci
+	SELECT persona_cci_ejec
+	SEEK m.tipo_id+m.ruc
+	SCAN WHILE tipo_id+ruc = m.tipo_id+m.ruc
+		IF persona_cci_ejec.estado_envio = 'A' THEN 
+			IF persona_cci_ejec.estado = 'N' THEN 
+				REPLACE persona_cci_ejec.estado WITH 'A'
+			ENDIF 		
+			IF persona_cci_ejec.cci <> lcCCI AND !EMPTY(persona_cci_ejec.cci) THEN 
+				WAIT WINDOW 'Actualizando CCI de RUC ==>'+m.ruc NOWAIT 
+				REPLACE persona.cci WITH persona_cci_ejec.cci 
+
+			ENDIF 
+		ENDIF 
+	ENDSCAN 
+	
+ENDSCAN 
+
+USE IN persona
+USE IN persona_cci_ejec
+WAIT WINDOW 'Proceso Terminado'

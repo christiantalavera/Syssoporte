@@ -1,0 +1,1184 @@
+Set Date BRITISH
+Set Talk OFF 
+Public lmonto_debe , lmonto_haber, lcertificado, lcertificado_sec, lprioridad
+
+lmonto_debe			= 0
+lmonto_haber		= 0
+lcertificado 		= ''
+lcertificado_sec 	= ''
+lprioridad			= ''
+lcDescProveedor		= ''
+
+
+
+CREATE CURSOR cur_ctb_diario_unicos (;
+	ano_ctb			c(004),;
+	sec_ejec		c(006),;
+	tipo			c(001),;
+	mayor 			c(004),;
+	sub_cta			c(008),;
+	expediente		c(010),;
+	secuencia		c(004))
+
+
+
+SELECT cur_ctb_diario_unicos
+INDEX on ano_ctb+sec_ejec+tipo+mayor+sub_cta+expediente+secuencia	TAG inx1
+
+CREATE CURSOR cur_certificado_diario_unicos (;
+	ano_ctb			c(004),;
+	sec_ejec		c(006),;
+	tipo			c(001),;
+	mayor 			c(004),;
+	sub_cta			c(008),;
+	expediente		c(010),;
+	secuencia		c(004),;
+	ano_cont		c(004),;
+	mes_cont		c(002),;
+	dia_cont		c(002))
+
+
+SELECT cur_certificado_diario_unicos
+INDEX on ano_ctb+sec_ejec+tipo+mayor+sub_cta+expediente+secuencia	TAG inx1
+
+CREATE CURSOR cur_ctb_diario (;
+	ano_ctb			c(004),;
+	sec_ejec		c(006),;
+	mayor			c(004),;
+	sub_cta			c(008),;
+	expediente		c(010),;
+	tipo_d_h		c(001),;
+	secuencia		c(004),;
+	correlativo		c(004),;
+	ano_cont		c(004),;
+	mes_cont		c(002),;
+	dia_cont		c(002),;
+	sec_area		c(004),;
+	nro_asiento		c(001),;
+	cod_doc			c(003),;
+	num_doc			c(020),;
+	tipo			c(001),;
+	ciclo			c(001),;
+	fase			c(001),;
+	id_clasificador c(007),;
+	orden			c(002),;
+	secuencia_oper  c(010),;
+	tipo_ctb		c(001),;
+	secuencia_to	c(007),;
+	monto 			n(19,2))
+	
+SELECT cur_ctb_diario
+INDEX on ano_ctb+sec_ejec+tipo+mayor+sub_cta+expediente	 				 TAG id01
+INDEX on ano_ctb+sec_ejec+tipo+mayor+sub_cta+expediente+secuencia	 	 TAG id02
+
+lMes	   = lcMes
+lMayor     = lcMayor
+lSubCuenta = lcSubCta
+lcCad      = ""
+lcCadM     = ""
+
+If !Empty(lcMayor) And lcMayor <> 'T' Then
+	lcCad  = " and mayor = '" + lcMayor + "' "
+	lcCadM = " and mayor = '" + lcMayor + "' "
+Endif
+
+If !Empty(lcSubCta) And lcSubCta <> 'T' Then
+	lnCaracteres = Str(Len(Alltrim(lcSubCta)),1,0)
+	lcCad=lcCad + " and LEFT(sub_cta," + lnCaracteres + ")" + "  = '" + Alltrim(lcSubCta) + "' "
+Endif
+
+**************************************************************************************************************************
+
+****DEL MES****
+
+SELECT ano_cont,SEC_EJEC,;
+	mayor,Sum(monto) As monto From ctb_diario ;
+	WHERE Val(mes_cont) <= lMes And tipo_d_h = 'D';
+	AND ano_cont = gcano_eje ;
+	&lcCadM;
+	GROUP By ano_cont,SEC_EJEC,;
+	mayor ;
+	INTO Cursor Cur_Mes_Mayor_D
+
+SELECT Cur_Mes_Mayor_D
+INDEX On ano_cont+SEC_EJEC+mayor Tag IndAcmD
+
+SELECT ano_cont,SEC_EJEC,;
+	mayor,Sum(monto) As monto From ctb_diario ;
+	WHERE Val(mes_cont) <= lMes And tipo_d_h = 'H';
+	AND ano_cont = gcano_eje ;	
+	&lcCadM;
+	GROUP By ano_cont,SEC_EJEC,mayor ;
+	INTO Cursor Cur_Mes_Mayor_H
+
+SELECT Cur_Mes_Mayor_H
+Index On ano_cont+SEC_EJEC+mayor Tag IndAcmH
+
+
+SELECT ruc, nombre FROM persona WHERE LEN(ALLTRIM(ruc))=11 AND estado = 'A' INTO CURSOR cur_persona 
+SELECT cur_persona
+INDEX on ruc TAG ruc
+
+lNum = Len(Alltrim(lcSubCta))
+
+
+***************************************************************************************************************************
+WAIT WINDOW 'Cargando Asientos del Diario Unicos' NOWAIT 
+i = 0
+SELECT ctb_diario
+xorden = ORDER()
+SET ORDER TO mes_ctb
+SEEK gcsec_ejec+gcano_eje
+SCAN WHILE sec_ejec+ano_cont+mes_ctb <= gcsec_ejec+gcano_eje+PADL(lmes,2,'0')
+	SCATTER MEMVAR 
+	IF m.tipo = 'C' THEN 
+		IF !SEEK(m.ano_ctb+m.sec_ejec+m.tipo+m.mayor+m.sub_cta+m.expediente+m.secuencia,'cur_certificado_diario_unicos') THEN 
+		    INSERT INTO cur_certificado_diario_unicos FROM MEMVAR 
+
+	    ENDIF 
+	ELSE
+		IF !SEEK(m.ano_ctb+m.sec_ejec+m.tipo+m.mayor+m.sub_cta+m.expediente+m.secuencia,'cur_ctb_diario_unicos') THEN 
+		    INSERT INTO cur_ctb_diario_unicos FROM MEMVAR 
+
+	    ENDIF 
+	ENDIF 
+ENDSCAN 
+SET ORDER TO &xorden
+
+
+
+
+SELECT cur_ctb_diario_unicos
+lmontoD 	=	0
+lmontoH 	=	0
+lNewMontoD 	= 	0
+lNewMontoH 	= 	0
+
+
+WAIT WINDOW 'Cargando Asientos del Diario' NOWAIT 
+i = 0
+SELECT ctb_diario
+xorden = ORDER()
+SET ORDER TO mes_ctb
+SEEK gcsec_ejec+gcano_eje 
+SCAN WHILE sec_ejec+ano_cont+mes_ctb <= gcsec_ejec+gcano_eje+PADL(lmes,2,'0')
+	SCATTER MEMVAR 
+	IF lcTipoCuenta  <> '*' THEN 
+		IF m.tipo_ctb <> lcTipoCuenta THEN 
+			LOOP 
+		ENDIF 
+	ENDIF 
+	IF VAL(m.mes_ctb) > lmes THEN 
+		LOOP 
+	ENDIF 
+	i = i + 1
+	INSERT INTO cur_ctb_diario FROM MEMVAR 
+
+ENDSCAN 
+
+
+
+SELECT cur_ctb_diario
+SET ORDER TO id02
+
+WAIT WINDOW 'Cargando Cursor Principal' NOWAIT 
+i = 0
+
+SELECT cur_ctb_diario_unicos
+SCAN ALL
+ 	SCATTER MEMVAR 
+ 	xclave = m.ano_ctb+m.sec_ejec+m.tipo+m.mayor+m.sub_cta+m.expediente+m.secuencia
+
+	If lcMayor <> "T" Then
+		If m.mayor   <> lcMayor  Then
+			Loop
+		Endif
+	ENDIF
+	
+	If lcSubCta <> "T" Then 
+		If Substr(m.sub_cta,1,lNum) <> Alltrim(lcSubCta) THEN 
+			Loop
+		Endif
+	ENDIF
+    SELECT cur_ctb_diario
+	SEEK xclave
+    SCAN WHILE ano_ctb+sec_ejec+tipo+mayor+sub_cta+expediente+secuencia = xclave
+    			IF cur_ctb_diario.ciclo+cur_ctb_diario.fase="GC" THEN 	
+	    			LOOP 
+	    		ENDIF 	
+    				
+				lcertificado        = '9999999999'
+				lcertificado_sec	= '9999'
+		      	lmontoD  			= lmontoD + IIF(cur_ctb_diario.tipo_d_h = 'D',cur_ctb_diario.monto,0)
+		      	lmontoH  			= lmontoH + IIF(cur_ctb_diario.tipo_d_h = 'H',cur_ctb_diario.monto,0)   
+		      	lano_ctb  			= cur_ctb_diario.ano_ctb   
+			    lsec_ejec 			= cur_ctb_diario.sec_ejec   
+			    lmayor    			= cur_ctb_diario.mayor   
+			    lsub_cta  			= cur_ctb_diario.sub_cta   
+			    lexpediente			= cur_ctb_diario.expediente   
+			    ltipo_d_h  	 		= cur_ctb_diario.tipo_d_h   
+			    lsecuencia 	 		= cur_ctb_diario.secuencia   
+			    lcorrelativo		= cur_ctb_diario.correlativo   
+			    lfecha_doc  		= cur_ctb_diario.dia_cont + "/" + cur_ctb_diario.mes_cont + "/" + cur_ctb_diario.ano_cont 
+			    lsec_area			= cur_ctb_diario.sec_area
+			    lnro_asiento		= cur_ctb_diario.nro_asiento
+
+				IF cur_ctb_diario.ciclo+cur_ctb_diario.fase="GC" THEN 
+				   =SEEK(gcano_eje+gcsec_ejec+cur_ctb_diario.expediente+cur_ctb_diario.SECUENCIA,"certificado_secuencia")
+				   lcod_doc = certificado_secuencia.cod_doc
+				ELSE 
+				   lcod_doc = cur_ctb_diario.cod_doc
+				ENDIF 
+			     
+			    lnum_doc     		= cur_ctb_diario.num_doc
+			    ltipo            	= cur_ctb_diario.tipo
+			    lciclo            	= cur_ctb_diario.ciclo
+			    lfase             	= cur_ctb_diario.fase
+			    lid_clasificador  	= cur_ctb_diario.id_clasificador
+			    lorden  			= cur_ctb_diario.orden
+			    lsecuencia_oper  	= cur_ctb_diario.secuencia_oper
+			    ltipo_ctb         	= cur_ctb_diario.tipo_ctb
+			    lsecuenca_to      	= cur_ctb_diario.secuencia_to
+
+				=SEEK(cur_ctb_diario.ano_ctb+cur_ctb_diario.id_clasificador,"especifica_det","IDCLASIF")
+				lcClasificador = especifica_det.tipo_transaccion + especifica_det.generica + especifica_det.subgenerica + especifica_det.subgenerica_det + especifica_det.especifica + especifica_det.especifica_det
+
+				=Seek(lcod_doc ,"maestro_documento","cod_doc")
+				lcDescDocumento = Alltrim(MAESTRO_DOCUMENTO.nombre)
+
+				=Seek(cur_ctb_diario.ano_ctb+cur_ctb_diario.SEC_EJEC+cur_ctb_diario.EXPEDIENTE+cur_ctb_diario.ciclo+cur_ctb_diario.fase+cur_ctb_diario.secuencia,"expediente_fase","EXP_FASE")
+
+				lRuc 				= expediente_fase.ruc
+				lcTipo_Giro 		= expediente_fase.tipo_giro
+				lcTipo_id 			= expediente_fase.tipo_id
+
+				=Seek(lcTipo_id+lRuc,"Persona","RUC")
+				IF cur_ctb_diario.tipo = 'N' Then
+					=Seek(cur_ctb_diario.ano_ctb+cur_ctb_diario.SEC_EJEC+cur_ctb_diario.EXPEDIENTE,"ctb_nota_contable","NOTA")
+					lcDescProveedor = Alltrim(ctb_nota_contable.comentario)
+				ELSE 
+					IF !Empty(lRuc) Then
+						lcDescProveedor = lRuc + " " + Alltrim(Persona.nombre)
+					ELSE 
+						IF Empty(Alltrim(cur_ctb_diario.secuencia_to))
+							=Seek(m.ano_ctb+cur_ctb_diario.SEC_EJEC+cur_ctb_diario.secuencia_oper,"ctb_oper_ejec","SEC_OPER")
+							SELECT ctb_oper_ejec
+							IF Found() Then
+								=Seek(gcano_eje+cur_ctb_diario.ciclo+cur_ctb_diario.id_clasificador+ctb_oper_ejec.mayor+ctb_oper_ejec.sub_cta,"ctb_operacion","OPER_CTA")
+								lcDesSubCta = Proper(Alltrim(ctb_operacion.nombre))
+								lcDescProveedor = lcDesSubCta
+							ELSE 
+								lcDescProveedor = ""
+							ENDIF 
+						ELSE 
+							=Seek(gcano_eje+cur_ctb_diario.ciclo+cur_ctb_diario.id_clasificador+Alltrim(cur_ctb_diario.secuencia_to),"ctb_operacion","OPER_SECTO")
+							lcDescProveedor = Alltrim(cur_ctb_diario.secuencia_to) + " " + Alltrim(ctb_operacion.nombre)
+						ENDIF 
+					ENDIF 
+				ENDIF 
+
+				IF cur_ctb_diario.ciclo+cur_ctb_diario.fase="GC" THEN 	
+					=SEEK(gcano_eje+gcsec_ejec+cur_ctb_diario.expediente+cur_ctb_diario.SECUENCIA,"certificado_fase")
+					lrubro 			= certificado_fase.fuente_financ
+					lcertificado	= cur_ctb_diario.expediente
+					lcertificado_sec= cur_ctb_diario.secuencia
+					lprioridad      = '1'
+
+				ELSE 	
+					lrubro = IIF(cur_ctb_diario.ciclo 	= "C","88",expediente_fase.fuente_financ)
+					lrubro = IIF(cur_ctb_diario.cod_doc = "028","",lrubro )
+					IF INLIST(cur_ctb_diario.ciclo+cur_ctb_diario.fase,'GD','GG','GR','GP','CC') THEN 
+						SELECT exp_fase1
+						IF SEEK(gcano_eje+gcsec_ejec+cur_ctb_diario.expediente+cur_ctb_diario.ciclo+cur_ctb_diario.fase+cur_ctb_diario.SECUENCIA,"exp_fase1",'exp_fase') THEN 
+							lcertificado		= exp_fase1.certificado
+							lcertificado_sec	= exp_fase1.certificado_secuencia
+						ENDIF 
+						DO CASE 
+							CASE cur_ctb_diario.ciclo+cur_ctb_diario.fase = 'GD'
+								lprioridad	= '2'
+							CASE cur_ctb_diario.ciclo+cur_ctb_diario.fase = 'GG'
+								lprioridad	= '3'							
+							CASE cur_ctb_diario.ciclo+cur_ctb_diario.fase = 'GR'													
+								lprioridad	= '4'
+							CASE cur_ctb_diario.ciclo+cur_ctb_diario.fase = 'GP'
+								lprioridad	= '5'							
+							CASE cur_ctb_diario.ciclo+cur_ctb_diario.fase = 'CC'
+								lprioridad	= '0'							
+								
+							OTHERWISE 
+								lprioridad  = '0'
+						ENDCASE
+					ELSE
+							lcertificado		= '9999999999'
+							lcertificado_sec	= '9999'
+					ENDIF 
+						
+				ENDIF 
+
+				
+				IF cur_ctb_diario.tipo_d_h = 'D' THEN 
+					  lano_ctbD 	 	= lano_ctb
+					  lsec_ejecD 		= lsec_ejec 
+					  lmayorD		 	= lmayor
+					  lsub_ctaD		 	= lsub_cta
+					  lexpedienteD   	= lexpediente   
+					  ltipo_d_hD     	= ltipo_d_h     
+				      lsecuenciaD    	= lsecuencia    
+				      lcorrelativoD  	= lcorrelativo  
+				      lfecha_docD    	= lfecha_doc    
+				      lcod_docD      	= lcod_doc      
+				      lnum_docD      	= lnum_doc      
+				      lcDescDocumentoD  = lcDescDocumento  
+				      lsec_areaD        = lsec_area        
+				      lnro_asientoD     = lnro_asiento     
+				      ltipoD            = ltipo            
+				      lcicloD           = lciclo
+				      lfaseD            = lfase            
+				      lcClasificadorD   = lcClasificador   
+				      ltipo_ctbD        = ltipo_ctb        
+				      lordenD           = lorden           
+				      lsecuencia_operD  = lsecuencia_oper  
+				      lrubroD           = lrubro           
+				      lcDescProveedorD  = lcDescProveedor  
+				      lctipo_giroD	    = lctipo_giro			 
+				ENDIF      
+				IF cur_ctb_diario.tipo_d_h = 'H' THEN 
+					  lano_ctbH 	 	= lano_ctb
+					  lsec_ejecH 	 	= lsec_ejec 
+					  lmayorH		 	= lmayor
+					  lsub_ctaH		 	= lsub_cta
+					  lexpedienteH   	= lexpediente   
+					  ltipo_d_hH     	= ltipo_d_h     
+				      lsecuenciaH    	= lsecuencia    
+				      lcorrelativoH  	= lcorrelativo  
+				      lfecha_docH    	= lfecha_doc    
+				      lcod_docH      	= lcod_doc      
+				      lnum_docH      	= lnum_doc      
+				      lcDescDocumentoH  = lcDescDocumento  
+				      lsec_areaH        = lsec_area        
+				      lnro_asientoH     = lnro_asiento     
+				      ltipoH            = ltipo            
+				      lcicloH           = lciclo
+				      lfaseH            = lfase            
+				      lcClasificadorH   = lcClasificador   
+				      ltipo_ctbH        = ltipo_ctb        
+				      lordenH           = lorden           
+				      lsecuencia_operH  = lsecuencia_oper  
+				      lrubroH           = lrubro           
+				      lcDescProveedorH  = lcDescProveedor  
+				      lctipo_giroH	    = lctipo_giro			 
+				ENDIF      
+		
+    ENDSCAN 
+    lcDescProveedor = Strtran(lcDescProveedor,"'"," ")
+    
+    IF lmontoD <> lMontoH THEN     
+    
+	    IF lmontoD > lMontoH THEN 
+	      lNewMontoD = lmontoD - lMontoH
+	      ltipo_d_h = 'D'
+
+		  lano_ctb 			= lano_ctbD
+		  lsec_ejec 		= lsec_ejecD 
+		  lmayor			= lmayorD
+		  lsub_cta			= lsub_ctaD
+		  lexpediente   	= lexpedienteD   
+		  ltipo_d_h     	= ltipo_d_h     
+	      lsecuencia    	= lsecuenciaD    
+	      lcorrelativo  	= lcorrelativoD  
+	      lfecha_doc    	= lfecha_docD    
+	      lcod_doc      	= lcod_docD      
+	      lnum_doc      	= lnum_docD      
+	      lcDescDocumento  	= lcDescDocumentoD  
+	      lsec_area        	= lsec_areaD        
+	      lnro_asiento     	= lnro_asientoD     
+	      ltipo            	= ltipoD            
+	      lciclo           	= lcicloD           
+	      lfase            	= lfaseD            
+	      lcClasificador   	= lcClasificadorD   
+	      ltipo_ctb        	= ltipo_ctbD        
+	      lorden           	= lordenD           
+	      lsecuencia_oper  	= lsecuencia_operD  
+	      lrubro           	= lrubroD           
+	      lcDescProveedor  	= lcDescProveedorD  
+	      lctipo_giro	   	= lctipo_giroD			 
+	      
+	    ENDIF 
+	    
+	    IF lmontoD < lMontoH THEN 
+	      lNewMontoH = lmontoH - lMontoD
+	      ltipo_d_h = 'H'
+
+		  lano_ctb 			= lano_ctbH
+		  lsec_ejec 		= lsec_ejecH 
+		  lmayor			= lmayorH
+		  lsub_cta			= lsub_ctaH
+		  lexpediente  	 	= lexpedienteH   
+		  ltipo_d_h    	 	= ltipo_d_h     
+	      lsecuencia    	= lsecuenciaH    
+	      lcorrelativo  	= lcorrelativoH  
+	      lfecha_doc    	= lfecha_docH    
+	      lcod_doc      	= lcod_docH      
+	      lnum_doc      	= lnum_docH      
+	      lcDescDocumento  	= lcDescDocumentoH  
+	      lsec_area        	= lsec_areaH        
+	      lnro_asiento     	= lnro_asientoH     
+	      ltipo            	= ltipoH            
+	      lciclo           	= lcicloH           
+	      lfase            	= lfaseH            
+	      lcClasificador   	= lcClasificadorH   
+	      ltipo_ctb        	= ltipo_ctbH        
+	      lorden           	= lordenH           
+	      lsecuencia_oper  	= lsecuencia_operH  
+	      lrubro           	= lrubroH           
+	      lcDescProveedor  	= lcDescProveedorH  
+	      lctipo_giro	   	= lctipo_giroH			 
+	      
+	    ENDIF 
+	 	i = i + 1
+
+
+	    
+	    INSERT INTO cur_prin(ano_eje,ano_cont,sec_ejec,mayor,sub_cta,Nro_not_exp,tipo_d_h,;
+	    					 secuencia,correlativo,fecha_doc,;
+	    					 cod_doc,nro_doc,desc_documento,;
+	    					 sec_area,nro_asiento,;
+	    					 tipo,ciclo,fase,clasificador,;
+	    					 tipo_ctb,orden,secuencia_oper,;
+	    					 rubro,desc_proveedor,tipo_giro,secuencia_to,;
+	    					 debe,haber, certificado, certificado_sec,prioridad)values;
+	    					(lano_ctb,cur_ctb_diario.ano_cont,lsec_ejec,lmayor,lsub_cta,lexpediente,ltipo_d_h,;
+	    					 lsecuencia,lcorrelativo,lfecha_doc,;
+	    					 lcod_doc,lnum_doc,lcDescDocumento,;
+	    					 lsec_area,lnro_asiento,;	
+	    					 ltipo,lciclo,lfase,lcClasificador ,;   
+	    					 ltipo_ctb,lorden,lsecuencia_oper,; 
+	    					 lrubro,lcDescProveedor,lctipo_giro,lsecuenca_to, ;					 
+	    					 lNewMontoD,lNewMontoH, lcertificado, lcertificado_sec, lprioridad)
+	    
+    ENDIF 
+	lNewMontoD = 0
+	lNewMontoH = 0
+	lmontoD = 0
+	lMontoH = 0
+ENDSCAN 
+
+***
+SELECT cur_ctb_diario
+SET ORDER TO id02
+
+SELECT cur_certificado_diario_unicos
+GO TOP 
+SCAN ALL
+ 	SCATTER MEMVAR 
+ 	xclave = m.ano_ctb+m.sec_ejec+m.tipo+m.mayor+m.sub_cta+m.expediente+m.secuencia
+	If lcMayor <> "T" Then
+		If m.mayor   <> lcMayor  Then
+			Loop
+		Endif
+	ENDIF
+	
+	If lcSubCta <> "T" Then 
+		If Substr(m.sub_cta,1,lNum) <> Alltrim(lcSubCta) THEN 
+			Loop
+		Endif
+	ENDIF
+    SELECT cur_ctb_diario
+	SEEK xclave
+    SCAN WHILE ano_ctb+sec_ejec+tipo+mayor+sub_cta+expediente+secuencia = xclave 
+	    		IF cur_ctb_diario.ciclo+cur_ctb_diario.fase<>"GC" THEN 	
+	    			LOOP 
+	    		ENDIF 
+	
+				lcertificado        = '9999999999'
+				lcertificado_sec	= '9999'
+		      	lmontoD  			= lmontoD + IIF(cur_ctb_diario.tipo_d_h = 'D',cur_ctb_diario.monto,0)
+		      	lmontoH  			= lmontoH + IIF(cur_ctb_diario.tipo_d_h = 'H',cur_ctb_diario.monto,0)   
+
+		      	lano_ctb  			= cur_ctb_diario.ano_ctb   
+			    lsec_ejec 			= cur_ctb_diario.sec_ejec   
+			    lmayor    			= cur_ctb_diario.mayor   
+			    lsub_cta  			= cur_ctb_diario.sub_cta   
+			    lexpediente			= cur_ctb_diario.expediente   
+			    ltipo_d_h  	 		= cur_ctb_diario.tipo_d_h   
+			    lsecuencia 	 		= cur_ctb_diario.secuencia   
+			    lcorrelativo		= cur_ctb_diario.correlativo   
+			    lfecha_doc  		= cur_certificado_diario_unicos.dia_cont + "/" + cur_certificado_diario_unicos.mes_cont + "/" + cur_certificado_diario_unicos.ano_cont 
+			    lsec_area			= cur_ctb_diario.sec_area
+			    lnro_asiento		= cur_ctb_diario.nro_asiento
+				lcod_doc 			= cur_ctb_diario.cod_doc
+			     
+			    lnum_doc     		= cur_ctb_diario.num_doc
+			    ltipo            	= cur_ctb_diario.tipo
+			    lciclo            	= cur_ctb_diario.ciclo
+			    lfase             	= cur_ctb_diario.fase
+			    lid_clasificador  	= cur_ctb_diario.id_clasificador
+			    lorden  			= cur_ctb_diario.orden
+			    lsecuencia_oper  	= cur_ctb_diario.secuencia_oper
+			    ltipo_ctb         	= cur_ctb_diario.tipo_ctb
+			    lsecuenca_to      	= cur_ctb_diario.secuencia_to
+
+				=SEEK(cur_ctb_diario.ano_ctb+cur_ctb_diario.id_clasificador,"especifica_det","IDCLASIF")
+				lcClasificador = especifica_det.tipo_transaccion + especifica_det.generica + especifica_det.subgenerica + especifica_det.subgenerica_det + especifica_det.especifica + especifica_det.especifica_det
+
+				=Seek(lcod_doc ,"maestro_documento","cod_doc")
+				lcDescDocumento = Alltrim(MAESTRO_DOCUMENTO.nombre)
+
+				=Seek(cur_ctb_diario.ano_ctb+cur_ctb_diario.SEC_EJEC+cur_ctb_diario.EXPEDIENTE+cur_ctb_diario.ciclo+cur_ctb_diario.fase+cur_ctb_diario.secuencia,"expediente_fase","EXP_FASE")
+
+				lRuc 				= expediente_fase.ruc
+				lcTipo_Giro 		= expediente_fase.tipo_giro
+				lcTipo_id 			= expediente_fase.tipo_id
+
+
+				=Seek(lcTipo_id+lRuc,"Persona","RUC")
+				IF cur_ctb_diario.tipo = 'N' Then
+					=Seek(cur_ctb_diario.ano_ctb+cur_ctb_diario.SEC_EJEC+cur_ctb_diario.EXPEDIENTE,"ctb_nota_contable","NOTA")
+					lcDescProveedor = Alltrim(ctb_nota_contable.comentario)
+				ELSE 
+					IF !Empty(lRuc) Then
+						lcDescProveedor = lRuc + " " + Alltrim(Persona.nombre)
+					ELSE 
+						IF Empty(Alltrim(cur_ctb_diario.secuencia_to))
+							=Seek(m.ano_ctb+cur_ctb_diario.SEC_EJEC+cur_ctb_diario.secuencia_oper,"ctb_oper_ejec","SEC_OPER")
+							SELECT ctb_oper_ejec
+							IF Found() Then
+								=Seek(gcano_eje+cur_ctb_diario.ciclo+cur_ctb_diario.id_clasificador+ctb_oper_ejec.mayor+ctb_oper_ejec.sub_cta,"ctb_operacion","OPER_CTA")
+								lcDesSubCta = Proper(Alltrim(ctb_operacion.nombre))
+								lcDescProveedor = lcDesSubCta
+							ELSE 
+								lcDescProveedor = ""
+							ENDIF 
+						ELSE 
+							=Seek(gcano_eje+cur_ctb_diario.ciclo+cur_ctb_diario.id_clasificador+Alltrim(cur_ctb_diario.secuencia_to),"ctb_operacion","OPER_SECTO")
+							lcDescProveedor = Alltrim(cur_ctb_diario.secuencia_to) + " " + Alltrim(ctb_operacion.nombre)
+						ENDIF 
+					ENDIF 
+				ENDIF 
+				lprioridad      = '1'
+				=SEEK(gcano_eje+gcsec_ejec+cur_ctb_diario.expediente+cur_ctb_diario.SECUENCIA,"certificado_fase")
+				lrubro 			= certificado_fase.fuente_financ
+				lcertificado	= cur_ctb_diario.expediente
+				lcertificado_sec= cur_ctb_diario.secuencia
+
+				
+				IF cur_ctb_diario.tipo_d_h = 'D' THEN 
+					  lano_ctbD 	 	= lano_ctb
+					  lsec_ejecD 		= lsec_ejec 
+					  lmayorD		 	= lmayor
+					  lsub_ctaD		 	= lsub_cta
+					  lexpedienteD   	= lexpediente   
+					  ltipo_d_hD     	= ltipo_d_h     
+				      lsecuenciaD    	= lsecuencia    
+				      lcorrelativoD  	= lcorrelativo  
+				      lfecha_docD    	= lfecha_doc    
+				      lcod_docD      	= lcod_doc      
+				      lnum_docD      	= lnum_doc      
+				      lcDescDocumentoD  = lcDescDocumento  
+				      lsec_areaD        = lsec_area        
+				      lnro_asientoD     = lnro_asiento     
+				      ltipoD            = ltipo            
+				      lcicloD           = lciclo
+				      lfaseD            = lfase            
+				      lcClasificadorD   = lcClasificador   
+				      ltipo_ctbD        = ltipo_ctb        
+				      lordenD           = lorden           
+				      lsecuencia_operD  = lsecuencia_oper  
+				      lrubroD           = lrubro           
+				      lcDescProveedorD  = lcDescProveedor  
+				      lctipo_giroD	    = lctipo_giro			 
+				ENDIF      
+				IF cur_ctb_diario.tipo_d_h = 'H' THEN 
+					  lano_ctbH 	 	= lano_ctb
+					  lsec_ejecH 	 	= lsec_ejec 
+					  lmayorH		 	= lmayor
+					  lsub_ctaH		 	= lsub_cta
+					  lexpedienteH   	= lexpediente   
+					  ltipo_d_hH     	= ltipo_d_h     
+				      lsecuenciaH    	= lsecuencia    
+				      lcorrelativoH  	= lcorrelativo  
+				      lfecha_docH    	= lfecha_doc    
+				      lcod_docH      	= lcod_doc      
+				      lnum_docH      	= lnum_doc      
+				      lcDescDocumentoH  = lcDescDocumento  
+				      lsec_areaH        = lsec_area        
+				      lnro_asientoH     = lnro_asiento     
+				      ltipoH            = ltipo            
+				      lcicloH           = lciclo
+				      lfaseH            = lfase            
+				      lcClasificadorH   = lcClasificador   
+				      ltipo_ctbH        = ltipo_ctb        
+				      lordenH           = lorden           
+				      lsecuencia_operH  = lsecuencia_oper  
+				      lrubroH           = lrubro           
+				      lcDescProveedorH  = lcDescProveedor  
+				      lctipo_giroH	    = lctipo_giro			 
+				ENDIF      
+		
+    ENDSCAN 
+    lcDescProveedor = Strtran(lcDescProveedor,"'"," ")
+    
+    IF lmontoD <> lMontoH THEN     
+    
+	    IF lmontoD > lMontoH THEN 
+	      lNewMontoD = lmontoD - lMontoH
+	      ltipo_d_h = 'D'
+
+		  lano_ctb 			= lano_ctbD
+		  lsec_ejec 		= lsec_ejecD 
+		  lmayor			= lmayorD
+		  lsub_cta			= lsub_ctaD
+		  lexpediente   	= lexpedienteD   
+		  ltipo_d_h     	= ltipo_d_h     
+	      lsecuencia    	= lsecuenciaD    
+	      lcorrelativo  	= lcorrelativoD  
+	      lfecha_doc    	= lfecha_docD    
+	      lcod_doc      	= lcod_docD      
+	      lnum_doc      	= lnum_docD      
+	      lcDescDocumento  	= lcDescDocumentoD  
+	      lsec_area        	= lsec_areaD        
+	      lnro_asiento     	= lnro_asientoD     
+	      ltipo            	= ltipoD            
+	      lciclo           	= lcicloD           
+	      lfase            	= lfaseD            
+	      lcClasificador   	= lcClasificadorD   
+	      ltipo_ctb        	= ltipo_ctbD        
+	      lorden           	= lordenD           
+	      lsecuencia_oper  	= lsecuencia_operD  
+	      lrubro           	= lrubroD           
+	      lcDescProveedor  	= lcDescProveedorD  
+	      lctipo_giro	   	= lctipo_giroD			 
+	      
+	    ENDIF 
+	    
+	    IF lmontoD < lMontoH THEN 
+	      lNewMontoH = lmontoH - lMontoD
+	      ltipo_d_h = 'H'
+
+		  lano_ctb 			= lano_ctbH
+		  lsec_ejec 		= lsec_ejecH 
+		  lmayor			= lmayorH
+		  lsub_cta			= lsub_ctaH
+		  lexpediente  	 	= lexpedienteH   
+		  ltipo_d_h    	 	= ltipo_d_h     
+	      lsecuencia    	= lsecuenciaH    
+	      lcorrelativo  	= lcorrelativoH  
+	      lfecha_doc    	= lfecha_docH    
+	      lcod_doc      	= lcod_docH      
+	      lnum_doc      	= lnum_docH      
+	      lcDescDocumento  	= lcDescDocumentoH  
+	      lsec_area        	= lsec_areaH        
+	      lnro_asiento     	= lnro_asientoH     
+	      ltipo            	= ltipoH            
+	      lciclo           	= lcicloH           
+	      lfase            	= lfaseH            
+	      lcClasificador   	= lcClasificadorH   
+	      ltipo_ctb        	= ltipo_ctbH        
+	      lorden           	= lordenH           
+	      lsecuencia_oper  	= lsecuencia_operH  
+	      lrubro           	= lrubroH           
+	      lcDescProveedor  	= lcDescProveedorH  
+	      lctipo_giro	   	= lctipo_giroH			 
+	      
+	    ENDIF 
+	 	i = i + 1
+
+
+	    
+	    INSERT INTO cur_prin(ano_eje,ano_cont,sec_ejec,mayor,sub_cta,Nro_not_exp,tipo_d_h,;
+	    					 secuencia,correlativo,fecha_doc,;
+	    					 cod_doc,nro_doc,desc_documento,;
+	    					 sec_area,nro_asiento,;
+	    					 tipo,ciclo,fase,clasificador,;
+	    					 tipo_ctb,orden,secuencia_oper,;
+	    					 rubro,desc_proveedor,tipo_giro,secuencia_to,;
+	    					 debe,haber, certificado, certificado_sec,prioridad)values;
+	    					(lano_ctb,cur_ctb_diario.ano_cont,lsec_ejec,lmayor,lsub_cta,lexpediente,ltipo_d_h,;
+	    					 lsecuencia,lcorrelativo,lfecha_doc,;
+	    					 lcod_doc,lnum_doc,lcDescDocumento,;
+	    					 lsec_area,lnro_asiento,;	
+	    					 ltipo,lciclo,lfase,lcClasificador ,;   
+	    					 ltipo_ctb,lorden,lsecuencia_oper,; 
+	    					 lrubro,lcDescProveedor,lctipo_giro,lsecuenca_to, ;					 
+	    					 lNewMontoD,lNewMontoH, lcertificado, lcertificado_sec, lprioridad)
+	    
+    ENDIF 
+	lNewMontoD = 0
+	lNewMontoH = 0
+	lmontoD = 0
+	lMontoH = 0
+ENDSCAN 
+
+***
+SELECT cur_prin
+GO TOP 
+SCAN ALL 
+	SCATTER MEMVAR 
+	IF m.tipo = "N" THEN
+		=SEEK(m.ano_eje+m.sec_ejec+m.nro_not_exp,"ctb_nota_contable_new","nota") &&&& ANO_CTB+SEC_EJEC+NOTA_CONTABLE
+		REPLACE cur_prin.nota_com 		WITH ctb_nota_contable_new.tipo_complementaria +"-" + ctb_nota_contable_new.elemento_complementaria +"-" + ctb_nota_contable_new.secuencia_to
+		REPLACE cur_prin.desc_proveedor WITH ALLTRIM(ctb_nota_contable_new.comentario)
+		SELECT cur_prin
+	ENDIF
+	IF m.ciclo+m.fase = "GC" THEN
+	    =SEEK(gcano_eje+m.SEC_EJEC+m.nro_not_exp+m.SECUENCIA,'CERTIFICADO_FASE','CERTI_FASE')   
+	    lcRucCer = ALLTRIM( CERTIFICADO_FASE.ruc)
+	    SELECT cur_Persona
+	    GO TOP 
+	    IF SEEK(lcrucCer) THEN 
+			 REPLACE cur_prin.desc_proveedor WITH ALLTRIM(IIF(ISNULL(cur_Persona.nombre),"",cur_Persona.nombre))
+		ENDIF 
+		SELECT cur_prin	
+	ENDIF 
+ENDSCAN 
+
+***************************************************************************************************************************
+SELECT MES
+=Seek(Padl(Int(lcMes),2,'0'),"Mes")
+
+
+lnMonto1  = 0
+lnSaldoAnterior = 0
+SELECT Distinct Substr(fecha_doc,4,2) As MES,mayor,sub_cta ;
+	FROM Cur_Prin ;
+	ORDER By MES,mayor,sub_cta ;
+	INTO Cursor Cur_Cuentas
+Index On MES 	Tag idMes
+
+
+SELECT Cur_Prin
+Index On ano_eje+SEC_EJEC+Substr(fecha_doc,4,2)+mayor+sub_cta+orden+fecha_doc+nro_asiento+tipo_d_h	Tag IndOrd111
+Set Order To IndOrd111
+GO TOP 
+
+
+SELECT cur_prin
+xorden = ORDER()
+SET ORDER TO idx01
+WAIT WINDOW 'Procesando cuentas por naturaleza' NOWAIT 
+i = 0
+SELECT  Cur_Cuentas
+SCAN ALL 
+	lnMonto1			=	0
+	SELECT Cur_Prin
+	Go Top
+	SEEK cur_cuentas.mayor+ALLTRIM(cur_cuentas.sub_cta)
+	SCAN WHILE mayor+ALLTRIM(sub_cta) = cur_cuentas.mayor+ALLTRIM(cur_cuentas.sub_cta)
+		SCATTER MEMVAR 
+		IF Cur_Cuentas.mayor+Alltrim(Cur_Cuentas.sub_cta) == m.mayor+Alltrim(m.sub_cta) THEN 
+			IF Seek(gcano_eje+m.mayor+m.sub_cta,'ctb_plan_sub_cuenta','PLAN_SCTA') THEN 
+
+				IF ctb_plan_sub_cuenta.naturaleza = 'D' THEN 
+					lnMonto  = (Cur_Prin.debe)-(Cur_Prin.haber)
+				ENDIF 
+
+				IF ctb_plan_sub_cuenta.naturaleza = 'H' THEN 
+					lnMonto  = (Cur_Prin.haber)-(Cur_Prin.debe)
+				ENDIF 
+
+				IF ctb_plan_sub_cuenta.naturaleza = 'A' THEN 
+					DO CASE 
+						CASE Inlist(Left(Cur_Prin.mayor,1),'1','5')
+							lnMonto  = (Cur_Prin.debe)-(Cur_Prin.haber)
+						CASE Inlist(Left(Cur_Prin.mayor,1),'2','3','4','6')
+							lnMonto  = (Cur_Prin.haber)-(Cur_Prin.debe)
+						CASE Inlist(Left(Cur_Prin.mayor,1),'8')
+							DO CASE 
+								CASE Inlist(Substr(Cur_Prin.mayor,2,1),'1','2','5')
+									lnMonto  = (Cur_Prin.debe)-(Cur_Prin.haber)
+								CASE  Inlist(Substr(Cur_Prin.mayor,2,1),'3','4','6')
+									lnMonto  = (Cur_Prin.haber)-(Cur_Prin.debe)
+							ENDCASE 
+						ENDCASE 
+				ENDIF 
+				lnMonto1 = lnMonto1  + lnMonto
+				Replace saldo 	 	With lnMonto
+				Replace saldo_acum 	With lnMonto
+				i = i + 1
+
+			ENDIF 
+		ENDIF 
+	ENDSCAN 
+ENDSCAN 
+
+SELECT cur_prin
+SET ORDER TO &xorden
+
+*********************
+Select ano_eje,SEC_EJEC,mayor,Left(sub_cta,4) As sub_cta4 ,Sum(saldo) As monto;
+	FROM Cur_Prin ;
+	WHERE Val(Substr(fecha_doc,4,2)) <= lMes ;
+	&lcCad;
+	GROUP By ano_eje,SEC_EJEC,mayor,sub_cta4 ;
+	INTO Cursor Cur_SubCtaSaldo4
+Select Cur_SubCtaSaldo4
+
+*********************
+
+If lcMes > 1 Then
+
+	lnMonto1 = 0
+	SELECT Cur_Prin
+	Go Top
+	LcMayorCur1  = Cur_Prin.mayor
+	LcSubCtaCur1 = Cur_Prin.sub_cta
+	Sum (saldo) For Int(Val(Substr(fecha_doc,4,2))) < Int(lcMes) ;
+		and mayor   = LcMayorCur1 ;
+		and sub_cta = LcSubCtaCur1 To lnSaldoAnterior
+
+	lm=Padl(Int(lcMes),2,'0')
+
+	SELECT Cur_Cuentas
+	=Seek(lm,"Cur_Cuentas","idMes")
+	SCAN WHILE Cur_Cuentas.MES = lm
+	
+	
+	    lnMonto1  =	0
+		SELECT Cur_Prin
+		Go Top
+		SCAN ALL 
+			Scatter Memvar
+
+			IF Padl(Int(lcMes),2,'0') = Substr(m.fecha_doc,4,2) THEN 
+				IF Cur_Cuentas.mayor+Alltrim(Cur_Cuentas.sub_cta) = m.mayor+Alltrim(m.sub_cta) Then
+					IF Seek(gcano_eje+m.mayor+m.sub_cta,'ctb_plan_sub_cuenta','PLAN_SCTA') Then
+
+						IF ctb_plan_sub_cuenta.naturaleza = 'D' THEN 
+							lnMonto  = (Cur_Prin.debe)-(Cur_Prin.haber)
+						ENDIF 
+
+						IF ctb_plan_sub_cuenta.naturaleza = 'H' THEN 
+							lnMonto  = (Cur_Prin.haber)-(Cur_Prin.debe)
+						ENDIF 
+
+						IF ctb_plan_sub_cuenta.naturaleza = 'A' THEN 
+							DO CASE 
+							CASE Inlist(Left(Cur_Prin.mayor,1),'1','5')
+								lnMonto  = (Cur_Prin.debe)-(Cur_Prin.haber)
+							CASE Inlist(Left(Cur_Prin.mayor,1),'2','3','4','6')
+								lnMonto  = (Cur_Prin.haber)-(Cur_Prin.debe)
+							CASE Inlist(Left(Cur_Prin.mayor,1),'8')
+								DO CASE 
+									CASE Inlist(Substr(Cur_Prin.mayor,2,1),'1','2','5')
+										lnMonto  = (Cur_Prin.debe)-(Cur_Prin.haber)
+									CASE Inlist(Substr(Cur_Prin.mayor,2,1),'3','4','6')
+										lnMonto  = (Cur_Prin.haber)-(Cur_Prin.debe)
+								ENDCASE 
+							ENDCASE 
+						ENDIF 
+						lnMonto1 = lnMonto1  + lnMonto
+						REPLACE saldo 	 	With lnMonto
+						REPLACE saldo_acum 	With lnMonto
+					ENDIF 
+				ENDIF 
+			ENDIF
+		ENDSCAN 
+	ENDSCAN 
+ENDIF 
+
+
+*********************
+
+SELECT Cur_Prin
+IF lMes > 1 THEN 
+	IF lcOrdenReg = '1' THEN 
+		Index On SEC_EJEC+mayor+sub_cta+orden+Substr(fecha_doc,7,4)+Substr(fecha_doc,4,2)+Substr(fecha_doc,1,2)+ALLTRIM(certificado+certificado_sec+prioridad)+Substr(fecha_doc,7,4)+Substr(fecha_doc,4,2)+Substr(fecha_doc,1,2)+nro_asiento Tag IndOrd21
+		Index On SEC_EJEC+mayor+sub_cta+orden+ALLTRIM(certificado+certificado_sec+prioridad)+substr(fecha_doc,7,4)+Substr(fecha_doc,4,2)+Substr(fecha_doc,1,2)+nro_asiento Tag IndOrd51
+
+	ELSE
+		Index On SEC_EJEC+mayor+sub_cta+orden+ALLTRIM(certificado+certificado_sec+prioridad)+Nro_not_exp+Substr(fecha_doc,7,4)+Substr(fecha_doc,4,2)+Substr(fecha_doc,1,2)+nro_asiento Tag IndOrd21
+		Index On SEC_EJEC+mayor+sub_cta+orden+ALLTRIM(certificado+certificado_sec+prioridad)+Nro_not_exp+Substr(fecha_doc,7,4)+Substr(fecha_doc,4,2)+Substr(fecha_doc,1,2)+nro_asiento Tag IndOrd51	
+	ENDIF 
+	SELECT sec_ejec, mayor,sub_cta, orden, certificado, certificado_sec ;
+	FROM cur_prin WHERE VAL(certificado)>0 AND tipo_ctb <> '1' ;
+	GROUP BY 1,2,3,4,5,6 INTO CURSOR cur_1
+	SELECT cur_1
+	INDEX on sec_ejec+mayor+sub_cta+orden+certificado+certificado_sec TAG inx1 	
+	
+ELSE
+	IF lcOrdenReg = '1' THEN 		
+		Index On SEC_EJEC+Substr(fecha_doc,4,2)+mayor+sub_cta+orden+ALLTRIM(certificado+certificado_sec+prioridad)+fecha_doc+nro_asiento  Tag IndOrd21
+		Index On SEC_EJEC+Substr(fecha_doc,4,2)+mayor+sub_cta+orden+ALLTRIM(certificado+certificado_sec+prioridad)+fecha_doc+nro_asiento  Tag IndOrd51	
+	ELSE
+		Index On SEC_EJEC+Substr(fecha_doc,4,2)+mayor+sub_cta+orden+ALLTRIM(certificado+certificado_sec+prioridad)+Nro_not_exp+Substr(fecha_doc,7,4)+Substr(fecha_doc,4,2)+Substr(fecha_doc,1,2)+nro_asiento  Tag IndOrd21
+		Index On SEC_EJEC+Substr(fecha_doc,4,2)+mayor+sub_cta+orden+ALLTRIM(certificado+certificado_sec+prioridad)+Nro_not_exp+Substr(fecha_doc,7,4)+Substr(fecha_doc,4,2)+Substr(fecha_doc,1,2)+nro_asiento  Tag IndOrd51	
+	ENDIF 	
+	SELECT ano_eje,sec_ejec, mayor,sub_cta, orden, certificado, certificado_sec ;
+	FROM cur_prin WHERE VAL(certificado)>0 AND tipo_ctb <> '1';
+	GROUP BY 1,2,3,4,5,6,7 INTO CURSOR cur_1
+	SELECT cur_1
+	INDEX on sec_ejec+mayor+sub_cta+orden+certificado+certificado_sec TAG inx1 	
+		
+ENDIF 
+
+
+
+SELECT Cur_Prin
+Index On SEC_EJEC+mayor+sub_cta+orden+certificado+certificado_sec+prioridad+Substr(fecha_doc,7,4)+Substr(fecha_doc,4,2)+Substr(fecha_doc,1,2)+Nro_not_exp+nro_asiento+tipo_d_h Tag IndOrd31
+REPLACE ALL ano_cont WITH RIGHT(fecha_doc,4) FOR EMPTY(ano_cont)
+
+
+SELECT cur_prin 
+Set Order To IndOrd31
+
+SELECT cur_1
+SCAN all
+	pSaldo_CA = 0
+	SELECT cur_prin	
+	SEEK cur_1.sec_ejec+cur_1.mayor+cur_1.sub_cta+cur_1.orden+cur_1.certificado+cur_1.certificado_sec 
+	SCAN WHILE sec_ejec+mayor+sub_cta+orden+certificado+certificado_sec = ;
+			   cur_1.sec_ejec+cur_1.mayor+cur_1.sub_cta+cur_1.orden+cur_1.certificado+cur_1.certificado_sec 
+		pSaldo_CA = pSaldo_CA + saldo_acum
+		REPLACE saldo_CA WITH pSaldo_CA IN cur_prin
+	ENDSCAN 
+ENDSCAN 		
+
+
+SELECT ano_eje, sec_ejec,certificado, certificado_sec,mayor, sub_cta, SUM(saldo_acum) as saldo_acum ;
+	FROM cur_prin WHERE CERTIFICADO <> '9999999999' AND CERTIFICADO_SEC <>'9999' GROUP BY 1,2,3,4,5,6 INTO CURSOR cur_elimina
+
+SELECT cur_prin
+SET ORDER TO CERTI   
+
+SELECT cur_elimina
+GO TOP 
+SCAN all
+	SCATTER MEMVAR 
+	IF m.saldo_acum = 0 THEN 
+		SELECT cur_prin 
+		SEEK m.ano_eje+m.sec_ejec+m.certificado+m.certificado_sec+m.mayor+m.sub_cta
+		SCAN WHILE ano_eje+sec_ejec+certificado+certificado_sec+mayor+sub_cta = m.ano_eje+m.sec_ejec+m.certificado+m.certificado_sec+m.mayor+m.sub_cta 
+			DELETE IN cur_prin 
+		ENDSCAN 
+	ENDIF 
+ENDSCAN 
+
+SELECT ano_eje, sec_ejec,tipo, Nro_not_exp, mayor, sub_cta, SUM(saldo) as saldo ;
+	WHERE INLIST(tipo,'R','N') ;
+	FROM cur_prin GROUP BY 1,2,3,4,5,6 INTO CURSOR cur_elimina_registro
+
+SELECT cur_prin
+SET ORDER TO expediente
+	
+	
+SELECT cur_elimina_registro
+GO TOP 
+SCAN all
+	SCATTER MEMVAR 
+	IF m.saldo = 0 THEN 
+		SELECT cur_prin 
+		SEEK m.ano_eje+m.sec_ejec+m.tipo+m.Nro_not_exp+m.mayor+m.sub_cta
+		SCAN WHILE ano_eje+sec_ejec+tipo+Nro_not_exp+mayor+sub_cta = m.ano_eje+m.sec_ejec+m.tipo+m.Nro_not_exp+m.mayor+m.sub_cta
+			DELETE IN cur_prin 
+		ENDSCAN 
+	ENDIF 
+ENDSCAN 
+
+**************** SALDOS ******************
+
+Select ano_eje,SEC_EJEC,mayor,sub_cta As sub_cta ,Sum(saldo)  As monto ;
+	FROM Cur_Prin ;
+	WHERE Val(Substr(fecha_doc,4,2)) <= lMes ;
+	&lcCad;
+	GROUP By ano_eje,SEC_EJEC,mayor,sub_cta ;
+	INTO Cursor Cur_SubCtaSaldo6
+Select Cur_SubCtaSaldo6
+
+Index On ano_eje+SEC_EJEC+mayor+sub_cta Tag Ind02
+
+
+Select ano_eje,SEC_EJEC,mayor,Left(sub_cta,4) As sub_cta4 ,Sum(saldo) As monto;
+	FROM Cur_Prin ;
+	WHERE Val(Substr(fecha_doc,4,2)) <= lMes ;
+	&lcCad;
+	GROUP By ano_eje,SEC_EJEC,mayor,sub_cta4 ;
+	INTO Cursor Cur_SubCtaSaldo4
+
+
+SELECT Cur_SubCtaSaldo4
+Index On ano_eje+SEC_EJEC+mayor+Left(sub_cta4,4) Tag Ind03
+
+SELECT ano_eje,SEC_EJEC,mayor,Left(sub_cta,2) As sub_cta2 ,Sum(saldo) As monto ;
+	FROM Cur_Prin ;
+	WHERE Val(Substr(fecha_doc,4,2)) <= lMes ;
+	&lcCad;
+	GROUP By ano_eje,SEC_EJEC,mayor,sub_cta2 ;
+	INTO Cursor Cur_SubCtaSaldo2
+
+SELECT Cur_SubCtaSaldo2
+Index On ano_eje+SEC_EJEC+mayor+Left(sub_cta2,2) Tag Ind04
+
+****************************************************AL MES***************************************************
+SELECT ano_eje,SEC_EJEC,mayor,sub_cta As sub_cta ,Sum(saldo) + lnSaldoAnterior As monto ;
+	FROM Cur_Prin ;
+	WHERE Val(Substr(fecha_doc,4,2)) <= lMes ;
+	&lcCad;
+	GROUP By ano_eje,SEC_EJEC,mayor,sub_cta ;
+	INTO Cursor Cur_SubCtaSaldo6AL
+SELECT Cur_SubCtaSaldo6AL
+
+Index On ano_eje+SEC_EJEC+mayor+sub_cta Tag Ind02
+
+
+SELECT ano_eje,SEC_EJEC,mayor,Left(sub_cta,4) As sub_cta4 ,Sum(saldo) + lnSaldoAnterior   As monto;
+	FROM Cur_Prin ;
+	WHERE Val(Substr(fecha_doc,4,2)) <= lMes ;
+	&lcCad;
+	GROUP By ano_eje,SEC_EJEC,mayor,sub_cta4 ;
+	INTO Cursor Cur_SubCtaSaldo4AL
+
+
+Select Cur_SubCtaSaldo4AL
+
+Index On ano_eje+SEC_EJEC+mayor+Left(sub_cta4,4) Tag Ind03
+
+Select ano_eje,SEC_EJEC,mayor,Left(sub_cta,2) As sub_cta2 ,Sum(saldo) + lnSaldoAnterior  As monto ;
+	FROM Cur_Prin ;
+	WHERE Val(Substr(fecha_doc,4,2)) <= lMes ;
+	&lcCad;
+	GROUP By ano_eje,SEC_EJEC,mayor,sub_cta2 ;
+	INTO Cursor Cur_SubCtaSaldo2AL
+
+Select Cur_SubCtaSaldo2AL
+Index On ano_eje+SEC_EJEC+mayor+Left(sub_cta2,2) Tag Ind04
+*************************************************************************************************************
+Select ano_eje,SEC_EJEC,;
+	mayor,Sum(saldo) + lnSaldoAnterior As monto ;
+	FROM Cur_Prin ;
+	WHERE Val(Substr(fecha_doc,4,2)) <= lMes ;
+	&lcCad;
+	GROUP By ano_eje,SEC_EJEC,mayor ;
+	INTO Cursor Cur_Mes_Saldo
+
+Select Cur_Mes_Saldo
+Index On ano_eje+SEC_EJEC+mayor Tag IndAcmH
+
+SELECT  Cur_Prin
+
+SELECT  ano_eje,SEC_EJEC,;
+	mayor,Sum(saldo) As monto ;
+	FROM Cur_Prin ;
+	WHERE Val(Substr(fecha_doc,4,2)) <= lMes ;
+	&lcCad;
+	GROUP By ano_eje,SEC_EJEC,mayor ;
+	INTO Cursor Cur_Acum_Mes_Saldo
+
+SELECT Cur_Acum_Mes_Saldo
+
+Index On ano_eje+SEC_EJEC+mayor Tag IndAcmH
+
+***Saldo del Mes Anterior
+
+Select ano_eje,SEC_EJEC,mayor,Sum(saldo) As monto ;
+	FROM Cur_Prin ;
+	WHERE Val(Substr(fecha_doc,4,2)) < lMes ;
+	&lcCad;
+	GROUP By ano_eje,SEC_EJEC,mayor ;
+	INTO Cursor Cur_Saldo_Anterior
+
+
+**************** FIN DE SALDOS ******************
+
+=Seek(gcano_eje+gcfuncion_entidad+gcsec_ejec+Padl(Alltrim(Str(lcMes,2,0)),2,'0'),"ctb_control","pr_tipo")
+SELECT Cur_Prin
+Delete All For marca = 'x'
+
+
+
+**
+
+
+
+SELECT CUR_PRIN
+SCAN ALL 
+	SCATTER MEMVAR 
+
+	IF !INDEXSEEK(m.ano_eje+m.sec_ejec+m.certificado+m.certificado_sec+'1',.F.,'cur_prin','certi_prio') THEN 
+		REPLACE certificado 		WITH '9999999999'
+		REPLACE certificado_sec		WITH '9999'
+		REPLACE prioridad			WITH '9'
+	ENDIF 
+	IF LEFT(MAYOR,2) <> '84' and INLIST(mayor+LEFT(RTRIM(sub_cta),2),'910309','910308','910409','910408')     THEN 
+		REPLACE certificado 		WITH '9999999999'
+		REPLACE certificado_sec		WITH '9999'
+		REPLACE prioridad			WITH '9'		
+	ENDIF 	
+	IF (CERTIFICADO='9999999999' AND CERTIFICADO_SEC = '9999')  THEN 
+		REPLACE SALDO_CA WITH 0.00
+	ENDIF 
+
+	
+ENDSCAN 
+
+
+SELECT cur_prin 
+GO TOP 
+BROWSE 
+SCAN ALL 
+	SCATTER MEMVAR 
+	IF ALLTRIM(CERTIFICADO)='9999999999' AND alltrim(CERTIFICADO_SEC) = '9999'  THEN 
+		replace cur_prin.saldo_ca WITH 0.00
+		replace cur_prin.certificado WITH ''
+		replace cur_prin.certificado_sec WITH ''
+		replace cur_prin.prioridad WITH ''
+	ENDIF 
+	IF SEEK(m.ano_eje+m.sec_ejec+m.Nro_not_exp+m.ciclo+m.fase+m.secuencia,'expediente_fase','exp_fase') THEN 
+		REPLACE rubro WITH expediente_fase.fuente_financ IN cur_prin
+	ENDIF 
+	IF m.ciclo+m.fase ='GD' THEN 
+		SELECT expediente_fase
+		IF SEEK(m.ano_eje+m.sec_ejec+m.Nro_not_exp+'GG'+m.secuencia,'expediente_fase','sec_anter') THEN 
+*		IF SEEK(m.ano_eje+m.sec_ejec+m.Nro_not_exp+'GG'+m.secuencia,'expediente_fase','exp_fase') THEN 
+			IF SEEK(m.ano_eje+m.sec_ejec+m.Nro_not_exp+'GG'+expediente_fase.secuencia,'expediente_secuencia','exp_sec') THEN 
+				REPLACE comp_pago WITH expediente_secuencia.num_doc IN cur_prin
+			ENDIF 
+			SELECT expediente_documento
+			IF SEEK(m.ano_eje+m.sec_ejec+m.Nro_not_exp+'GG'+expediente_fase.secuencia,'expediente_documento','exp_doc') THEN 
+				REPLACE persona_giro WITH expediente_documento.nombre IN cur_prin
+			ENDIF 
+		ENDIF 
+	ENDIF 
+	IF m.ciclo+m.fase ='GG' THEN 
+		SELECT expediente_fase
+		IF SEEK(m.ano_eje+m.sec_ejec+m.Nro_not_exp+'GG'+m.secuencia,'expediente_fase','exp_fase') THEN 
+			IF SEEK(m.ano_eje+m.sec_ejec+m.Nro_not_exp+'GG'+expediente_fase.secuencia,'expediente_secuencia','exp_sec') THEN 
+				REPLACE comp_pago WITH expediente_secuencia.num_doc IN cur_prin
+			ENDIF 
+			SELECT expediente_documento
+			IF SEEK(m.ano_eje+m.sec_ejec+m.Nro_not_exp+'GG'+expediente_fase.secuencia,'expediente_documento','exp_doc') THEN 
+				REPLACE persona_giro WITH expediente_documento.nombre IN cur_prin
+			ENDIF 
+		ENDIF 
+	ENDIF 
+	
+	IF INLIST(m.mayor,'9103','9104') THEN 
+		IF SEEK(m.ano_eje+m.sec_ejec+m.Nro_not_exp+'GG'+m.secuencia,'expediente_fase','exp_fase') THEN 
+			IF SEEK(m.ano_eje+m.sec_ejec+m.Nro_not_exp+'GG'+expediente_fase.secuencia,'expediente_secuencia','exp_sec') THEN 
+				REPLACE comp_pago WITH expediente_secuencia.num_doc IN cur_prin
+			ENDIF 
+			SELECT expediente_documento
+			IF SEEK(m.ano_eje+m.sec_ejec+m.Nro_not_exp+'GG'+expediente_fase.secuencia,'expediente_documento','exp_doc') THEN 
+				REPLACE persona_giro WITH expediente_documento.nombre IN cur_prin
+			ENDIF 
+		ENDIF 
+	
+	ENDIF 
+ENDSCAN 
+
+SELECT ejecutora
+=SEEK(gcano_eje+gcsec_ejec,'ejecutora','sec_ejec')
+
+
+SELECT cur_prin 
+Set Order To IndOrd51
+GO TOP
+
+
+USE IN cur_ctb_diario_unicos 
+USE IN cur_certificado_diario_unicos 
+USE IN cur_ctb_diario 
+
+
+
+
+

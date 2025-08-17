@@ -1,0 +1,33 @@
+SET PATH TO fORMS, PRGS, menus, graficos, include, data , clases, reports
+SET DATE  BRITISH
+SET CENTURY ON 
+SET SAFETY OFF
+SET TALK OFF
+SET PROCEDURE TO rutinas
+*SET CLASSLIB TO  clases\manage   ADDITIVE 
+SET CLASSLIB TO  clases\blowfish ADDITIVE 
+gcEncriptaDesencripta = CREATEOBJECT("blowfish")
+gcLLave = 'LOBO'
+
+_screen.backcolor = RGB(223,227,239 )
+*** SETEANDO DATOS DE LA PANTALLA
+_screen.Icon 		= 'Cert.ICO'
+_screen.Picture 	= 'bghome.gif'
+_screen.Caption 	= 'Encripta - Desencripta' 
+_screen.BorderStyle = 3
+
+**2
+_screen.windowstate = 2
+_screen.Closable = .F.
+_SCREEN.CONTROLBOX=.T.
+_screen.AlwaysOnTop = .F. 
+
+DO FORM frmcodificadecodifica_new
+SET EXCLUSIVE OFF 
+SET DELETED ON 
+
+
+READ events
+
+
+

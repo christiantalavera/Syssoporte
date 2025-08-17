@@ -1,0 +1,151 @@
+lsRutaSiafDbc = gcRutaSiaf
+*TRY 
+	USE siaf!usuario_entidad ALIAS 'usuario_entidad' SHARED NOUPDATE IN 0
+	SELECT sec_ejec FROM usuario_entidad WHERE NOT EMPTY(sec_ejec) GROUP BY sec_ejec INTO CURSOR cur_sec_ejec
+	USE IN usuario_entidad
+	
+	lnCuentaSecEjec = RECCOUNT('cur_sec_ejec')
+	llFlag = .T.
+	lsSecEjec = PADL(cur_sec_ejec.sec_ejec,6,'0')
+	USE IN (SELECT('cur_sec_ejec'))
+	IF lnCuentaSecEjec > 1 THEN 
+		llFlag = .F.
+		lsMensaje = [Existe varios sec_ejec en la tabla usuario entidad!!!]
+	ENDIF .
+
+	lsRutaTmp = gcRuta_app + 'backup\'
+	lsRutaDestino = gcRuta_app 
+	IF llFlag THEN 
+		lsRutaDbc =  lsRutaTmp + lsSecEjec + '_dbc\'
+		&&1. Eliminar directorio del DBC a copiar
+		IF DIRECTORY(lsRutaDbc) THEN 
+			lsComand = 'RUN RMDIR /S /Q ' + lsRutaDbc
+			&lsComand
+		ENDIF
+		&&2. Elimina archivo zip
+		lsNombreZip = SUBSTR(lsRutaDbc,1,LEN(lsRutaDbc)-1)+'.zip'
+		lsNombreArchivo =  lsSecEjec + '_dbc'+'.zip'
+		IF FILE(lsNombreZip) THEN 
+			DELETE FILE (lsNombreZip)
+		ENDIF 
+		&&3. Elimina archivo ZIP de la ruta destino.
+		IF FILE(lsRutaDestino+JUSTFNAME(lsNombreZip)) THEN 
+			DELETE FILE (lsRutaDestino+JUSTFNAME(lsNombreZip))
+		ENDIF
+		&&4. Crea carpeta
+		MKDIR (lsRutaDbc)
+		STRTOFILE( TRANSFORM(DATETIME()) + " " + "Creando Carpeta" + CHR(13) + CHR(10), gcArchivoLOG, 1  )
+	ENDIF 
+
+	IF llFlag THEN
+*			OPEN DATABASE (lsRutaSiafDbc + [siaf.dbc]) SHARED
+*			OPEN DATABASE siaf SHARED
+			STRTOFILE( TRANSFORM(DATETIME()) + " " + "Abriendo Base de Datos" + CHR(13) + CHR(10), gcArchivoLOG, 1  )
+			&& Obtiene listado de tablas asociadas al dbc
+			lnCuenta =ADBOBJECTS(laTables, [TABLE])
+			CREATE CURSOR cur_tablas(id integer,tabla varchar(200))
+			** aqui
+			FOR lnId = 1 TO lnCuenta 
+				INSERT INTO cur_tablas(id,tabla) values(lnId,laTables(lnId))
+			ENDFOR 
+			STRTOFILE( TRANSFORM(DATETIME()) + " " + "Iniciando Proceso" + CHR(13) + CHR(10), gcArchivoLOG, 1  )
+			&& obtiene tablas de planillas, que empiezan con pers_titu_det_monto
+			CREATE CURSOR cur_tabla_planilla(id integer,tabla varchar(200))
+			lnCuenta = ADIR(laFile,lsRutaSiafDbc + [pers_titu_det_monto*.dbf])
+			FOR lnId = 1 TO lnCuenta
+				lsArchivoDbf = laFile(lnId,1)
+			    INSERT INTO cur_tabla_planilla(id,tabla) values(lnId,SUBSTR(lsArchivoDbf,1,LEN(lsArchivoDbf)-4))
+			ENDFOR
+					
+			lsNombreDbc = lsRutaDbc + 'siaf.dbc'
+			
+			CREATE DATABASE (lsNombreDbc)
+			OPEN DATABASE (lsNombreDbc) EXCLUSIVE
+			SELECT cur_tablas
+			SCAN
+				lsTabla 	= cur_tablas.tabla
+				lsDbf 		= lsRutaSiafDbc + lsTabla + '.dbf'
+				lsDbfNew 	= lsRutaDbc + cur_tablas.tabla + '.dbf'
+				lsTablaNew 	= cur_tablas.tabla
+				
+				WAIT WINDOW 'Tablas: ' + ALLTRIM(STR(RECNO())) + ' de ' + ALLTRIM(STR(RECCOUNT())) + ' Tabla: ' + lsTabla NOWAIT NOCLEAR
+				STRTOFILE( TRANSFORM(DATETIME()) + " " + "Procesando Tabla -->" +RTRIM(lsTabla)+ CHR(13) + CHR(10), gcArchivoLOG, 1  )
+				USE (lsDbf) ALIAS (lsTabla) SHARED NOUPDATE IN 0 
+				SELECT (lsTabla)
+				COPY STRUCTURE TO (lsDbfNew) DATABASE (lsNombreDbc)
+				USE (lsDbfNew) ALIAS (lsTablaNew) exclusi 
+				SELECT (lsTablaNew) 
+				
+				IF UPPER(SUBSTR(lsTabla,1,4))<> 'VFP_' THEN 
+					APPEND FROM (lsDbf)
+				ENDIF 
+				
+				USE IN (SELECT(lsTabla))
+				USE IN (SELECT(lsTablaNew))
+				SELECT cur_tablas
+			ENDSCAN
+			
+			SELECT tabla FROM cur_tabla_planilla a WHERE NOT exists(SELECT 1 FROM cur_tablas b WHERE a.tabla==b.tabla) INTO ARRAY laTablaPlanilla
+*			CLOSE DATABASES ALL
+			
+			IF VARTYPE(laTablaPlanilla)=='C' THEN 
+				lnCuenta = ALEN('laTablaPlanilla')
+				FOR lnId = 1 TO lnCuenta			
+					lsTabla 	= laTablaPlanilla(lnId) 			&&cur_tabla_planilla_agregar.tabla
+					lsDbf 		= lsRutaSiafDbc + lsTabla + '.dbf' 	&&cur_tabla_planilla_agregar.tablaDbf
+					lsDbfNew 	= lsRutaDbc + lsTabla + '.dbf'		&&cur_tabla_planilla_agregar.tablaDbf
+					lsTablaNew 	= lsTabla 							&&cur_tabla_planilla_agregar.tabla 
+
+					WAIT WINDOW 'Tablas de planillas: ' + ALLTRIM(STR(lnId)) + ' de ' + ALLTRIM(STR(lnCuenta)) + ' Tabla: ' + lsTabla NOWAIT NOCLEAR
+								
+					USE (lsDbf) ALIAS (lsTabla) SHARED NOUPDATE IN 0 
+					SELECT (lsTabla)
+					COPY STRUCTURE TO (lsDbfNew) 
+					USE (lsDbfNew) ALIAS (lsTablaNew) exclusi 
+					SELECT (lsTablaNew)
+					APPEND FROM (lsDbf)
+					STRTOFILE( TRANSFORM(DATETIME()) + " " + "Procesando Tabla -->" +RTRIM(lsTabla)+ CHR(13) + CHR(10), gcArchivoLOG, 1  )
+					USE IN (SELECT(lsTabla))
+					USE IN (SELECT(lsTablaNew))
+				ENDFOR
+			ENDIF 
+*			SUSPEND 
+			CLOSE DATABASES ALL
+			&& Zipear la carpeta
+			WAIT WINDOW 'Generando archivo comprimido' NOWAIT 
+			*NOCLEAR 
+			SET LIBRARY TO "vfpcompression.fll" ADDITIVE 
+			STRTOFILE( TRANSFORM(DATETIME()) + " " + "Generando Archivo " +RTRIM(lsNombreZip)+ CHR(13) + CHR(10), gcArchivoLOG, 1  )
+			llResult = ZipFolderQuick(LEFT(lsRutaDbc,LEN(lsRutaDbc)-1))
+	*		llResult = ZipFolderQuick(lsRutaDbc,.F.,gcllave_zip)
+*			SET LIBRARY TO	
+			WAIT CLEAR 
+
+			WAIT WINDOW 'Eliminando el directorio: ' + lsRutaDbc NOWAIT NOCLEAR 
+			IF DIRECTORY(lsRutaDbc) THEN
+				lsComand = 'RUN RMDIR /S /Q ' + lsRutaDbc
+				&lsComand
+			ENDIF
+*!*			WAIT WINDOW 'Eliminando el archivo: ' + lsNombreZip NOWAIT NOCLEAR 
+*!*			IF FILE(lsNombreZip) THEN 
+*!*				DELETE FILE (lsNombreZip)
+*!*			ENDIF
+	ENDIF 
+*!*	CATCH TO leError
+*!*		llFlag = .F.
+*!*		ltFecha = TTOC(FDATE('syssoporte.exe',1))
+*!*		lsMensaje =  [ Error : ] + STR(leError.ErrorNo) + CHR(13) +;
+*!*			  [ Linea : ] + STR(leError.LineNo) + CHR(13) + ;
+*!*			  [ Procedimiento : ] + ALLTRIM(leError.Procedure) + CHR(13) + ;
+*!*			  [ Sentencia : ] + ALLTRIM(leError.LineContents) + CHR(13) + ;
+*!*			  [ Mensaje : ] + ALLTRIM(leError.Message) + CHR(13) + ;
+*!*			  [ Fecha ejecutable: ] + ltFecha
+*!*	*!*	FINALLY
+*!*	*!*		loFSO = NULL
+*!*	ENDTRY 
+QUIT 
+
+
+
+
+

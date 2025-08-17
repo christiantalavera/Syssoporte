@@ -1,0 +1,252 @@
+DO ABRE_TABLAS
+DO REFRESCAR_SALDOS
+DO CERRAR_TABLAS
+
+PROCEDURE ABRE_TABLAS
+
+	USE SIAF!ejecutora						IN 0 SHARED AGAIN ORDER tag sec_ejec
+	USE siaf!certificado					IN 0 SHARED AGAIN order tag certi			ALIAS c_certificado
+	USE siaf!certificado_fase				IN 0 SHARED AGAIN ORDER tag certi_fase		ALIAS c_certificado_fase
+	USE siaf!certificado_secuencia			IN 0 SHARED AGAIN ORDER tag certi_sec		ALIAS c_certificado_secuencia
+	USE siaf!certificado_clasif				IN 0 SHARED AGAIN ORDER tag certi_clas		ALIAS c_certificado_clasif
+	USE siaf!certificado_meta				IN 0 SHARED AGAIN ORDER tag certi_meta		ALIAS c_certificado_meta
+	USE siaf!certificado_fase 				IN 0 ALIAS c_fase 		AGAIN ORDER TAG CERTI_FASE
+	USE siaf!certificado_secuencia			IN 0 ALIAS c_secuencia	AGAIN ORDER TAG CERTI_SEC
+	USE siaf!certificado_clasif				IN 0 ALIAS c_clasif		AGAIN ORDER TAG CERTI_CLAS
+	USE siaf!certificado_meta				IN 0 ALIAS c_meta		AGAIN ORDER TAG CERTI_META
+	USE syssoporte!log_soporte				IN 0 SHARED AGAIN ORDER tag operacion
+	USE siaf!expediente_fase				IN 0 SHARED AGAIN ORDER tag CER_FASE
+	USE siaf!expediente_secuencia			IN 0 SHARED AGAIN ORDER tag exp_sec
+	USE siaf!expediente_clasif				IN 0 SHARED AGAIN ORDER TAG EXPCLASIFP
+	USE siaf!expediente_meta				IN 0 SHARED AGAIN ORDER tag EXP_METAP
+
+
+
+	CREATE CURSOR cur_certi   (ano_eje					C(04)    ,;
+							   sec_ejec					C(06)    ,;
+							   certificado				c(10)	 ,;
+							   secuencia				c(4)	 )
+						   
+
+	SELECT cur_certi
+	INDEX on ano_eje+sec_ejec+certificado+secuencia TAG inx1
+
+	CREATE CURSOR cur_ca  (ano_eje					C(04)    ,;
+						   sec_ejec					C(06)    ,;
+						   certificado				c(10)	 ,;
+						   secuencia				c(4)	 )
+						   
+
+	SELECT cur_ca
+	INDEX on ano_eje+sec_ejec+certificado+secuencia TAG inx1
+
+
+
+	SELECT c_certificado_secuencia
+	SET RELATION TO ano_eje+sec_ejec+certificado INTO c_certificado
+	SET RELATION TO ano_eje+sec_ejec+certificado+secuencia INTO c_certificado_fase ADDITIVE 
+ENDPROC 
+
+
+PROCEDURE REFRESCAR_SALDO
+	ZAP IN cur_ca 
+	ZAP IN cur_certi
+
+
+	*====================================================================================================================================================
+	*  Coloca los Montos en Cero de la Certificacion
+	*----------------------------------------------------------------------------------------------------------------------------------------------------
+
+	SELECT curCertificado
+	SCAN ALL FOR seleccionado = 1
+		lcCertificado = curCertificado.certificado
+		lcSecuencia   = curCertificado.secuencia
+		*
+		SELECT c_secuencia 
+		SEEK gcano_eje+gcsec_ejec+lcCertificado+lcsecuencia
+		SCAN WHILE ano_eje+sec_ejec+certificado+secuencia=gcano_eje+gcsec_ejec+lcCertificado+lcSecuencia
+		     SCATTER MEMVAR 
+		     *	     
+		     REPLACE monto WITH 0, monto_nacional WITH 0 IN c_secuencia
+		     *
+		     IF c_secuencia.correlativo<>'0001'
+		        LOOP 
+		     Endif
+		
+			 SELECT c_fase
+			 SEEK gcano_eje+gcsec_ejec+m.Certificado+m.Secuencia
+			 SCAN WHILE ano_eje+sec_ejec+certificado+secuencia = gcano_eje+gcsec_ejec+m.Certificado+m.Secuencia
+			 	 REPLACE monto WITH 0, monto_nacional WITH 0, saldo_nacional WITH 0, monto_comprometido WITH 0
+	 		 ENDSCAN 
+	 		 *
+			 SELECT c_clasif
+			 SEEK gcano_eje+gcsec_ejec+m.Certificado+m.Secuencia
+			 SCAN WHILE ano_eje+sec_ejec+certificado+Secuencia = gcano_eje+gcsec_ejec+m.Certificado+m.Secuencia
+			 	  REPLACE monto WITH 0, monto_nacional WITH 0
+			 ENDSCAN 
+			 
+			INSERT INTO cur_certi (ano_eje, sec_ejec, certificado, secuencia) VALUES (m.ano_eje, m.sec_ejec, m.Certificado, m.secuencia)
+						
+			STORE 0 TO wmonto_nacional, wmonto
+		ENDSCAN 		
+	ENDSCAN 
+
+	*====================================================================================================================================================
+	* Inserta Compromisos Anuales de la Certificacion
+	*----------------------------------------------------------------------------------------------------------------------------------------------------
+	SELECT curCertificado
+	SCAN ALL
+		SELECT c_fase
+		SEEK curCertificado.ano_eje+curCertificado.sec_ejec+curCertificado.certificado
+		SCAN WHILE ano_eje+sec_ejec+certificado = curCertificado.ano_eje+curCertificado.sec_ejec+curCertificado.certificado
+			SCATTER MEMVAR 
+			IF m.secuencia_padre <> cur_reg.secuencia THEN 
+				LOOP 
+			ENDIF 
+			INSERT INTO cur_ca (ano_eje, sec_ejec, certificado, secuencia) VALUES (m.ano_eje, m.sec_ejec, m.Certificado, m.secuencia)
+		ENDSCAN 
+	ENDSCAN 
+
+
+	*======================================================================================================================================================
+	* Actualiza Saldos de la Certificacion
+	*------------------------------------------------------------------------------------------------------------------------------------------------------
+	SELECT cur_certi
+	SCAN ALL 
+		lcCertificado = cur_certi.certificado
+		lcSecuencia   = cur_certi.secuencia
+		SELECT c_meta
+		=SEEK(gcano_eje + gcsec_ejec + lcCertificado + lcSecuencia)
+		SCAN REST WHILE ano_eje = gcano_eje AND sec_ejec = gcsec_ejec AND certificado = lcCertificado AND secuencia = lcSecuencia
+			wmonto				= c_meta.monto
+			wmonto_nacional 	= c_meta.monto_nacional + c_meta.monto_nacional_ajuste
+			wmonto_comprometido = c_meta.monto_comprometido
+			*-tabla certificado_clasif
+			SELECT c_clasif
+			IF SEEK(c_meta.ano_eje+c_meta.sec_ejec+c_meta.certificado+c_meta.secuencia+;
+					c_meta.correlativo+c_meta.id_clasificador,'c_clasif','certi_clas') THEN
+				REPLACE c_clasif.monto			WITH c_clasif.monto + wmonto ,;
+						c_clasif.monto_nacional	WITH c_clasif.monto_nacional + wmonto_nacional IN c_clasif
+			ENDIF
+			
+			*-tabla certificado_fase
+			IF SEEK(c_meta.ano_eje+c_meta.sec_ejec+c_meta.certificado+c_meta.secuencia,'c_fase') AND ;
+					SEEK(c_meta.ano_eje+c_meta.sec_ejec+c_meta.certificado+c_meta.secuencia+c_meta.correlativo,'c_secuencia') THEN
+					
+				IF INLIST(c_secuencia.tipo_registro, 'N', 'T',' ') THEN
+					REPLACE monto			WITH monto 			+ wmonto,;
+							monto_nacional	WITH monto_nacional + wmonto_nacional,;
+							saldo_nacional	WITH saldo_nacional + wmonto_nacional - wmonto_comprometido IN c_fase
+				ELSE
+					REPLACE saldo_nacional WITH saldo_nacional + wmonto_nacional IN c_fase
+				ENDIF
+
+				IF c_fase.etapa ='2' THEN
+					lcSecuenciaPadre = c_fase.secuencia_padre
+					IF SEEK(c_meta.ano_eje+c_meta.sec_ejec+c_meta.certificado+lcSecuenciaPadre,'c_fase')
+						REPLACE saldo_nacional WITH saldo_nacional - wmonto_nacional IN c_fase
+					ENDIF
+				ENDIF
+			ENDIF
+			*-tabla certificado_secuencia
+			SELECT c_secuencia
+			IF SEEK(c_meta.ano_eje+c_meta.sec_ejec+c_meta.certificado+c_meta.secuencia+;
+					c_meta.correlativo,'c_secuencia') THEN
+				REPLACE c_secuencia.monto			WITH  c_secuencia.monto + wmonto,;
+						c_secuencia.monto_nacional	WITH  c_secuencia.monto_nacional + wmonto_nacional IN c_secuencia
+			ENDIF
+		ENDSCAN
+	ENDSCAN 
+
+
+	*======================================================================================================================================================
+	* INICIALIZA MONTO COMPROMETIDO ***
+	*------------------------------------------------------------------------------------------------------------------------------------------------------
+	SELECT cur_ca
+	SCAN ALL 
+		lcCertificado = cur_ca.certificado
+		lcSecuencia   = cur_ca.secuencia
+
+		SELECT c_fase
+		SEEK gcano_eje+gcsec_ejec+lcCertificado+lcSecuencia
+		SCAN WHILE ano_eje+sec_ejec+certificado+secuencia = gcano_eje+gcsec_ejec+lcCertificado+lcSecuencia
+			REPLACE monto_comprometido WITH 0
+		ENDSCAN 
+		SELECT c_secuencia
+		SEEK gcano_eje+gcsec_ejec+lcCertificado+lcSecuencia
+		SCAN WHILE ano_eje+sec_ejec+certificado+Secuencia = gcano_eje+gcsec_ejec+lcCertificado+lcSecuencia
+			REPLACE monto_comprometido WITH 0
+		ENDSCAN 
+		SELECT c_clasif
+		SEEK gcano_eje+gcsec_ejec+lcCertificado+lcSecuencia
+		SCAN WHILE ano_eje+sec_ejec+certificado+lcSecuencia = gcano_eje+gcsec_ejec+lcCertificado+lcSecuencia
+			REPLACE monto_comprometido WITH 0
+		ENDSCAN 
+		SELECT c_meta
+		SEEK gcano_eje+gcsec_ejec+lcCertificado+lcSecuencia
+		SCAN WHILE ano_eje+sec_ejec+certificado+lcSecuencia = gcano_eje+gcsec_ejec+lcCertificado+lcSecuencia
+			REPLACE monto_comprometido WITH 0
+		ENDSCAN 
+
+	ENDSCAN 
+
+
+	*======================================================================================================================================================
+	* ACTUALIZA MONTO COMPROMETIDO
+	*------------------------------------------------------------------------------------------------------------------------------------------------------
+	SELECT cur_ca
+	SCAN ALL 
+		SELECT expediente_fase
+		SEEK gcano_eje+gcsec_ejec+cur_ca.Certificado+cur_ca.secuencia
+		SCAN WHILE ano_eje+sec_ejec+certificado+certificado_secuencia = gcano_eje+gcsec_ejec+cur_ca.Certificado+cur_ca.secuencia 
+			SELECT expediente_meta
+			lcClave_sec = gcano_eje+gcsec_ejec+expediente_fase.expediente+expediente_fase.ciclo+expediente_fase.fase+expediente_fase.secuencia
+			SEEK lcClave_sec
+			SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia = lcClave_sec
+				IF expediente_meta.ciclo + expediente_meta.fase <> 'GC' THEN 
+					LOOP 
+				ENDIF 
+				lnMonto_nacional = expediente_meta.monto_nacional
+				IF SEEK(gcano_eje + gcsec_ejec + expediente_fase.certificado + expediente_fase.certificado_secuencia, ;
+						'c_fase')
+					REPLACE c_fase.monto_comprometido WITH c_fase.monto_comprometido + lnmonto_nacional IN c_fase
+				ENDIF
+				IF SEEK(gcano_eje + gcsec_ejec + expediente_fase.certificado + expediente_fase.certificado_secuencia ;
+						+ '0001', 'c_secuencia')
+					REPLACE c_secuencia.monto_comprometido WITH c_secuencia.monto_comprometido + lnmonto_nacional IN c_secuencia
+				ENDIF
+				lcCorrelativoCert="0001"
+				IF SEEK(gcano_eje + gcsec_ejec + expediente_fase.certificado + expediente_fase.certificado_secuencia + lcCorrelativoCert + ;
+						expediente_meta.id_clasificador + expediente_meta.sec_func, 'c_meta')
+					REPLACE c_meta.monto_comprometido WITH c_meta.monto_comprometido + lnmonto_nacional IN c_meta
+				ELSE
+					IF SEEK(gcano_eje + gcsec_ejec + expediente_fase.certificado + expediente_fase.certificado_secuencia +  ;
+							expediente_meta.id_clasificador + expediente_meta.sec_func, 'c_meta','CERTI_CLF')
+						REPLACE c_meta.monto_comprometido WITH c_meta.monto_comprometido + lnmonto_nacional IN c_meta
+						lcCorrelativoCert=c_meta.correlativo
+					ENDIF
+				ENDIF
+				IF SEEK(gcano_eje + gcsec_ejec + expediente_fase.certificado + expediente_fase.certificado_secuencia + lcCorrelativoCert + ;
+						expediente_meta.id_clasificador, 'c_clasif')
+					REPLACE c_clasif.monto_comprometido WITH c_clasif.monto_comprometido + lnmonto_nacional IN c_clasif
+				ENDIF
+			ENDSCAN 
+		ENDSCAN 
+		
+	ENDSCAN 
+
+
+ENDPROC 
+
+PROCEDURE CERRAR_TABLAS
+ DIMENSION aTablas(1)
+   nTablas = AUSED(aTablas)
+
+   IF nTablas > 0 
+  FOR EACH oTabla IN aTablas
+     SELECT (oTabla)
+     USE 
+  ENDFOR 
+   ENDIF
+
+ENDPROC 

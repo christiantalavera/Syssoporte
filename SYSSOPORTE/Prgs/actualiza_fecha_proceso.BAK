@@ -1,0 +1,15 @@
+USE siaf!expediente_secuencia ORDER tag exp_sec ALIAS cExpediente_secuencia
+SELECT cExpediente_secuencia
+SEEK gcano_eje+gcsec_ejec
+SCAN WHILE ano_eje+sec_ejec = gcano_eje+gcsec_ejec
+	IF estado_envio = 'A' THEN 
+		IF EMPTY(ano_proceso) OR EMPTY(mes_proceso) OR EMPTY(dia_proceso) THEN 
+			IF !RLOCK() THEN 
+				REPLACE ano_proceso WITH PADL(YEAR(fecha_bd_oracle),4,'0')
+				REPLACE mes_proceso WITH PADL(MONTH(fecha_bd_oracle),2,'0')
+				REPLACE dia_proceso WITH PADL(DAY(fecha_bd_oracle),2,'0')
+			ENDIF 
+		ENDIF 
+	ENDIF 
+ENDSCAN
+USE IN cExpediente_secuencia

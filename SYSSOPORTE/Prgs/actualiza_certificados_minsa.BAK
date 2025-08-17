@@ -1,0 +1,126 @@
+PROCEDURE SaveCertificadoSel
+PARAMETER pcertificado,psecuencia, pCorrelativo
+tblant = ALIAS()
+IF  !USED("sys_cert") THEN 
+ 	USE CERT!certificados ALIAS sys_cert again ORDER CERT_DET IN 0
+ELSE
+     SELECT sys_cert
+     SET ORDER TO cert
+ENDIF
+USE cert!gasto_gpr IN 0 ALIAS r_gasto_gpr again ORDER tag gastogpr   &&ano_eje+sec_ejec+origen+fuente_financ+id_clasificador+sec_func+id_centro_costo+id_gpr
+
+
+DO WHILE .T.
+	SELECT SYS_CERT
+	SEEK gcano_eje+gcsec_ejec+pcertificado+pSecuencia+pCorrelativo
+	IF FOUND() THEN 
+		Replace certificado WITH SYS(2015)
+		DELETE 
+	ELSE
+		EXIT 
+	ENDIF 
+ENDDO
+SELECT Tmpclasif
+SEEK gcano_eje+gcsec_ejec+pCertificado+psecuencia+pCorrelativo
+SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo = gcano_eje+gcsec_ejec+pcertificado+psecuencia+pcorrelativo
+     SCATTER MEMVAR
+     m.fech_ingsi 			= DATETIME()
+	 m.cod_doc				= cur_cert.cod_doc
+	 m.num_doc				= cur_cert.num_doc
+	 m.fecha_doc			= cur_cert.fecha_doc
+	 m.glosa				= cur_cert.glosa							                 
+	 m.descarea				= "OFICINA DE ADMINISTRACIÓN"
+	 m.origen				= cur_cert.origen
+	 m.fuente_financ		= cur_cert.fuente_financ
+	 m.tipo_registro		= cur_cert.tipo_registro
+	 m.ind_certificacion	= cur_cert.ind_certificacion
+	 m.id_clasificador		= certificado_meta.id_clasificador
+	 m.sec_func				= certificado_meta.sec_func
+	 m.imptaprobxcert		= cur_cert.monto_nacional
+	 m.fecha_bd_oracle 		= cur_cert.fecha_bd_oracle
+	 m.descripcion_gasto	= cur_cert.descripcion_gasto
+	 m.oficina				= cur_cert.oficina
+	 m.referencia			= cur_cert.referencia
+	 
+	 SELECT clstDocM
+	 SEEK gcano_eje+gcsec_ejec+pcertificado+psecuencia+pcorrelativo+m.id_clasificador
+	 SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo+id_clasificador = gcano_eje+gcsec_ejec+pcertificado+psecuencia+pcorrelativo+m.id_clasificador
+	 	SCATTER MEMVAR 
+		 m.impsol				= clstDocM.monto_nacional
+		 m.impaprob				= clstDocM.monto_nacional
+		 m.especifica   		= tmpclasif.clasif
+	     m.meta 				= clstDocM.sec_func
+	     m.monto_certificado	= 0.00
+		 m.saldo_pim			= cur_rpim.saldopim	 
+	     IF gcano_eje >= '2012' THEN 
+		     m.cadfuncional		= IIF(SEEK(gcano_eje+gcsec_ejec+certificado_meta.sec_func,'meta'),meta.programa_ppto + "." + meta.act_proy + "." + meta.componente + "." +  ;
+					              meta.funcion+  "." + meta.programa + "." + meta.sub_programa,'')
+		 ELSE
+		     m.cadfuncional		= IIF(SEEK(gcano_eje+gcsec_ejec+certificado_meta.sec_func,'meta'),meta.funcion + "." + meta.programa + "." + meta.sub_programa + "." +  ;
+					              meta.act_proy +  "." + meta.componente + "." + meta.finalidad,'')
+		 ENDIF 									                 
+		 
+		 lcClaveMeta 			= gcano_eje+gcsec_ejec+pcertificado+psecuencia+pcorrelativo+m.id_clasificador+m.sec_func
+		 SELECT certificado_detalle
+		 SEEK lcClaveMeta
+		 SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo+id_clasificador+sec_func = lcClaveMeta
+		 	SCATTER MEMVAR 
+			 *ano_eje+sec_ejec+origen+fuente_financ+id_clasificador+sec_func+id_centro_costo+id_gpr    
+		     SELECT r_gasto_gpr
+		     SEEK gcano_eje+gcsec_ejec+m.origen+m.fuente_financ+m.id_clasificador+m.sec_func+m.id_centro_costo
+		     SCAN WHILE ano_eje+sec_ejec+origen+fuente_financ = gcano_eje+gcsec_ejec+m.origen+m.fuente_financ
+		     	m.monto_certificado = m.monto_certificado + r_gasto_gpr.monto_certificado
+		     ENDSCAN  
+		 
+		 ENDSCAN 
+
+	     INSERT INTO sys_cert FROM MEMVAR	 
+	 ENDSCAN 
+
+     SELECT cur_cert
+ENDSCAN
+IF USED("sys_cert")
+     SELECT sys_cert
+     USE
+ENDIF
+IF USED("r_gasto")
+     SELECT r_gasto
+     USE
+ENDIF
+
+IF USED(tblant)
+     SELECT &tblAnt 
+ENDIF
+RETURN
+ENDPROC
+**
+PROCEDURE DeleteCertificadoSel
+PARAMETER pcertificado, pSecuencia, pCorrelativo
+tblant = ALIAS()
+IF  !USED("sys_cert") THEN 
+     USE CERT!certificados AGAIN ALIAS sys_cert ORDER CERT_DET IN 0
+ELSE
+     SELECT sys_cert
+     SET ORDER TO cert
+ENDIF
+DO WHILE .T.
+	SELECT SYS_CERT
+	SEEK gcano_eje+gcsec_ejec+pcertificado+pSecuencia+pCorrelativo
+	IF FOUND() THEN 
+		Replace certificado WITH SYS(2015)
+		DELETE 
+	ELSE
+		EXIT 
+	ENDIF 
+
+ENDDO
+
+IF USED("sys_cert")
+     SELECT sys_cert
+     USE
+ENDIF
+IF USED(tblant)
+     SELECT &tblAnt 
+ENDIF
+RETURN
+ENDPROC

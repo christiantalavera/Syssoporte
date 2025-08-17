@@ -1,0 +1,62 @@
+*----------------------
+procedure sf_reindexa
+*----------------------
+ lcBaseDatos = gcrutacert+'SYSSOPORTE.dbc'
+ select * ;
+   from &lcBaseDatos ;
+   where objecttype='Table' AND !DELETED() ;
+   into cursor cursiaf_tablas READWRITE 
+    
+   index on objectid tag ind02  
+   
+USE IN SYSSOPORTE
+   select cursiaf_tablas 
+ 
+   scan all        
+     SCATTER MEMVAR 
+      lcTabla=alltrim(m.objectname)
+      WAIT WINDOW "Reindexando Tabla '" + lcTabla + "'" NOWAIT 
+      lcArchivo=gcrutacert+alltrim(m.objectname)+'.dbf'
+      IF FILE(lcArchivo) THEN 
+	      USE  &LcArchivo IN 0 AGAIN ALIAS &LcTabla EXCLUSIVE 
+	      SELECT &LcTabla
+	      Reindex        
+	      USE IN &LcTabla
+	    ENDIF 
+      select cursiaf_tablas       
+   endscan 
+   WAIT WINDOW 'Proceso de reindexado finalizado exitosamente...'
+  CLOSE DATABASES ALL  
+RETURN  
+
+*---------------------- 
+procedure sf_Packea
+*----------------------
+ 
+ lcBaseDatos = gcrutacert+'SYSSOPORTE.dbc'
+ select * ;
+   from &lcBaseDatos ;
+   where objecttype='Table' AND !DELETED() ;
+   into cursor cursiaf_tablas READWRITE 
+    
+   index on objectid tag ind02  
+   
+USE IN SYSSOPORTE
+   SELECT cursiaf_tablas 
+ 
+   SCAN ALL          
+     SCATTER MEMVAR 
+	  lcTabla=alltrim(m.objectname)
+      lcArchivo=gcrutacert+alltrim(m.objectname)+'.dbf'
+      IF FILE(lcArchivo) THEN 
+	      WAIT WINDOW "Pack en Tabla '" + lcTabla + "'" NOWAIT 
+	      USE  &lcArchivo IN 0 AGAIN ALIAS &LcTabla EXCLUSIVE 
+	      SELECT &LcTabla
+	      Pack
+	      USE IN &LcTabla
+      ENDIF 
+      SELECT cursiaf_tablas       
+   endscan 
+   WAIT WINDOW 'Proceso de eliminación finalizado exitosamente...'
+  CLOSE DATABASES ALL  
+RETURN  

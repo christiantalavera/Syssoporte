@@ -1,0 +1,103 @@
+PROCEDURE SaveCertificadoSel
+PARAMETER pcertificado,psecuencia, pCorrelativo
+tblant = ALIAS()
+IF  !USED("sys_cert") THEN 
+ 	USE CERT!certificados ALIAS sys_cert again ORDER CERT_DET IN 0
+ELSE
+     SELECT sys_cert
+     SET ORDER TO cert
+ENDIF
+
+DO WHILE .T.
+	SELECT SYS_CERT
+	SEEK gcano_eje+gcsec_ejec+pcertificado+pSecuencia+pCorrelativo
+	IF FOUND() THEN 
+		Replace certificado WITH SYS(2015)
+		DELETE 
+	ELSE
+		EXIT 
+	ENDIF 
+ENDDO
+SELECT Tmpclasif
+SEEK gcano_eje+gcsec_ejec+pCertificado+psecuencia+pCorrelativo
+SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo = gcano_eje+gcsec_ejec+pcertificado+psecuencia+pcorrelativo
+     SCATTER MEMVAR
+     m.fech_ingsi 			= DATETIME()
+	 m.cod_doc				= cur_cert.cod_doc
+	 m.num_doc				= cur_cert.num_doc
+	 m.fecha_doc			= cur_cert.fecha_doc
+	 m.glosa				= cur_cert.glosa							                 
+	 m.descarea				= "OFICINA DE ADMINISTRACIÓN"
+	 m.origen				= cur_cert.origen
+	 m.fuente_financ		= cur_cert.fuente_financ
+	 m.tipo_registro		= cur_cert.tipo_registro
+	 m.ind_certificacion	= cur_cert.ind_certificacion
+	 m.id_clasificador		= certificado_meta.id_clasificador
+	 m.sec_func				= certificado_meta.sec_func
+	 m.imptaprobxcert		= cur_cert.monto_nacional
+	 m.fecha_bd_oracle 		= cur_cert.fecha_bd_oracle
+	 SELECT clstDocM
+	 SEEK gcano_eje+gcsec_ejec+pcertificado+psecuencia+pcorrelativo+m.id_clasificador
+	 SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo+id_clasificador = gcano_eje+gcsec_ejec+pcertificado+psecuencia+pcorrelativo+m.id_clasificador
+	 	SCATTER MEMVAR 
+		 m.impsol				= clstDocM.monto_nacional
+		 m.impaprob				= clstDocM.monto_nacional
+		 m.especifica   		= tmpclasif.clasif
+	     m.meta 				= clstDocM.sec_func
+	     m.id_centro_costo 		= IIF(SEEK(gcsec_ejec+gcano_eje+clstDocM.sec_func,'meta_cc','metacc'),meta_cc.id_centro_costo,'')
+	     m.descarea				= IIF(SEEK(gcano_eje+m.id_centro_costo,'centro_costo'),centro_costo.nombre,'')
+	     IF gcano_eje >= '2012' THEN 
+		     m.cadfuncional			= IIF(SEEK(gcano_eje+gcsec_ejec+certificado_meta.sec_func,'meta'),meta.programa_ppto + "." + meta.act_proy + "." + meta.componente + "." +  ;
+					                 meta.funcion+  "." + meta.programa + "." + meta.sub_programa,'')
+		 ELSE
+		     m.cadfuncional			= IIF(SEEK(gcano_eje+gcsec_ejec+certificado_meta.sec_func,'meta'),meta.funcion + "." + meta.programa + "." + meta.sub_programa + "." +  ;
+					                 meta.act_proy +  "." + meta.componente + "." + meta.finalidad,'')
+		 ENDIF 									                 
+		 m.saldo_pim			= cur_rpim.saldopim
+
+		 m.id_centro_costo		= clstDocM.id_centro_costo
+	     INSERT INTO sys_cert FROM MEMVAR	 
+	 ENDSCAN 
+
+     SELECT cur_cert
+ENDSCAN
+IF USED("sys_cert")
+     SELECT sys_cert
+     USE
+ENDIF
+IF USED(tblant)
+     SELECT &tblAnt 
+ENDIF
+RETURN
+ENDPROC
+**
+PROCEDURE DeleteCertificadoSel
+PARAMETER pcertificado, pSecuencia, pCorrelativo
+tblant = ALIAS()
+IF  !USED("sys_cert") THEN 
+     USE CERT!certificados AGAIN ALIAS sys_cert ORDER CERT_DET IN 0
+ELSE
+     SELECT sys_cert
+     SET ORDER TO cert
+ENDIF
+DO WHILE .T.
+	SELECT SYS_CERT
+	SEEK gcano_eje+gcsec_ejec+pcertificado+pSecuencia+pCorrelativo
+	IF FOUND() THEN 
+		Replace certificado WITH SYS(2015)
+		DELETE 
+	ELSE
+		EXIT 
+	ENDIF 
+
+ENDDO
+
+IF USED("sys_cert")
+     SELECT sys_cert
+     USE
+ENDIF
+IF USED(tblant)
+     SELECT &tblAnt 
+ENDIF
+RETURN
+ENDPROC

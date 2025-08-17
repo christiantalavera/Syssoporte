@@ -1,0 +1,884 @@
+**
+FUNCTION CheckInitial
+PRIVATE ciniciado, lok, ctipoenti,  ;
+        ccodienti, cuniejec,  ;
+        cruta_siaf, csec_ejec,  ;
+        cvalor, lseguir,  ;
+        cinstalac, ctypeinst
+IF  !FILE(gcfileini)
+     = MESSAGEBOX("SE CREARA ARCHIVO DE INICIO " + gcfileini, 048, "Aviso")
+     = savefileini(gcfileini,  ;
+       gcsession, "", "", "")
+ENDIF
+
+ciniciado = REPLICATE(CHR(0), 8)
+= getprivstr(gcsession,  ;
+  "Iniciado", "", @ciniciado, 9,  ;
+  gcfileini)
+ciniciado = quitachrcero(ciniciado)
+o = CREATEOBJECT('blowfish.blowfish')
+IF ciniciado <> "S"
+     csec_ejec = o.codificarblowfish(ALLTRIM(oappenv.sec_ejec),  ;
+                 'MHOLGADO')
+     cano_eje = oappenv.ano_eje
+     cruta_siaf = oappenv.ruta_siaf
+     cruta_cert = oappenv.ruta_cert
+     = writeprivstr(gcsession,  ;
+       "Iniciado", "S",  ;
+       gcfileini)
+     = writeprivstr(gcsession,  ;
+       "Version", "BETA",  ;
+       gcfileini)
+     = writeprivstr(gcsession,  ;
+       "RutaSiaf", cruta_siaf,  ;
+       gcfileini)
+     = writeprivstr(gcsession,  ;
+       "RutaCert", cruta_cert,  ;
+       gcfileini)
+     = writeprivstr(gcsession,  ;
+       "Sec_Ejec", csec_ejec,  ;
+       gcfileini)
+     = writeprivstr(gcsession,  ;
+       "Ano_Eje", cano_eje,  ;
+       gcfileini)
+ELSE
+     IF FILE(gcfileini)
+          ctipobd = REPLICATE(CHR(0),  ;
+                    15)
+          cversion = REPLICATE(CHR(0),  ;
+                     8)
+          cruta_siaf = REPLICATE(CHR(0),  ;
+                       100)
+          cruta_cert = REPLICATE(CHR(0),  ;
+                       100)
+          csec_ejec = REPLICATE(CHR(0),  ;
+                      150)
+          cano_eje = REPLICATE(CHR(0),  ;
+                     4)
+          = getprivstr(gcsession,  ;
+            "Version", "",  ;
+            @cversion, 8,  ;
+            gcfileini)
+          = getprivstr(gcsession,  ;
+            "RutaSiaf", "",  ;
+            @cruta_siaf, 100,  ;
+            gcfileini)
+          = getprivstr(gcsession,  ;
+            "RutaCert", "",  ;
+            @cruta_cert, 100,  ;
+            gcfileini)
+          = getprivstr(gcsession,  ;
+            "Sec_Ejec", "",  ;
+            @csec_ejec, 150,  ;
+            gcfileini)
+          = getprivstr(gcsession,  ;
+            "Ano_Eje", "",  ;
+            @cano_eje, 10,  ;
+            gcfileini)
+          cversion = quitachrcero(cversion)
+          cruta_siaf = quitachrcero(cruta_siaf)
+          cruta_cert = quitachrcero(cruta_cert)
+          csec_ejec = o.decodificarblowfish(ALLTRIM(quitachrcero(csec_ejec)),  ;
+                      'MHOLGADO')
+          cano_eje = quitachrcero(cano_eje)
+          oappenv.sec_ejec = ALLTRIM(csec_ejec)
+          oappenv.ano_eje = ALLTRIM(cano_eje)
+          oappenv.ruta_siaf = ALLTRIM(cruta_siaf)
+          oappenv.ruta_cert = ALLTRIM(cruta_cert)
+     ENDIF
+ENDIF
+RETURN .T.
+ENDFUNC 
+**
+FUNCTION SaveFileIni
+PARAMETER cfileini, csess,  ;
+          ctipent, ccodent,  ;
+          cnamefilemdb
+= writeprivstr(csess, "Iniciado",  ;
+  "N", cfileini)
+RETURN .T.
+ENDFUNC
+**
+FUNCTION QuitaChrCero
+PARAMETER ccadena
+PRIVATE ni, ccadreturn
+ccadreturn = ""
+FOR ni = 1 TO LEN(ccadena)
+     IF SUBSTR(ccadena, ni, 1) =  ;
+        CHR(0)
+          ccadreturn = SUBSTR(ccadena,  ;
+                       1, ni -  ;
+                       1)
+          RETURN ALLTRIM(ccadreturn)
+          ni = LEN(ccadena) + 1
+     ENDIF
+ENDFOR
+RETURN ALLTRIM(IIF(EMPTY(ccadreturn),  ;
+       ccadena, ccadreturn))
+ENDFUNC
+**
+PROCEDURE CloseTablesRpts
+	IF USED("RCERTIFICADO_CLASIF")
+	     SELECT rcertificado_clasif
+	     USE
+	ENDIF
+	IF USED("RCERTIFICADO_META")
+	     SELECT rcertificado_meta
+	     USE
+	ENDIF
+	IF USED("RMAESTRO_DOCUMENTO")
+	     SELECT rmaestro_documento
+	     USE
+	ENDIF
+	IF USED("RMAESTRO_CLASIFICADOR")
+	     SELECT rmaestro_clasificador
+	     USE
+	ENDIF
+	IF USED("RFUENTE_FINANC")
+	     SELECT rfuente_financ
+	     USE
+	ENDIF
+	IF USED("RMETA")
+	     SELECT rmeta
+	     USE
+	ENDIF
+	IF USED("RMAESTRO")
+	     SELECT rmaestro
+	     USE
+	ENDIF
+	IF USED("pliego")
+	     SELECT pliego
+	     USE
+	ENDIF
+	IF USED("ejecutora")
+	     SELECT ejecutora
+	     USE
+	ENDIF
+	IF USED("sector")
+	     SELECT sector
+	     USE
+	ENDIF
+	RETURN
+ENDPROC
+**
+PROCEDURE RptCertificado
+*= closetablesrpts()
+USE siaf!ejecutora 					SHARED AGAIN ALIAS ejecutora ORDER sec_ejec IN 0
+USE siaf!sector 					SHARED AGAIN ALIAS sector ORDER sector IN 0
+USE siaf!pliego 					SHARED AGAIN ALIAS pliego ORDER pliego IN 0
+USE siaf!CERTIFICADO_FASE 			SHARED AGAIN ALIAS rcertificado_fase ORDER CERTI_FASE IN 0
+USE siaf!CERTIFICADO_SECUENCIA	 	SHARED AGAIN ALIAS rcertificado_secuencia ORDER CERTI_SEC IN 0
+USE siaf!CERTIFICADO_CLASIF 		SHARED AGAIN ALIAS	rcertificado_clasif ORDER CERTI_CLAS IN 0
+USE siaf!CERTIFICADO_META 			SHARED AGAIN ALIAS rcertificado_meta ORDER CERTI_META IN 0
+USE siaf!MAESTRO_DOCUMENTO 			SHARED AGAIN ALIAS rmaestro_documento ORDER COD_DOC IN 0
+USE siaf!MAESTRO_CLASIFICADOR 		SHARED AGAIN ALIAS rmaestro_clasificador ORDER IDCLASIF IN 0
+USE siaf!FUENTE_FINANC 				SHARED AGAIN ALIAS rfuente_financ ORDER FUENTE_FIN IN 0
+USE siaf!META 						SHARED AGAIN ALIAS rmeta ORDER META IN 0
+USE CERT!MAESTRO_DETALLE_CERT 		SHARED AGAIN ALIAS rmaestro ORDER MAESTRO IN 0
+
+= SEEK(gcano_eje + gcsec_ejec, 'ejecutora')
+  
+SELECT ejecutora
+SET RELATION TO ano_eje + sector INTO sector
+SET RELATION TO ano_eje + sector+ pliego INTO pliego ADDITIVE 
+
+SELECT a.*, b.tipo_transaccion,  ;
+       b.generica, b.subgenerica,  ;
+       b.subgenerica_det,  ;
+       b.especifica,  ;
+       b.especifica_det,  ;
+       b.descripcion, b.ambito,  ;
+       (ALLTRIM(b.tipo_transaccion) +  ;
+       ". " + ALLTRIM(b.generica) +  ;
+       ". " +  ;
+       ALLTRIM(b.subgenerica) +  ;
+       " " +  ;
+       ALLTRIM(b.subgenerica_det) +  ;
+       ". " +  ;
+       ALLTRIM(b.especifica) +  ;
+       " " +  ;
+       ALLTRIM(b.especifica_det))  ;
+       AS clasif FROM  ;
+       CERTIFICADO_CLASIF a,  ;
+       ESPECIFICA_DET b WHERE  ;
+       a.ano_eje = b.ano_eje AND  ;
+       a.id_clasificador = b.id_clasificador AND  ;
+       b.estado = 'A' AND  a.ano_eje = gcano_eje INTO CURSOR tmpClasifRPT
+       
+SELECT tmpclasifrpt
+INDEX ON ano_eje + sec_ejec + certificado + secuencia + correlativo + id_clasificador TAG clasif
+
+CREATE CURSOR cur_prin (ano_eje C(4), 	sec_ejec C(6),  ;
+       certificado C(10),      			tipo_certificado C(1),  ;
+       cod_error C(2), 					cod_mensa C (4),;
+       tipo_operacion C(2), 			glosa C (250),  ;
+       secuencia C(4), 	    			correlativo C (4),;
+       cod_doc   C(3), 					num_doc C(20),  ;
+       fecha_doc D(8), 				    estado_registro C(1),  ;
+       estado_envio C(1), 		      	estado_envio2 C (1),  ;
+       ind_certificacion C(1), 	        monto N (19, 2),  ;
+       monto_comprometido N (19,2), 	monto_nacional N (19,2),;
+       moneda C(3),  			        tipo_cambio N (19, 15),  ;
+       tipo_registro C(1),		        desc_doc C(100),  ;
+       seleccionar N(1), 		        rechazar N(1),  ;
+       tipo_modificacion C(01), 	    origen C(1),  ;
+       fuente_financ C(2), 				ruc C(11), ;
+       meta C(4),  						cadfuncional C(50),  ;
+       especifica C(20), 		        saldopim N(19, 2),;
+       impsol N(19, 2), 				impaprob N(19,2),;
+       etapa C(1), 						descarea C(100),;
+       imptaprobxcert N(19, 2), 		caducidad c(2),;
+       descaducidad c(50),				id_gpr n(6),;
+       id_centro_costo n(6),			gpr c(200),;
+       centro_costo c(200), 			abrgpr c(15),;
+       abrcentro_costo c(15))
+       
+INDEX ON ano_eje + sec_ejec TAG id001
+INDEX ON ano_eje + sec_ejec + certificado + etapa TAG id01
+INDEX ON ano_eje + sec_ejec + fuente_financ + certificado + secuencia + correlativo TAG  idfte
+INDEX ON ano_eje + sec_ejec + certificado + secuencia + correlativo TAG idxlstdoc
+SET RELATION TO ano_eje + origen + fuente_financ INTO rfuente_financ ADDITIVE 
+SET RELATION TO '01' + meta INTO rmaestro ADDITIVE 
+
+ZAP IN cur_prin
+SELECT c.id_clasificador,  ;
+       c.certificado, c.sec_func,  ;
+       e.tipo_transaccion,  ;
+       e.generica, e.subgenerica,  ;
+       e.subgenerica_det,  ;
+       e.especifica,  ;
+       e.especifica_det,  ;
+       c.monto_nacional,  ;
+       g.presupuesto +  ;
+       g.modificacion AS pim,  ;
+       g.monto_certificado,  ;
+       g.monto_precertificado,  ;
+       g.monto_comprometido_anual  ;
+       FROM especifica_det e,  ;
+       certificado_meta c, gasto  ;
+       g, certificado_fase f  ;
+       WHERE g.ano_eje =  ;
+       e.ano_eje AND e.ano_eje =  ;
+       f.ano_eje AND f.ano_eje =  ;
+       c.ano_eje AND  ;
+       f.certificado =  ;
+       c.certificado AND  ;
+       g.sec_func = c.sec_func  ;
+       AND e.id_clasificador =  ;
+       g.id_clasificador AND  ;
+       g.id_clasificador =  ;
+       c.id_clasificador AND  ;
+       g.sec_ejec = c.sec_ejec  ;
+       AND g.fuente_financ =  ;
+       f.fuente_financ AND  ;
+       c.ano_eje = gcano_eje AND  ;
+       c.secuencia = '0001' GROUP  ;
+       BY c.certificado,  ;
+       c.sec_func,  ;
+       e.tipo_transaccion,  ;
+       e.generica, e.subgenerica,  ;
+       e.subgenerica_det,  ;
+       e.especifica,  ;
+       e.especifica_det,  ;
+       c.monto_nacional,  ;
+       g.presupuesto,  ;
+       g.modificacion,  ;
+       g.monto_certificado,  ;
+       g.monto_precertificado,  ;
+       g.monto_comprometido_anual,  ;
+       c.id_clasificador INTO  ;
+       CURSOR rpim
+
+INDEX ON certificado + sec_func + id_clasificador TAG idxpim
+
+SELECT rcertificado_meta
+GOTO TOP
+SEEK gcano_eje + gcsec_ejec 
+SET RELATION TO ano_eje + id_clasificador INTO rmaestro_clasificador ADDITIVE 
+SET RELATION TO ano_eje + sec_ejec + certificado + secuencia INTO rcertificado_fase ADDITIVE 
+SET RELATION TO ano_eje + sec_ejec + certificado + secuencia + correlativo INTO rcertificado_secuencia ADDITIVE 
+SET RELATION TO ano_eje + sec_ejec + sec_func INTO rmeta ADDITIVE 
+SET RELATION TO '01' + sec_func INTO rmaestro ADDITIVE 
+SET RELATION TO certificado + sec_func + id_clasificador INTO rpim ADDITIVE 
+SET RELATION TO ano_eje + sec_ejec + certificado + secuencia + correlativo + id_clasificador INTO tmpclasifrpt ADDITIVE 
+
+SELECT rcertificado_meta
+SCAN FOR  !DELETED() AND ano_eje + sec_ejec = gcano_eje + gcsec_ejec 
+     SCATTER MEMVAR
+     IF rcertificado_secuencia.ind_certificacion = 'S' AND rcertificado_secuencia.estado_registro = 'V'
+          INSERT INTO CUR_PRIN FROM MEMVAR
+          REPLACE cur_prin.meta 			WITH m.sec_func
+          REPLACE cur_prin.especifica 	    WITH tmpclasifrpt.clasif
+          REPLACE cur_prin.glosa            WITH ALLTRIM(UPPER(rcertificado_fase.glosa))
+          REPLACE cur_prin.fuente_financ    WITH rcertificado_fase.fuente_financ
+          REPLACE cur_prin.origen           WITH rcertificado_fase.etapa
+          REPLACE cur_prin.descarea         WITH "OFICINA DE ADMINISTRACIÓN"
+          REPLACE cur_prin.cadfuncional     WITH rmeta.funcion + "." + rmeta.programa + "." + rmeta.sub_programa + "." +  ;
+								                 rmeta.act_proy +  "." + rmeta.componente + "." + rmeta.finalidad
+          REPLACE cur_prin.impaprob  		WITH cur_prin.monto
+          REPLACE cur_prin.impsol  			WITH cur_prin.monto
+          REPLACE cur_prin.fecha_doc        WITH rcertificado_secuencia.fecha_doc
+          REPLACE cur_prin.saldopim  		WITH rpim.pim - rpim.monto_certificado
+          REPLACE cur_prin.cod_doc          WITH rcertificado_secuencia.cod_doc
+          REPLACE cur_prin.num_doc          WITH rcertificado_secuencia.num_doc
+          REPLACE cur_prin.ruc 	            WITH rcertificado_fase.ruc
+          REPLACE cur_prin.num_doc          WITH ALLTRIM(SUBSTR(cur_prin.num_doc,1, IIF(AT('-', cur_prin.num_doc) > 0, AT('-', cur_prin.num_doc) - 1, LEN(cur_prin.num_doc))))
+     ENDIF
+     SELECT rcertificado_meta
+ENDSCAN
+SELECT cur_prin
+GOTO TOP
+llave = cur_prin.ano_eje + cur_prin.sec_ejec + cur_prin.certificado
+SUM monto_nacional TO gcmonto ALL  FOR cur_prin.ano_eje + cur_prin.sec_ejec + cur_prin.certificado = llave
+GOTO TOP
+SCAN
+     IF llave = cur_prin.ano_eje + cur_prin.sec_ejec + cur_prin.certificado THEN 
+          REPLACE cur_prin.imptaprobxcert WITH gcmonto
+     ELSE
+          rnum = RECNO()
+          llave = cur_prin.ano_eje + cur_prin.sec_ejec + cur_prin.certificado
+          SUM monto_nacional TO gcmonto ALL FOR cur_prin.ano_eje + cur_prin.sec_ejec + cur_prin.certificado = llave
+          GOTO rnum
+          REPLACE cur_prin.imptaprobxcert WITH gcmonto
+     ENDIF
+     SELECT cur_prin
+ENDSCAN
+GOTO TOP
+RETURN
+ENDPROC
+**
+PROCEDURE SaveCertificado
+IF  !USED("sys_cert") THEN 
+     USE CERT!certificados ALIAS sys_cert ORDER CERT IN 0
+ELSE
+     SELECT sys_cert
+     SET ORDER TO cert
+ENDIF
+
+SELECT DISTINCT ano_eje, sec_ejec, certificado FROM RCERTIFICADO_secuencia  ;
+       WHERE estado_registro =  'V' ;
+       AND ind_certificacion <>  'S' INTO CURSOR TMP0
+       
+SELECT tmp0
+GOTO TOP
+SCAN
+     SELECT sys_cert
+     GOTO TOP
+     SEEK tmp0.ano_eje + tmp0.sec_ejec + tmp0.certificado 
+     IF FOUND()
+          DELETE ALL FOR ano_eje + sec_ejec + certificado = tmp0.ano_eje + tmp0.sec_ejec + tmp0.certificado
+     ENDIF
+     SELECT tmp0
+ENDSCAN
+SELECT DISTINCT ano_eje, sec_ejec, certificado FROM CUR_PRIN INTO CURSOR TMP0
+SELECT tmp0
+GOTO TOP
+SCAN
+     SELECT sys_cert
+     GOTO TOP
+     SEEK tmp0.ano_eje + tmp0.sec_ejec + tmp0.certificado 
+     IF FOUND()
+          DELETE ALL FOR ano_eje + sec_ejec + certificado = tmp0.ano_eje + tmp0.sec_ejec + tmp0.certificado
+     ENDIF
+     SELECT tmp0
+ENDSCAN
+SELECT cur_prin
+GOTO TOP
+SCAN
+     SCATTER MEMVAR
+     INSERT INTO sys_cert FROM MEMVAR
+ENDSCAN
+IF USED("sys_cert")
+     SELECT sys_cert
+     USE
+ENDIF
+SELECT cur_prin
+GOTO TOP
+RETURN
+ENDPROC
+**
+PROCEDURE SaveCertificadoSel
+PARAMETER pcertificado,psecuencia, pCorrelativo
+SUSPEND 
+tblant = ALIAS()
+IF  !USED("sys_cert") THEN 
+ 	USE CERT!certificados ALIAS sys_cert again ORDER CERT_DET IN 0
+ELSE
+     SELECT sys_cert
+     SET ORDER TO cert_DET
+ENDIF
+DO WHILE .T.
+	SELECT SYS_CERT
+	SEEK gcano_eje+gcsec_ejec+pcertificado+pSecuencia+pCorrelativo
+	IF FOUND() THEN 
+		Replace certificado WITH SYS(2015)
+		DELETE 
+	ELSE
+		EXIT 
+	ENDIF 
+ENDDO
+SELECT Tmpclasif
+SEEK gcano_eje+gcsec_ejec+pCertificado+psecuencia+pCorrelativo
+SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo = gcano_eje+gcsec_ejec+pcertificado+psecuencia+pcorrelativo
+     SCATTER MEMVAR
+     m.fech_ingsi 			= DATETIME()
+	 m.tipo_certificado     = cur_cert.tipo_certificado								                 
+	 m.cod_doc				= cur_cert.cod_doc
+	 m.num_doc				= cur_cert.num_doc
+	 m.fecha_doc			= cur_cert.fecha_doc
+	 m.glosa				= upper(cur_cert.glosa)							                 
+	 m.descarea				= "OFICINA GENERAL DE ADMINISTRACION "
+	 m.ind_certificacion	= cur_cert.ind_certificacion
+	 m.origen				= cur_cert.origen
+	 m.fuente_financ		= cur_cert.fuente_financ
+	 m.tipo_registro		= cur_cert.tipo_registro
+	 m.caducidad 			= cur_cert.caducidad
+	 m.id_centro_costo 		= clstdocM.id_centro_costo
+	 m.id_gpr				= clstdocM.id_gpr
+	 m.imptaprobxcert		= cur_cert.monto_nacional
+	 SELECT clstDocM
+ 	 SEEK gcano_eje+gcsec_ejec+pCertificado+psecuencia+pCorrelativo+TmpClasif.id_clasificador	 
+ 	 SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo+id_clasificador = gcano_eje+gcsec_ejec+pCertificado+psecuencia+pCorrelativo+TmpClasif.id_clasificador	 
+ 	 	 SCATTER MEMVAR 
+	     m.cadfuncional			= IIF(SEEK(gcano_eje+gcsec_ejec+clstdocM.sec_func,'meta'),meta.funcion + "." + meta.programa + "." + meta.sub_programa + "." +  ;
+								                 meta.act_proy +  "." + meta.componente + "." + meta.finalidad,'')
+ 	 	 
+	     m.meta 				= clstdocM.sec_func	     
+		 m.id_clasificador		= clstdocM.id_clasificador
+		 m.sec_func				= clstdocM.sec_func
+		 m.especifica   		= tmpclasif.clasif 	 	 
+		 m.impsol				= clstDocM.monto_nacional
+		 m.impaprob				= clstDocM.monto_nacional
+		 m.saldo_pim			= cur_rpim.saldopim
+ 	 	 
+	     INSERT INTO sys_cert FROM MEMVAR
+ 	 ENDSCAN 
+
+     SELECT cur_cert
+ENDSCAN
+IF USED("sys_cert")
+     SELECT sys_cert
+     USE
+ENDIF
+IF USED(tblant)
+     SELECT &tblAnt 
+ENDIF
+RETURN
+ENDPROC
+**
+PROCEDURE DeleteCertificadoSel
+PARAMETER pcertificado, pSecuencia, pCorrelativo
+tblant = ALIAS()
+IF  !USED("sys_cert") THEN 
+     USE CERT!certificados AGAIN ALIAS sys_cert ORDER CERT_DET IN 0
+ELSE
+     SELECT sys_cert
+     SET ORDER TO cert_DET
+ENDIF
+DO WHILE .T.
+	SELECT SYS_CERT
+	SEEK gcano_eje+gcsec_ejec+pcertificado+pSecuencia+pCorrelativo
+	IF FOUND() THEN 
+		Replace certificado WITH SYS(2015)
+		DELETE 
+	ELSE
+		EXIT 
+	ENDIF 
+
+ENDDO
+*!*	SELECT sys_cert
+*!*	SEEK gcano_eje+gcsec_ejec+pcertificado+pSecuencia+pCorrelativo
+*!*	SCAN FOR ano_eje+sec_ejec+certificado+secuencia+correlativo = gcano_eje+gcsec_ejec+pcertificado+pSecuencia+pCorrelativo
+*!*		Replace certificado WITH SYS(2015)
+*!*		DELETE 
+*!*	ENDSCAN 
+IF USED("sys_cert")
+     SELECT sys_cert
+     USE
+ENDIF
+IF USED(tblant)
+     SELECT &tblAnt 
+ENDIF
+RETURN
+ENDPROC
+**
+PROCEDURE RptCertificadoAprobado
+WAIT WINDOW "Recuperando información..." NOWAIT  
+*= closetablesrpts()
+USE siaf!ejecutora 						SHARED AGAIN ALIAS ejecutora 				ORDER sec_ejec IN 0
+USE siaf!sector 						SHARED AGAIN ALIAS sector 					ORDER sector IN 0
+USE siaf!pliego 						SHARED AGAIN ALIAS pliego 					ORDER pliego IN 0
+USE siaf!CERTIFICADO_FASE 				SHARED AGAIN ALIAS rcertificado_fase 		ORDER CERTI_FASE IN 0
+USE siaf!CERTIFICADO_SECUENCIA  	   	SHARED AGAIN ALIAS rcertificado_secuencia 	ORDER CERTI_SEC IN 0
+USE siaf!CERTIFICADO_CLASIF  			SHARED AGAIN ALIAS rcertificado_clasif 		ORDER CERTI_CLAS IN 0
+USE siaf!CERTIFICADO_META 				SHARED AGAIN ALIAS rcertificado_meta 		ORDER CERTI_META IN 0
+USE siaf!MAESTRO_DOCUMENTO  			SHARED AGAIN ALIAS rmaestro_documento 		ORDER COD_DOC IN 0
+USE siaf!MAESTRO_CLASIFICADOR 			SHARED AGAIN ALIAS rmaestro_clasificador 	ORDER IDCLASIF IN 0
+USE siaf!FUENTE_FINANC 					SHARED AGAIN ALIAS rfuente_financ 			ORDER FUENTE_FIN IN 0
+USE siaf!META 							SHARED AGAIN ALIAS rmeta 					ORDER META IN 0
+USE CERT!MAESTRO_DETALLE_CERT 			SHARED AGAIN ALIAS rmaestro 				ORDER MAESTRO IN 0
+
+= SEEK(gcano_eje + gcsec_ejec, 'ejecutora')
+SELECT ejecutora
+SET RELATION TO ano_eje + sector INTO sector
+SET RELATION TO ano_eje + sector + pliego INTO pliego ADDITIVE 
+
+SELECT a.*, b.tipo_transaccion,  ;
+       b.generica, b.subgenerica,  ;
+       b.subgenerica_det,  ;
+       b.especifica,  ;
+       b.especifica_det,  ;
+       b.descripcion, b.ambito,  ;
+       (ALLTRIM(b.tipo_transaccion) +  ;
+       ". " + ALLTRIM(b.generica) +  ;
+       ". " +  ;
+       ALLTRIM(b.subgenerica) +  ;
+       " " +  ;
+       ALLTRIM(b.subgenerica_det) +  ;
+       ". " +  ;
+       ALLTRIM(b.especifica) +  ;
+       " " +  ;
+       ALLTRIM(b.especifica_det))  ;
+       AS clasif ;
+       FROM  CERTIFICADO_CLASIF a, ESPECIFICA_DET b ; 
+       WHERE ;
+	       a.ano_eje = b.ano_eje AND  ;
+	       a.id_clasificador =  ;
+	       b.id_clasificador AND  ;
+	       b.estado = 'A' AND  ;
+	       a.ano_eje = gcano_eje ;
+	   INTO CURSOR tmpClasifRPT
+
+SELECT tmpclasifrpt
+INDEX ON ano_eje + sec_ejec + certificado + secuencia + correlativo + id_clasificador TAG clasif
+
+CREATE CURSOR 	cur_prin (ano_eje 		C(4),;
+				sec_ejec 				C(6),;
+		        certificado 			C(10),;
+       			tipo_certificado 		C(1),;
+		        cod_error				C(2),;
+		        cod_mensa 			    C(4),;
+		        tipo_operacion 			C(2),;
+		        Glosa 					C(250),  ;
+		        secuencia 				C(4),  ;
+		        correlativo 			C(4),;
+		        cod_doc  				C(3),;
+		        num_doc 				C(20),;
+		        fecha_doc 				D(8),;
+       			estado_registro 		C(1),;
+       			estado_envio 			C(1),;
+       			estado_envio2 			C(1),  ;
+       			ind_certificacion 		C(1),  ;
+       			monto 					N(19,2),  ;
+       			monto_comprometido 		N(19,2),;
+       			monto_nacional 			N(19,2),;
+       			moneda 					C(3),;
+      			tipo_cambio 			N(19,15),  ;
+       			tipo_registro 			C(1),  ;
+       			desc_doc 				C(100),  ;
+       			seleccionar 			N(1),  ;
+       			rechazar 				N(1),  ;
+				tipo_modificacion 		C(01),  ;
+       			origen 					C(1),  ;
+       			fuente_financ 			C(2),;
+       			ruc 					C(11),;
+       			meta 					C(4),;
+       			cadfuncional 			C(50),;
+		        especifica 				C(20),  ;
+       			saldopim 				N(19, 2),;
+       			impsol 			       	N(19, 2),;
+       			impaprob 				N(19, 2),;
+       			etapa 					C(1),;
+       			descarea  				C(100),;
+       			imptaprobxcert 			N(19,2))
+       			
+INDEX ON ano_eje + sec_ejec TAG id001
+INDEX ON ano_eje + sec_ejec + certificado + etapa TAG id01
+INDEX ON ano_eje + sec_ejec + fuente_financ + certificado + secuencia + correlativo TAG idfte
+INDEX ON ano_eje + sec_ejec + certificado + secuencia + correlativo TAG idxlstdoc
+SET RELATION TO ano_eje + origen + fuente_financ INTO rfuente_financ ADDITIVE 
+SET RELATION TO '01' + meta INTO rmaestro ADDITIVE 
+ZAP IN cur_prin
+IF  !USED("sys_cert")
+     USE CERT!certificados ALIAS sys_cert ORDER CERT IN 0
+ELSE
+     SELECT sys_cert
+     SET ORDER TO cert
+ENDIF
+SELECT sys_cert
+GO TOP
+SCAN ALL 
+     SCATTER MEMVAR
+     INSERT INTO cur_prin FROM MEMVAR
+     SELECT sys_cert
+ENDSCAN
+SELECT cur_prin
+GOTO TOP
+brow
+RETURN
+ENDPROC
+**
+PROCEDURE RptCertificadoSel
+PARAMETER pcertificado
+*= closetablesrpts()
+USE SIAF!ejecutora 					SHARED AGAIN ALIAS ejecutora ORDER sec_ejec IN 0
+USE SIAF!sector 					SHARED AGAIN ALIAS sector ORDER sector IN 0
+USE SIAF!pliego 					SHARED AGAIN ALIAS pliego ORDER pliego IN 0
+USE SIAF!CERTIFICADO_FASE 			SHARED AGAIN ALIAS rcertificado_fase ORDER CERTI_FASE IN 0
+USE SIAF!CERTIFICADO_SECUENCIA  	SHARED AGAIN ALIAS rcertificado_secuencia ORDER CERTI_SEC IN 0
+USE SIAF!CERTIFICADO_CLASIF 		SHARED AGAIN ALIAS rcertificado_clasif ORDER CERTI_CLAS IN 0
+USE SIAF!CERTIFICADO_META 			SHARED AGAIN ALIAS rcertificado_meta ORDER CERTI_META IN 0
+USE SIAF!MAESTRO_DOCUMENTO 			SHARED AGAIN ALIAS rmaestro_documento ORDER COD_DOC IN 0
+USE SIAF!MAESTRO_CLASIFICADOR  		SHARED AGAIN ALIAS rmaestro_clasificador ORDER IDCLASIF IN 0
+USE SIAF!FUENTE_FINANC 				SHARED AGAIN ALIAS rfuente_financ ORDER FUENTE_FIN IN 0
+USE SIAF!META 						SHARED AGAIN ALIAS rmeta ORDER META IN 0
+USE CERT!MAESTRO_DETALLE_CERT 		SHARED AGAIN ALIAS rmaestro ORDER MAESTRO IN 0
+
+=SEEK(gcano_eje + gcsec_ejec,'ejecutora')
+SELECT ejecutora
+SET RELATION TO ano_eje + sector INTO sector ADDITIVE 
+SET RELATION TO ano_eje + sector+ pliego INTO pliego ADDITIVE 
+SELECT a.*, b.tipo_transaccion,  ;
+       b.generica, b.subgenerica,  ;
+       b.subgenerica_det,  ;
+       b.especifica,  ;
+       b.especifica_det,  ;
+       b.descripcion, b.ambito,  ;
+       (ALLTRIM(b.tipo_transaccion) +  ;
+       ". " + ALLTRIM(b.generica) +  ;
+       ". " +  ;
+       ALLTRIM(b.subgenerica) +  ;
+       " " +  ;
+       ALLTRIM(b.subgenerica_det) +  ;
+       ". " +  ;
+       ALLTRIM(b.especifica) +  ;
+       " " +  ;
+       ALLTRIM(b.especifica_det))  ;
+       AS clasif FROM  ;
+       CERTIFICADO_CLASIF a,  ;
+       ESPECIFICA_DET b WHERE  ;
+       a.ano_eje = b.ano_eje AND  ;
+       a.id_clasificador =  ;
+       b.id_clasificador AND  ;
+       b.estado = 'A' AND  ;
+       a.ano_eje = gcano_eje AND  ;
+       a.certificado =  ;
+       pcertificado INTO CURSOR  ;
+       tmpClasifRPT
+       
+SELECT tmpclasifrpt
+INDEX ON ano_eje + sec_ejec + certificado + secuencia + correlativo + id_clasificador TAG clasif
+
+CREATE CURSOR cur_prin (ano_eje 	C(4), sec_ejec C (6),  ;
+				        certificado C(10),    tipo_certificado C(1),  ;
+				        cod_error 	C(2), cod_mensa C (4), tipo_operacion C(2),;
+				        glosa C(250),secuencia C(4),  ;
+				        correlativo C(4), cod_doc  C (3), num_doc C(20),  ;
+				        fecha_doc D(8),  estado_registro C(1),  ;
+					    estado_envio C(1), estado_envio2 C(1),  ;
+				        ind_certificacion C(1),  ;
+				        monto N(19, 2),  ;
+				        monto_comprometido N(19,2), monto_nacional N(19,2), moneda C(3),  ;
+				        tipo_cambio N(19, 15), tipo_registro C(1),  ;
+				        desc_doc C(100), seleccionar N(1),  ;
+				        rechazar N(1),  tipo_modificacion C(01),  ;
+				        origen C(1), fuente_financ C(2), ruc C(11), meta C(4),  ;
+				        cadfuncional C(50), especifica C(20),  ;
+				        saldopim N(19,2), impsol   N(19, 2), impaprob N(19,2), etapa C(1),;
+				        descarea C(100), imptaprobxcert N(19, 2))
+
+SELECT CUR_PRIN				        
+INDEX ON ano_eje + sec_ejec TAG  id001
+INDEX ON ano_eje + sec_ejec + certificado + etapa TAG id01
+INDEX ON ano_eje + sec_ejec + fuente_financ + certificado + secuencia + correlativo TAG idfte
+INDEX ON ano_eje + sec_ejec + certificado + secuencia + correlativo TAG idxlstdoc
+SET RELATION TO ano_eje + origen + fuente_financ INTO rfuente_financ ADDITIVE 
+SET RELATION TO '01' + meta INTO rmaestro ADDITIVE 
+ZAP IN cur_prin
+
+SELECT c.id_clasificador,  ;
+       c.certificado, c.sec_func,  ;
+       e.tipo_transaccion,  ;
+       e.generica, e.subgenerica,  ;
+       e.subgenerica_det,  ;
+       e.especifica,  ;
+       e.especifica_det,  ;
+       c.monto_nacional,  ;
+       g.presupuesto +  ;
+       g.modificacion AS pim,  ;
+       g.monto_certificado,  ;
+       g.monto_precertificado,  ;
+       g.monto_comprometido_anual  ;
+       FROM especifica_det e,  ;
+       certificado_meta c, gasto  ;
+       g, certificado_fase f  ;
+       WHERE g.ano_eje =  ;
+       e.ano_eje AND e.ano_eje =  ;
+       f.ano_eje AND f.ano_eje =  ;
+       c.ano_eje AND  ;
+       f.certificado = c.certificado AND  ;
+       g.sec_func = c.sec_func  ;
+       AND e.id_clasificador =  ;
+       g.id_clasificador AND  ;
+       g.id_clasificador =  ;
+       c.id_clasificador AND  ;
+       g.sec_ejec = c.sec_ejec  ;
+       AND g.fuente_financ =  ;
+       f.fuente_financ AND  ;
+       c.ano_eje = gcano_eje AND  ;
+       c.secuencia = '0001' AND  ;
+       c.certificado = pcertificado GROUP BY  ;
+       c.certificado, c.sec_func,  ;
+       e.tipo_transaccion,  ;
+       e.generica, e.subgenerica,  ;
+       e.subgenerica_det,  ;
+       e.especifica,  ;
+       e.especifica_det,  ;
+       c.monto_nacional,  ;
+       g.presupuesto,  ;
+       g.modificacion,  ;
+       g.monto_certificado,  ;
+       g.monto_precertificado,  ;
+       g.monto_comprometido_anual,  ;
+       c.id_clasificador INTO  ;
+       CURSOR rpim
+
+SELECT RPIM       
+INDEX ON certificado + sec_func + id_clasificador TAG idxpim
+
+SELECT rcertificado_meta
+GOTO TOP
+SEEK gcano_eje + gcsec_ejec 
+SET RELATION TO ano_eje + id_clasificador INTO rmaestro_clasificador ADDITIVE 
+SET RELATION TO ano_eje + sec_ejec + certificado + secuencia INTO rcertificado_fase ADDITIVE 
+SET RELATION TO ano_eje + sec_ejec + certificado + secuencia + correlativo INTO rcertificado_secuencia ADDITIVE 
+SET RELATION TO ano_eje + sec_ejec + sec_func INTO rmeta ADDITIVE 
+SET RELATION TO '01' + sec_func INTO rmaestro ADDITIVE 
+SET RELATION TO certificado + sec_func + id_clasificador INTO rpim
+SET RELATION TO ano_eje + sec_ejec + certificado + secuencia + correlativo + id_clasificador INTO tmpclasifrpt 
+
+SCAN FOR  !DELETED() AND ano_eje + sec_ejec =  gcano_eje + gcsec_ejec AND secuencia = '0001' AND certificado = pcertificado
+     SCATTER MEMVAR
+     INSERT INTO CUR_PRIN FROM MEMVAR
+     REPLACE cur_prin.meta 			WITH m.sec_func
+     REPLACE cur_prin.especifica 	WITH tmpclasifrpt.clasif
+     REPLACE cur_prin.glosa 		WITH ALLTRIM(UPPER(rcertificado_fase.glosa))
+     REPLACE cur_prin.fuente_financ WITH rcertificado_fase.fuente_financ
+     REPLACE cur_prin.origen 		WITH rcertificado_fase.etapa
+     REPLACE cur_prin.descarea      WITH "OFICINA DE ADMINISTRACIÓN"
+     REPLACE cur_prin.cadfuncional  WITH rmeta.funcion + "." + rmeta.programa + "." + rmeta.sub_programa + "." + rmeta.act_proy + "." +  ;
+							             rmeta.componente + "." + rmeta.finalidad
+     REPLACE cur_prin.impaprob      WITH cur_prin.monto
+     REPLACE cur_prin.impsol 		WITH cur_prin.monto
+     REPLACE cur_prin.fecha_doc 	WITH rcertificado_secuencia.fecha_doc
+     REPLACE cur_prin.saldopim 		WITH rpim.pim - rpim.monto_certificado
+     REPLACE cur_prin.cod_doc  		WITH rcertificado_secuencia.cod_doc
+     REPLACE cur_prin.num_doc       WITH rcertificado_secuencia.num_doc
+     REPLACE cur_prin.ruc 			WITH rcertificado_fase.ruc
+     REPLACE cur_prin.num_doc 		WITH ALLTRIM(SUBSTR(cur_prin.num_doc,1, IIF(AT('-',cur_prin.num_doc) > 0, AT('-', cur_prin.num_doc) - 1, LEN(cur_prin.num_doc))))
+     SELECT rcertificado_meta
+ENDSCAN
+SELECT cur_prin
+GOTO TOP
+llave = cur_prin.ano_eje + cur_prin.sec_ejec + cur_prin.certificado
+SUM ALL monto_nacional TO gcmonto FOR cur_prin.ano_eje + cur_prin.sec_ejec + cur_prin.certificado = llave
+GOTO TOP
+SCAN
+     IF llave = cur_prin.ano_eje + cur_prin.sec_ejec + cur_prin.certificado THEN 
+          REPLACE cur_prin.imptaprobxcert WITH gcmonto
+     ELSE
+          rnum = RECNO()
+          llave = cur_prin.ano_eje +  ;
+                  cur_prin.sec_ejec +  ;
+                  cur_prin.certificado
+          SUM monto_nacional TO  ;
+              gcmonto ALL FOR  ;
+              cur_prin.ano_eje +  ;
+              cur_prin.sec_ejec +  ;
+              cur_prin.certificado = llave
+              
+          GOTO rnum
+          REPLACE cur_prin.imptaprobxcert WITH gcmonto
+     ENDIF
+     SELECT cur_prin
+ENDSCAN
+GOTO TOP
+RETURN
+ENDPROC
+**
+
+PROCEDURE RptSoloPendientes
+*!*	SELECT DISTINCT ano_eje, sec_ejec, certificado FROM RCERTIFICADO_secuencia  ;
+*!*	       WHERE estado_registro = 'V' AND estado_envio = 'P'  ;
+*!*	       AND secuencia = '0001' AND correlativo = '0001' AND  ;
+*!*	       ind_certificacion = 'S' INTO CURSOR TMP0
+
+SELECT DISTINCT ano_eje, sec_ejec, certificado, secuencia  FROM RCERTIFICADO_secuencia  ;
+       WHERE estado_registro = 'V' AND estado_envio = 'P' AND  ;
+       ind_certificacion = 'S' INTO CURSOR TMP0
+
+SELECT TMP0       
+INDEX ON ano_eje + sec_ejec + certificado+secuencia TAG tmpt0
+
+SELECT tmp0
+GOTO TOP
+SCAN ALL 
+     SELECT tmp0
+     GOTO TOP
+     SEEK cur_prin.ano_eje + cur_prin.sec_ejec + cur_prin.certificado + cur_prin.secuencia
+     IF  !FOUND() THEN 
+          SELECT cur_prin
+          DELETE
+     ENDIF
+     SELECT cur_prin
+ENDSCAN
+SELECT cur_prin
+GOTO TOP
+RETURN
+ENDPROC
+
+**
+PROCEDURE RptMesSeleccionado
+IF  !EMPTY(gcmes) AND gcmes <> '00' THEN 
+     SELECT cur_prin
+     GOTO TOP
+     DELETE ALL FOR ano_eje = gcano_eje AND sec_ejec = gcsec_ejec AND  ;
+            MONTH(fecha_doc) <> VAL(gcmes)
+ENDIF
+SELECT cur_prin
+GOTO TOP
+RETURN
+ENDPROC
+**
+
+FUNCTION DESC_MES 
+PARAMETERS CMES
+DMES = "ninguno"
+DO CASE 
+	CASE cmes ='01' 
+		dmes = 'Enero'
+	CASE cmes ='02' 
+		dmes = 'Febrero'
+	CASE cmes ='03' 
+		dmes = 'Marzo'
+	CASE cmes ='04' 
+		dmes = 'Abril'
+	CASE cmes ='05' 
+		dmes = 'Mayo'
+	CASE cmes ='06' 
+		dmes = 'Junio'
+	CASE cmes ='07' 
+		dmes = 'Julio'
+	CASE cmes ='08' 
+		dmes = 'Agosto'
+	CASE cmes ='09' 
+		dmes = 'Setiembre'
+	CASE cmes ='10' 
+		dmes = 'Octubre'
+	CASE cmes ='11' 
+		dmes = 'Noviembre'
+	CASE cmes ='12'
+		dmes = 'Diciembre'
+ENDCASE
+
+RETURN DMES

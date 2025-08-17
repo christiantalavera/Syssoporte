@@ -1,0 +1,1618 @@
+PUBLIC pEstado_envio , gc01, gcSol
+STORE '0001' TO gc01
+gcSol = 'S/.'
+USE siaf!certificado						IN 0 ALIAS certi			order tag certi
+USE siaf!certificado_fase					IN 0 ALIAS c_fase			order tag certi_fase
+USE siaf!certificado_secuencia				IN 0 ALIAS c_secuencia		order tag FLAG_ENVIO
+USE siaf!certificado_clasif					IN 0 ALIAS c_clasif			order tag certi_clas
+USE siaf!certificado_meta					IN 0 ALIAS c_meta			order tag certi_meta
+USE siaf!expediente							IN 0 ALIAS c_exp			order tag expediente
+USE siaf!expediente_fase					IN 0 ALIAS c_exp_fase		order tag exp_fase
+USE siaf!expediente_secuencia				IN 0 ALIAS c_exp_sec		order tag FLAG_ENVIO
+USE siaf!expediente_clasif					IN 0 ALIAS c_exp_clasif 	ORDER tag expclasifp
+USE siaf!expediente_meta					IN 0 ALIAS c_exp_meta		order tag exp_metap
+USE siaf!expediente_documento 				IN 0 ALIAS c_exp_doc		order tag exp_doc
+USE siaf!solicitud_rend_reasig_cab			IN 0 ALIAS c_reasig_cab 	ORDER tag reasig
+USE siaf!solicitud_rend_reasig_sec			IN 0 ALIAS c_reasig_sec 	ORDER tag FLAG_ENVIO
+USE siaf!solicitud_rend_reasig_det			IN 0 ALIAS c_reasig_det 	ORDER tag reasig_det
+USE siaf!solicitud_rend_reasig_clasif		IN 0 ALIAS c_reasig_clasif	order tag reasig_cla
+USE siaf!solicitud_rend_reasig_meta			IN 0 ALIAS c_reasig_meta	order tag reasig_met
+USE siaf!solicitud_rend_reasig_dst			IN 0 ALIAS c_reasig_dst		order tag reasig_dst
+USE siaf!maestro_clasificador				IN 0 ALIAS c_maestro_cla	order tag idclasif 
+
+
+lSuccess=CURSORSETPROP("Buffering", 4, "certi")
+lSuccess=CURSORSETPROP("Buffering", 4, "c_fase")
+lSuccess=CURSORSETPROP("Buffering", 4, "c_secuencia")
+lSuccess=CURSORSETPROP("Buffering", 4, "c_clasif")
+lSuccess=CURSORSETPROP("Buffering", 4, "c_meta")
+lSuccess=CURSORSETPROP("Buffering", 4, "c_exp")
+lSuccess=CURSORSETPROP("Buffering", 4, "c_exp_fase")
+lSuccess=CURSORSETPROP("Buffering", 4, "c_exp_sec")
+lSuccess=CURSORSETPROP("Buffering", 4, "c_exp_clasif")
+lSuccess=CURSORSETPROP("Buffering", 4, "c_exp_meta")
+lSuccess=CURSORSETPROP("Buffering", 4, "c_exp_doc")
+lSuccess=CURSORSETPROP("Buffering", 4, "c_reasig_cab")
+lSuccess=CURSORSETPROP("Buffering", 4, "c_reasig_sec")
+lSuccess=CURSORSETPROP("Buffering", 4, "c_reasig_det")
+lSuccess=CURSORSETPROP("Buffering", 4, "c_reasig_clasif")
+lSuccess=CURSORSETPROP("Buffering", 4, "c_reasig_meta")
+lSuccess=CURSORSETPROP("Buffering", 4, "c_reasig_dst")
+
+
+
+
+
+SELECT c_secuencia
+SET RELATION TO ano_eje+sec_ejec+certificado 			INTO certi 	ADDITIVE 
+SET RELATION TO ano_eje+sec_ejec+certificado+secuencia 	INTO c_fase ADDITIVE 
+
+SELECT c_exp_sec
+SET RELATION TO ano_eje+sec_ejec+expediente								INTO c_exp ADDITIVE 
+SET RELATION TO ano_eje+sec_ejec+expediente+ciclo+fase+secuencia		INTO c_exp_fase ADDITIVE 
+
+SELECT c_reasig_sec
+SET RELATION TO ano_eje+sec_ejec+secuencia_solicitud INTO c_reasig_cab	ADDITIVE 
+
+**** CERTIFICADOS ***********
+	pestado_envio = 'T'
+	DO busca_certificado
+	DO actualiza_certificado
+	pEstado_envio = 'N'
+	DO busca_certificado
+	DO actualiza_certificado
+*****************************
+***** EXPEDIENTES ***********	
+	DO busca_expediente
+	DO actualiza_expediente
+*****************************
+
+***** RENDICIONES / REASIGNACIONES ***********	
+	DO busca_rendicion
+	DO actualiza_rendicion
+	DO Actualiza_expediente
+	DO Rendicion_certificado
+	DO actualiza_rendicion
+**********************************************
+
+DO cierra_tablas
+
+
+
+*--------------------------------
+PROCEDURE busca_certificado 
+*--------------------------------
+	SELECT c_secuencia
+	SEEK gcano_eje+gcsec_ejec+pEstado_envio
+	SCAN WHILE ano_eje+sec_ejec+estado_envio = gcano_eje+gcsec_ejec+pEstado_envio
+		SCATTER MEMVAR 
+		IF INLIST(m.estado_registro ,'A','R') THEN 
+			LOOP 
+		ENDIF 
+		IF c_fase.es_compromiso = 'N' THEN 
+			DO CASE 
+				CASE EMPTY(m.estado_registro) 
+					lcEstado_envio = 'P'
+					lcEstado_registro = 'V'
+					
+					
+				
+				CASE m.estado_registro = 'V'
+					lcEstado_envio = 'T'
+					lcEstado_registro = 'A'
+				
+			ENDCASE 
+		ELSE
+			lcEstado_envio = 'T'
+			lcEstado_registro = 'A'
+		ENDIF 
+		REPLACE certi.estado_envio   			WITH lcEstado_envio
+		REPLACE certi.estado_registro			WITH lcEstado_registro
+		REPLACE c_fase.estado_envio				WITH lcEstado_envio
+		REPLACE c_fase.estado_registro			WITH lcEstado_registro
+		REPLACE c_secuencia.estado_envio		WITH lcEstado_envio
+		REPLACE c_secuencia.estado_registro		WITH lcEstado_registro
+		REPLACE c_secuencia.fecha_bd_oracle		WITH c_secuencia.fecha_doc
+		
+		SELECT c_clasif
+		SEEK gcano_eje+gcsec_ejec+m.certificado+m.secuencia+m.correlativo
+		SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo = gcano_eje+gcsec_ejec+m.certificado+m.secuencia+m.correlativo
+			REPLACE c_clasif.estado_envio 		WITH lcEstado_envio
+			REPLACE c_clasif.estado_registro	WITH lcEstado_registro
+		ENDSCAN 	
+		
+		SELECT c_meta
+		SEEK gcano_eje+gcsec_ejec+m.certificado+m.secuencia+m.correlativo
+		SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo = gcano_eje+gcsec_ejec+m.certificado+m.secuencia+m.correlativo
+			REPLACE c_meta.estado_envio 		WITH lcEstado_envio
+			REPLACE c_meta.estado_registro		WITH lcEstado_registro
+		ENDSCAN 	
+
+	ENDSCAN 
+ENDPROC 
+
+
+*--------------------------------
+PROCEDURE busca_expediente 
+*--------------------------------
+	SELECT c_exp_sec
+	SET ORDER to FLAG_ENVIO	
+	SEEK gcano_eje+gcsec_ejec+pEstado_envio
+	SCAN WHILE ano_eje+sec_ejec+estado_envio = gcano_eje+gcsec_ejec+pEstado_envio
+		SCATTER MEMVAR 
+
+		lcEstado_envio = 'A'
+		REPLACE c_exp.estado_envio   			WITH lcEstado_envio
+		REPLACE c_exp_fase.estado_envio			WITH lcEstado_envio
+		REPLACE c_exp_sec.estado_envio			WITH lcEstado_envio	
+		REPLACE c_exp_sec.fecha_bd_oracle		WITH c_exp_sec.fecha_doc	
+		REPLACE c_exp_sec.archivo				WITH 'DEMO'	
+		REPLACE c_exp_fase.archivo				WITH 'DEMO'	
+		SELECT c_exp_clasif
+		SEEK gcano_eje+gcsec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo
+		SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo = gcano_eje+gcsec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo
+			REPLACE c_exp_clasif.estado_envio 	WITH lcEstado_envio
+			REPLACE c_exp_clasif.archivo		WITH 'DEMO'
+		ENDSCAN 	
+		
+		SELECT c_exp_meta
+		SEEK gcano_eje+gcsec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo
+		SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo = gcano_eje+gcsec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo
+			REPLACE c_exp_meta.estado_envio 	WITH lcEstado_envio
+			REPLACE c_exp_meta.archivo			WITH 'DEMO'
+		ENDSCAN 	
+
+		SELECT c_exp_doc
+		SEEK gcano_eje+gcsec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo
+		SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo = gcano_eje+gcsec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo
+			REPLACE c_exp_doc.estado_envio 		WITH lcEstado_envio
+			REPLACE c_exp_doc.archivo		WITH 'DEMO'			
+		ENDSCAN 	
+
+	ENDSCAN 
+ENDPROC 
+
+*--------------------------------
+PROCEDURE busca_rendicion
+*--------------------------------
+	PUBLIC cSecuenciaAnterior
+	pestado_envio = 'N'
+	CREATE CURSOR curRinde (ano_eje C(4), sec_ejec C(6), expediente C(10), ciclo C(1), fase C(1), secuencia C(4), ;
+							clasif C(10), id_clasif C(7), meta C(4), clasificador C(10), id_clasificador C(7), ;
+							sec_func C(4), cod_doc C(3), num_doc C(20), ;
+							fecha_doc D, moneda C(5), tipo_cambio N(19,15), monto_origen N(19,2), ;
+							monto_ingresado N(19,2), monto_nacional N(19,2), usado L, certificado c(10), certificado_secuencia c(4))
+	INDEX ON ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+id_clasif+meta TAG meta
+	INDEX ON ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+clasif+meta TAG clasif ADDITIVE
+	INDEX ON ano_eje+sec_ejec+certificado+certificado_secuencia+id_clasif+meta TAG cmeta ADDITIVE 
+	INDEX on ano_eje+sec_ejec+certificado+certificado_secuencia+clasif TAG cclasif ADDITIVE 
+
+	SELECT c_reasig_sec
+	SEEK gcano_eje+gcsec_ejec+pEstado_envio
+	SCAN WHILE ano_eje+sec_ejec+estado_envio = gcano_eje+gcsec_ejec+pEstado_envio
+		SCATTER MEMVAR 
+
+		IF INLIST(m.estado_registro ,'A','R') THEN 
+			LOOP 
+		ENDIF 
+*!*			DO CASE 
+*!*				CASE EMPTY(m.estado_registro) 
+*!*					lcEstado_envio = 'P'
+*!*					lcEstado_registro = 'V'
+*!*				CASE m.estado_registro = 'V'
+*!*					lcEstado_envio = 'T'
+*!*					lcEstado_registro = 'A'
+*!*			ENDCASE 
+		lcEstado_envio 		= 'T'
+		lcEstado_registro 	= 'A'
+		
+		REPLACE c_reasig_cab.estado_envio		WITH lcEstado_envio
+		REPLACE c_reasig_cab.estado_registro	WITH lcEstado_registro
+		REPLACE c_reasig_sec.estado_envio		WITH lcEstado_envio
+		REPLACE c_reasig_sec.estado_registro	WITH lcEstado_registro
+		
+		SELECT c_reasig_det
+		SEEK gcano_eje+gcsec_ejec+m.secuencia_solicitud 
+		SCAN WHILE ano_eje+sec_ejec+secuencia_solicitud = gcano_eje+gcsec_ejec+m.secuencia_solicitud 
+			REPLACE c_reasig_det.estado_envio 			WITH lcEstado_envio
+			REPLACE c_reasig_det.estado_registro		WITH lcEstado_registro
+			
+			SELECT c_reasig_clasif
+			SEEK gcano_eje+gcsec_ejec+m.secuencia_solicitud+c_reasig_det.sec_x_expediente 
+			SCAN WHILE ano_eje+sec_ejec+secuencia_solicitud+sec_x_expediente  = gcano_eje+gcsec_ejec+m.secuencia_solicitud+c_reasig_det.sec_x_expediente  
+				REPLACE c_reasig_clasif.estado_envio 	WITH lcEstado_envio
+				REPLACE c_reasig_clasif.estado_registro	WITH lcEstado_registro
+				
+				SELECT c_reasig_meta
+				SEEK gcano_eje+gcsec_ejec+m.secuencia_solicitud+c_reasig_clasif.sec_x_expediente+c_reasig_clasif.id_clasificador 
+				SCAN WHILE ano_eje+sec_ejec+secuencia_solicitud+sec_x_expediente+id_clasificador = gcano_eje+gcsec_ejec+m.secuencia_solicitud+c_reasig_clasif.sec_x_expediente+c_reasig_clasif.id_clasificador  
+					REPLACE c_reasig_meta.estado_envio 		WITH lcEstado_envio
+					REPLACE c_reasig_meta.estado_registro	WITH lcEstado_registro
+
+					SELECT c_reasig_dst
+					SEEK gcano_eje+gcsec_ejec+m.secuencia_solicitud+c_reasig_meta.sec_x_expediente+c_reasig_meta.id_clasificador+c_reasig_meta.sec_func 
+					SCAN WHILE ano_eje+sec_ejec+secuencia_solicitud+sec_x_expediente+id_clasificador+sec_func = gcano_eje+gcsec_ejec+m.secuencia_solicitud+c_reasig_meta.sec_x_expediente+c_reasig_meta.id_clasificador+c_reasig_meta.sec_func  
+						REPLACE c_reasig_dst.estado_envio 		WITH lcEstado_envio
+						REPLACE c_reasig_dst.estado_registro	WITH lcEstado_registro
+
+						INSERT INTO curRinde VALUES (gcano_eje, gcsec_ejec, c_reasig_det.expediente, c_reasig_det.ciclo, c_reasig_det.fase,;
+														 c_reasig_det.secuencia,iif(SEEK(gcano_eje+c_reasig_dst.id_clasificador,'c_maestro_cla'),c_maestro_cla.clasificador,''),;
+														 c_reasig_dst.id_clasificador, c_reasig_dst.sec_func, iif(SEEK(gcano_eje+c_reasig_dst.id_clasificador_dst,'c_maestro_cla'),c_maestro_cla.clasificador,''),c_reasig_dst.id_clasificador_dst, ;
+														 c_reasig_dst.sec_func_dst, c_reasig_sec.cod_doc, c_reasig_sec.num_doc, c_reasig_sec.fecha_doc,;
+														 c_reasig_det.moneda, c_reasig_det.tipo_cambio,c_reasig_meta.monto_nacional, c_reasig_dst.monto, c_reasig_dst.monto_nacional, .F.,;
+														 c_reasig_det.certificado, c_reasig_det.certificado_secuencia)
+														 
+						
+					ENDSCAN 
+				ENDSCAN 
+				
+			ENDSCAN 
+			cSecuenciaAnterior = c_reasig_det.secuencia
+			IF c_reasig_cab.tipo_solicitud = '01' THEN 
+				DO fase_rendicion
+			ELSE
+				DO genera_reasignacion
+			ENDIF 
+			
+		ENDSCAN 
+
+	ENDSCAN 
+ENDPROC 
+*--------------------------------
+PROCEDURE Actualiza_Certificado
+*--------------------------------
+BEGIN TRANSACTION
+	***************
+	SET DELETED OFF
+	***************
+	*
+	llError = !TABLEUPDATE(1, .T., 'Certi')
+	IF !llError
+		llError = !TABLEUPDATE(1, .T., 'c_fase')
+	ENDIF
+	IF !llError
+		llError = !TABLEUPDATE(1, .T., 'c_secuencia')
+	ENDIF
+	IF !llError
+		llError = !TABLEUPDATE(1, .T., 'c_clasif')
+	ENDIF
+	IF !llError
+		llError = !TABLEUPDATE(1, .T., 'c_meta')
+	ENDIF
+	
+	*
+	IF llError
+		ROLLBACK
+		=AERROR(aErrorArray)
+		WAIT WINDOW 'Error al Grabar : ' + lcError 
+		RETURN (.f.)
+	ELSE	
+		END TRANSACTION
+		RETURN (.t.)
+	ENDIF
+	
+ENDPROC 
+
+*--------------------------------
+PROCEDURE Actualiza_Expediente
+*--------------------------------
+BEGIN TRANSACTION
+	***************
+	SET DELETED OFF
+	***************
+	*
+	llError = !TABLEUPDATE(1, .T., 'c_exp')
+
+	IF !llError
+		llError = !TABLEUPDATE(1, .T., 'c_exp_fase')
+	ENDIF
+	IF !llError
+		llError = !TABLEUPDATE(1, .T., 'c_exp_sec')
+	ENDIF
+	IF !llError
+		llError = !TABLEUPDATE(1, .T., 'c_exp_clasif')
+	ENDIF
+	IF !llError
+		llError = !TABLEUPDATE(1, .T., 'c_exp_meta')
+	ENDIF
+	IF !llError
+		llError = !TABLEUPDATE(1, .T., 'c_exp_doc')
+	ENDIF
+	
+	*
+	IF llError
+		ROLLBACK
+		=AERROR(aErrorArray)
+		WAIT WINDOW 'Error al Grabar : ' 
+		RETURN (.f.)
+	ELSE	
+		END TRANSACTION
+		RETURN (.t.)
+	ENDIF
+	
+ENDPROC 
+
+*--------------------------------
+PROCEDURE Actualiza_Rendicion
+*--------------------------------
+BEGIN TRANSACTION
+	***************
+	SET DELETED OFF
+	***************
+	*
+	llError = !TABLEUPDATE(1, .T., 'c_reasig_cab')
+
+	IF !llError
+		llError = !TABLEUPDATE(1, .T., 'c_reasig_sec')
+	ENDIF
+	IF !llError
+		llError = !TABLEUPDATE(1, .T., 'c_reasig_det')
+	ENDIF
+	IF !llError
+		llError = !TABLEUPDATE(1, .T., 'c_reasig_clasif')
+	ENDIF
+	IF !llError
+		llError = !TABLEUPDATE(1, .T., 'c_reasig_meta')
+	ENDIF
+	IF !llError
+		llError = !TABLEUPDATE(1, .T., 'c_reasig_dst')
+	ENDIF
+	
+	*
+	IF llError
+		ROLLBACK
+		=AERROR(aErrorArray)
+		WAIT WINDOW 'Error al Grabar : ' + lcError 
+		RETURN (.f.)
+	ELSE	
+		END TRANSACTION
+		RETURN (.t.)
+	ENDIF
+	
+ENDPROC 
+
+*--------------------------------
+PROCEDURE Cierra_tablas
+*--------------------------------
+	USE IN certi
+	USE IN c_fase
+	USE IN c_secuencia
+	USE IN c_clasif
+	USE IN c_meta
+	USE IN c_exp
+	USE IN c_exp_fase
+	USE IN c_exp_sec
+	USE IN c_exp_clasif
+	USE IN c_exp_meta
+	USE IN c_exp_doc
+	USE IN c_reasig_cab
+	USE IN c_reasig_sec
+	USE IN c_reasig_det
+	USE IN c_reasig_clasif
+	USE IN c_reasig_meta
+	USE IN c_reasig_dst
+	USE IN c_maestro_cla
+
+ENDPROC 
+
+*--------------------------------
+PROCEDURE fase_rendicion
+*--------------------------------
+	SELECT c_exp_sec
+	SET ORDER to exp_sec
+	SELECT currinde
+	GO TOP
+	lcCod_doc = currinde.cod_doc
+	lcNum_doc = currinde.num_doc
+	ldFecha_doc = currinde.Fecha_doc
+	lcMoneda = currinde.Moneda
+	lcTipo_cambio = currinde.Tipo_cambio
+	SUM monto_ingresado, monto_nacional TO lnMonto, lnMonto_nacional
+
+	*-- Suponemos que seguimos en registro gc01 de la fase anterior
+	REPLACE monto_saldo WITH c_exp_fase.monto_saldo-lnMonto_nacional IN c_exp_fase
+	LOCAL llAnoAnterior
+	SELECT currinde
+	GO TOP
+	llAnoAnterior = VAL(gcano_eje) < YEAR(currinde.Fecha_doc)
+	IF !llAnoAnterior
+		*-- Accesamos registros de girado y devengado para guardar secuencia de operación anterior
+		IF SEEK(gcAno_Eje + gcSec_ejec + c_reasig_det.expediente + 'GG' + ;
+				c_reasig_det.secuencia, 'c_exp_fase','exp_fase')				
+			cDSecuenciaAnterior=c_exp_fase.secuencia_anterior
+		ELSE
+			WAIT 'ERROR ... [Rendición Girado]' WINDOW TIMEOUT 1
+			RETURN .F.
+		ENDIF
+		IF SEEK(gcAno_Eje + gcSec_ejec + c_reasig_det.expediente + 'GD' + ;
+				cDSecuenciaAnterior, 'c_exp_fase','exp_fase')
+			cCSecuenciaAnterior=c_exp_fase.secuencia_anterior
+		ELSE
+			WAIT 'ERROR ... [Rendición Devengado]' WINDOW TIMEOUT 1
+			RETURN .F.
+		ENDIF
+		*------------------------------------------------------------------------------------
+		*-- Guardamos la secuencia del girado para accesar a la rendición
+		cGSecuenciaActual=c_reasig_det.secuencia
+		*-- Ejecutamos las siguientes sentencias para cada fase (montos negativos)
+		lncont=4
+		DO WHILE lncont > 1
+			lncont = lncont - 1
+			lcCicloActual='G'
+			lcFaseActual=IIF(lncont=3,'G',IIF(lncont=2,'D','C'))
+			lcSecuenciaActual=IIF(lncont=3,cSecuenciaAnterior, ;
+				IIF(lncont=2,cDSecuenciaAnterior,cCSecuenciaAnterior))
+			*-- Vamos a Registros Fase y Secuencia
+			=SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+				lcSecuenciaActual, 'c_exp_fase','exp_fase')
+			=SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+				lcSecuenciaActual+gc01, 'c_exp_sec','exp_sec')
+			*--////////////////////////////////////////////////////////////////////////
+			*-- Generamos el registro que albergará los montos negativos para cada fase
+			*--
+			lcCorrelativo='0000'
+			i=0
+			SET DELETED OFF
+			SELECT c_exp_sec
+			IF SEEK(gcano_eje + gcsec_ejec + c_exp_fase.expediente + ;
+					c_exp_fase.ciclo+c_exp_fase.fase+c_exp_fase.secuencia)
+				SCAN REST WHILE ano_eje + sec_ejec + expediente + ciclo + fase + secuencia == ;
+						gcano_eje + gcsec_ejec + c_exp_fase.expediente + ;
+						c_exp_fase.ciclo+c_exp_fase.fase+c_exp_fase.secuencia
+					lcCorrelativo=MAX(lcCorrelativo,c_exp_sec.correlativo)
+					IF !DELETED()
+						i=i+1
+					ENDIF
+				ENDSCAN
+			ENDIF
+			lcCorrelativo=PADL(INT(VAL(lcCorrelativo)+1),4,'0')
+			i=i+1
+			SET DELETED ON
+			=SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+				lcSecuenciaActual+gc01, 'c_exp_sec','exp_sec')
+			SCATTER MEMVAR
+			STORE 0 TO m.monto, m.monto_nacional, m.monto_extranjero
+			STORE '' TO m.ano_proceso, m.mes_proceso, m.dia_proceso
+			m.Correlativo			= lcCorrelativo
+			m.Cod_doc				= lcCod_doc
+			m.Num_doc				= lcNum_doc
+			m.Fecha_doc				= ldFecha_doc
+			m.Moneda				= gcSol
+			m.Tipo_cambio			= 0
+			m.Estado_envio			= 'A'
+			m.Estado				= 'H'
+			m.Estado_ctb			= 'N'
+			m.Archivo				= 'DEMO'
+			m.Grupo					= ''
+			m.Edicion				= ''
+			m.fecha_bd_oracle		= ldFecha_doc			
+			m.secuencia_solicitud	= c_reasig_cab.secuencia_solicitud
+			INSERT INTO c_exp_sec FROM MEMVAR
+			*-- Creamos clasificadores y metas
+			SELECT c_exp_meta
+			lcClave=gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+lcSecuenciaActual
+			IF SEEK(lcClave)
+				SCAN REST WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia=lcClave FOR ;
+						estado_envio = 'A'
+					*-- Si la meta no tiene rendición no hacemos nada
+					lcClasif=id_clasificador
+					lcMeta=sec_func
+					IF SEEK(ano_eje+sec_ejec+expediente+'GG'+cGSecuenciaActual+lcClasif+ ;
+							lcMeta, 'currinde','Meta') AND !currinde.usado
+						SELECT currinde
+						REPLACE currinde.usado WITH .T.
+						SUM monto_ingresado, monto_nacional TO lnMonto,lnMonto_nacional FOR ;
+							id_clasif+meta=lcClasif+lcMeta
+					ELSE
+						LOOP
+					ENDIF
+					*-- Si se creó clasificador lo actualizamos, de lo contrario lo creamos.
+					*-- Guardamos RECNO() de meta para regresar, ya que SEEK moverá el puntero
+					SELECT c_exp_meta
+					lnRegno=RECNO('c_exp_meta')
+					lcClaveMeta=ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo+ ;
+						id_clasificador
+					IF SEEK(ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+lccorrelativo+ ;
+							lcClasif, 'c_exp_clasif','expclasifp')
+						REPLACE monto WITH c_exp_clasif.monto - lnMonto, ;
+							monto_nacional WITH c_exp_clasif.monto_nacional - ;
+							lnMonto_nacional IN c_exp_clasif
+					ELSE
+						SELECT c_exp_clasif
+						IF SEEK(lcClaveMeta,'c_exp_clasif','expclasifp')
+							SCATTER MEMVAR
+							m.Correlativo	= lcCorrelativo
+							m.Monto			= - lnMonto
+							m.Monto_nacional= - lnMonto_nacional
+							m.Estado_envio	= 'A'
+							m.Estado		= 'H'
+							m.Estado_ctb	= 'N'
+							m.Archivo		= 'DEMO'
+							INSERT INTO c_exp_clasif FROM MEMVAR
+						ELSE
+							WAIT 'ERROR ... [Anulación clasificador]' WINDOW TIMEOUT 1
+							CANCEL
+						ENDIF
+					ENDIF
+					*-- Siempre creamos meta a partir de meta anterior
+					SELECT c_exp_meta
+					GO lnRegno
+					SCATTER MEMVAR
+					m.Correlativo	= lcCorrelativo
+					m.Monto			= - lnMonto
+					m.Monto_nacional= - lnMonto_nacional
+					m.Estado_envio	= 'A'
+					m.Estado		= 'H'
+					m.Archivo		= 'DEMO'
+					m.Ind_proceso	= '0'	&& Actualizado 08/08/2005 (AJRR)
+					m.Edicion		= ''
+					INSERT INTO c_exp_meta FROM MEMVAR
+					*-- Actualiza acumulado
+*					=SEEK(ano_eje+gcSec_ejec_meta+sec_func,gcAlias_meta,'meta')
+*					=Thisform.acumula_gasto(c_exp_meta.monto_nacional,.T.)
+					*--
+					SELECT c_exp_meta 
+					GO lnRegno IN c_exp_meta 
+				ENDSCAN
+			ENDIF
+			*-- Actualizamos secuencia
+			SELECT currinde
+			SUM monto_ingresado, monto_nacional TO lnMonto, lnMonto_nacional
+			REPLACE ALL usado WITH .F.
+			REPLACE monto WITH - lnMonto, ;
+				monto_nacional WITH - lnMonto_nacional IN c_exp_sec
+		ENDDO
+		*-- Ejecutamos las siguientes sentencias para cada fase (montos positivos)
+		lncont=0
+		DO WHILE lncont < 3
+			lncont = lncont + 1
+			lcCicloActual='G'
+			lcFaseActual=IIF(lncont=3,'G',IIF(lncont=2,'D','C'))
+			lcSecuenciaActual=IIF(lncont=3,cSecuenciaAnterior, ;
+				IIF(lncont=2,cDSecuenciaAnterior,cCSecuenciaAnterior))
+			*-- Vamos a Registros Fase y Secuencia
+			=SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+				lcSecuenciaActual, 'c_exp_fase','exp_fase')
+			=SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+				lcSecuenciaActual+gc01, 'c_exp_sec','exp_sec')
+			*--///////////////////////////////////////////////////////////////////////
+			*-- Generamos el registro que albergará los montos rendidos para cada fase
+			*--
+			SELECT currinde
+			GO TOP
+			lcMoneda=gcSol		&&currinde.moneda
+			lcTipo_cambio=0		&&currinde.tipo_cambio
+			lcCorrelativo='0000'
+			i=0
+			SET DELETED OFF
+			SELECT c_exp_sec
+			IF SEEK(gcano_eje + gcsec_ejec + c_exp_fase.expediente + ;
+					c_exp_fase.ciclo+c_exp_fase.fase+c_exp_fase.secuencia)
+				SCAN REST WHILE ano_eje + sec_ejec + expediente + ciclo + fase + secuencia == ;
+						gcano_eje + gcsec_ejec + c_exp_fase.expediente + ;
+						c_exp_fase.ciclo+c_exp_fase.fase+c_exp_fase.secuencia
+					lcCorrelativo=MAX(lcCorrelativo,c_exp_sec.correlativo)
+					i=i+1
+				ENDSCAN
+			ENDIF
+			lcCorrelativo=PADL(INT(VAL(lcCorrelativo)+1),4,'0')
+			i=i+1
+			SET DELETED ON
+			=SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+				lcSecuenciaActual+gc01, 'c_exp_sec','exp_sec')
+			SCATTER MEMVAR
+			STORE 0 TO m.monto, m.monto_nacional, m.monto_extranjero
+			STORE '' TO m.ano_proceso, m.mes_proceso, m.dia_proceso
+			m.Correlativo			= lcCorrelativo
+			m.Cod_doc				= lcCod_doc
+			m.Num_doc				= lcNum_doc
+			m.Fecha_doc				= ldFecha_doc
+			m.Moneda				= lcMoneda
+			m.Tipo_cambio			= lcTipo_cambio
+			m.Estado_envio			= 'A'
+			m.Estado				= 'I'
+			m.Estado_ctb			= 'N'
+			m.Archivo				= 'DEMO'
+			m.Grupo					= ''
+			m.Edicion				= 'I'
+			m.fecha_bd_oracle		= ldFecha_doc			
+			m.secuencia_solicitud	= c_reasig_cab.secuencia_solicitud
+			
+			INSERT INTO c_exp_sec FROM MEMVAR
+			GO RECNO('c_exp_sec') IN c_exp_sec 
+			*-- Copiamos clasificadores de currinde
+			SELECT currinde
+			SCAN ALL FOR monto_ingresado > 0
+				*-- Guardamos datos a grabar
+				lcCateg_gasto		= '0'
+				lcGrupo_gasto		= '0'
+				lcModalidad_gasto	= '00'
+				lcElemento_gasto	= '00'
+				lcIdClasificador	= currinde.id_clasificador
+				lcSec_func			= currinde.sec_func
+				lnMonto				= currinde.monto_ingresado
+				lnMonto_nacional	= currinde.monto_nacional
+				*-- Buscamos registro nuevo para el clasificador; si existe le sumamos monto
+				*-- de lo contrario lo creamos
+				IF SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+						lcSecuenciaActual+lcCorrelativo+lcIdClasificador,'c_exp_clasif','expclasifp')
+					REPLACE monto WITH c_exp_clasif.monto+lnMonto, ;
+						monto_nacional WITH c_exp_clasif.monto_nacional + ;
+						lnMonto_nacional IN c_exp_clasif
+				ELSE
+					INSERT INTO c_exp_clasif;
+						(ano_eje,sec_ejec,expediente,ciclo,fase,secuencia,correlativo, ;
+						categ_gasto,grupo_gasto,modalidad_gasto,elemento_gasto,id_clasificador,secuencia_to,monto, ;
+						monto_nacional,estado_envio,estado) ;
+						VALUES ;
+						(gcAno_Eje,gcSec_ejec,c_reasig_det.expediente,lcCicloActual,lcFaseActual, ;
+						lcSecuenciaActual,lcCorrelativo,lcCateg_gasto,lcGrupo_gasto, ;
+						lcModalidad_gasto,lcElemento_gasto,lcIdClasificador, '000',lnMonto,lnMonto_nacional, ;
+						'A','I')
+				ENDIF
+				*-- Buscamos registro nuevo para la meta; si existe le sumamos monto
+				*-- de lo contrario lo creamos
+				IF SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+						lcSecuenciaActual+lcCorrelativo+lcIdclasificador+lcSec_func,'c_exp_meta','exp_metap')
+					REPLACE monto WITH c_exp_meta.monto+lnMonto, monto_nacional WITH ;
+						c_exp_meta.monto_nacional+lnMonto_nacional IN c_exp_meta
+				ELSE
+					INSERT INTO c_exp_meta;
+						(ano_eje,sec_ejec,expediente,ciclo,fase,secuencia,correlativo, ;
+						categ_gasto,grupo_gasto,modalidad_gasto,elemento_gasto,id_clasificador,sec_func, ;
+						monto,monto_nacional,estado_envio,estado,edicion,ind_proceso) ;
+						VALUES ;
+						(gcAno_Eje,gcSec_ejec,c_reasig_det.expediente,lcCicloActual,lcFaseActual, ;
+						lcSecuenciaActual,lcCorrelativo,lcCateg_gasto,lcGrupo_gasto, ;
+						lcModalidad_gasto,lcElemento_gasto,lcIdClasificador,lcSec_func,lnMonto,lnMonto_nacional, ;
+						'A','I','I','1')
+				ENDIF
+				*-- Actualiza acumulado
+*				=SEEK(ano_eje+gcSec_ejec_meta+sec_func,gcAlias_meta,'meta')
+*				=Thisform.acumula_gasto(lnmonto_nacional,.T.,,,,,.T.)	&& Ya validó contra calendarios cuando se rendía.
+			ENDSCAN
+			*-- Actualizamos secuencia
+			SELECT currinde
+			SUM monto_ingresado, monto_nacional TO lnMonto, lnMonto_nacional
+			REPLACE monto WITH lnMonto, monto_nacional WITH lnMonto_nacional IN c_exp_sec
+		ENDDO
+	ENDIF
+	*-- Sumamos nuevamente currinde para actualizar la fase Rendición
+	SELECT currinde
+	GO TOP
+	lcMoneda = gcSol	&& currinde.Moneda
+	lcTipo_cambio = 0	&& currinde.Tipo_cambio
+	SUM monto_ingresado TO lnMonto
+	lnMonto_nacional	= IIF(lcMoneda=gcSol,lnMonto, SF_ROUND(lnMonto*lcTipo_cambio,2))
+	lnMonto_nacional_f	= lnMonto_nacional
+	*-- Accesamos al registro de fase Rendición para reemplazar
+**	
+	=SEEK(gcano_eje+gcsec_ejec+c_reasig_det.expediente+c_reasig_det.ciclo+c_reasig_det.fase+c_reasig_det.secuencia,'c_exp_fase','exp_fase')
+	=SEEK(gcano_eje+gcsec_ejec+c_reasig_det.expediente+c_reasig_det.ciclo+c_reasig_det.fase+c_reasig_det.secuencia+c_reasig_det.correlativo,'c_exp_sec','exp_sec')
+	lcMejor_fecha  			= c_exp_fase.mejor_fecha
+	lcOrigen				= c_exp_fase.origen
+	lcFuente_financ 		= c_exp_fase.fuente_financ
+	lcProyecto				= c_exp_fase.proyecto	
+	lcTipo_pago				= c_exp_fase.tipo_pago
+	lcTipo_compromiso 		= c_exp_fase.tipo_compromiso
+	lcTipo_recurso			= c_exp_fase.tipo_recurso
+	lcTipo_financiamiento	= c_exp_fase.tipo_financiamiento
+	lcCertificado			= c_exp_fase.certificado
+	lcCertificado_sec		= c_exp_fase.certificado_secuencia
+	lcBanco 				= ''
+	lcCtacte 				= ''
+	lcTipo_id 				= c_exp_fase.tipo_id
+	lcRuc					= c_exp_fase.ruc
+	lcSecuencia				= '0000'
+	lcCicloActual 			= 'G'
+	lcFaseActual    		= 'R'
+	lcAnoCtacte 			= ''
+	i=0
+	SET DELETED OFF
+	SELECT c_exp_fase
+	IF SEEK(gcano_eje + gcsec_ejec + c_reasig_det.expediente + lcCicloActual)
+		SCAN REST WHILE ano_eje + sec_ejec + expediente + ciclo  == ;
+				gcano_eje + gcsec_ejec + c_reasig_det.expediente + lcCicloActual 
+			lcSecuencia=MAX(lcSecuencia,c_exp_fase.secuencia)
+			i=i+1
+		ENDSCAN
+	ENDIF
+	lcSecuenciaActual=PADL(INT(VAL(lcSecuencia)+1),4,'0')
+	i=i+1
+	SET DELETED ON
+
+	
+	IF !SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+			lcSecuenciaActual, 'c_exp_fase','exp_fase')
+		INSERT INTO c_exp_fase (ano_eje, sec_ejec, expediente, ciclo, fase, secuencia, estado_envio, certificado, certificado_secuencia , archivo);
+			VALUES (gcano_eje, gcsec_ejec, c_reasig_det.expediente, lcCicloActual, lcFaseActual,lcSecuenciaActual, 'A', lcCertificado, lcCertificado_sec, 'DEMO')
+			
+		REPLACE ;
+			c_exp_fase.secuencia_padre 		WITH c_reasig_det.secuencia_padre ;
+			c_exp_fase.secuencia_anterior 	WITH c_reasig_det.secuencia ;
+			c_exp_fase.monto_nacional 		WITH lnMonto_nacional ;
+			c_exp_fase.monto_saldo 			WITH lnMonto_nacional ;
+			c_exp_fase.mejor_fecha 			WITH lcMejor_fecha ;
+			c_exp_fase.origen 				WITH lcOrigen ;
+			c_exp_fase.fuente_financ 		WITH lcFuente_financ ;
+			c_exp_fase.proyecto 			WITH lcProyecto ;
+			c_exp_fase.tipo_pago 			WITH lcTipo_pago ;
+			c_exp_fase.tipo_compromiso 		WITH lcTipo_compromiso ;
+			c_exp_fase.tipo_recurso 		WITH lcTipo_recurso ;
+			c_exp_fase.tipo_financiamiento 	WITH lcTipo_financiamiento ;
+			c_exp_sec.banco 				WITH lcBanco ;
+			c_exp_sec.cta_cte 				WITH lcCtacte ;
+			c_exp_fase.tipo_id 				WITH lcTipo_id ;
+			c_exp_fase.ruc 					WITH lcRuc IN c_exp_fase
+			
+
+		*-- Accesamos al registro secuencia nuevo con correlativo gc01 para reemplazar
+		GO RECNO('c_exp_fase') IN c_exp_fase
+		IF !SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+				lcSecuenciaActual+gc01, 'c_exp_sec','exp_sec')
+			INSERT INTO c_exp_sec (ano_eje, sec_ejec, expediente, ciclo, fase, secuencia, correlativo, estado_envio, archivo, secuencia_solicitud);
+					VALUES (gcano_eje, gcsec_ejec ,c_reasig_det.expediente, lcCicloActual, lcFaseActual,lcSecuenciaActual, gc01, 'A', 'DEMO',c_reasig_cab.secuencia_solicitud) 	
+			REPLACE ;
+				c_exp_sec.cod_doc 		 WITH lcCod_doc ;
+				c_exp_sec.num_doc 		 WITH lcNum_doc ;
+				c_exp_sec.fecha_doc 	 WITH ldFecha_doc ;
+				c_exp_sec.moneda	 	 WITH lcMoneda ;
+				c_exp_sec.tipo_cambio 	 WITH lcTipo_cambio ;
+				c_exp_sec.monto 		 WITH lnMonto ;
+				c_exp_sec.monto_nacional WITH lnMonto_nacional IN c_exp_sec
+		ELSE
+			WAIT 'ERROR ... [Secuencia Actual]' WINDOW TIMEOUT 1
+			RETURN .F.
+		ENDIF
+		*-- Copiamos clasificadores de currinde
+		SELECT currinde
+		SCAN ALL FOR monto_ingresado > 0
+			*-- Guardamos datos a grabar
+			cCateg_gasto		= '0'
+			cGrupo_gasto		= '0'
+			cModalidad_gasto	= '00'
+			cElemento_gasto		= '00'
+			cId_clasificador	= currinde.id_clasificador
+			lnMonto				= currinde.monto_ingresado
+			lnMonto_nacional	= currinde.monto_nacional
+			cSecuencia_to 		= '000'
+			*-- Buscamos registro nuevo para el clasificador; si existe le sumamos monto
+			*-- de lo contrario lo creamos
+			IF SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+					lcSecuenciaActual+gc01+cId_clasificador,'c_exp_clasif','expclasifp')
+				REPLACE monto WITH c_exp_clasif.monto + lnMonto, monto_nacional WITH ;
+					c_exp_clasif.monto_nacional+lnMonto_nacional IN c_exp_clasif
+			ELSE
+				INSERT INTO c_exp_clasif;
+					(ano_eje,sec_ejec,expediente,ciclo,fase,secuencia,correlativo,secuencia_to, ;
+					categ_gasto,grupo_gasto,modalidad_gasto,elemento_gasto,id_clasificador,monto,monto_nacional, estado_envio, archivo) ;
+					VALUES ;
+					(gcAno_Eje,gcSec_ejec,c_reasig_det.expediente,lcCicloActual,lcFaseActual, ;
+					lcSecuenciaActual,gc01,cSecuencia_to,cCateg_gasto,cGrupo_gasto,cModalidad_gasto, ;
+					cElemento_gasto,cId_clasificador,lnMonto,lnMonto_nacional, 'A','DEMO')
+			ENDIF
+		ENDSCAN
+		*-- Copiamos metas de currinde
+		SELECT currinde
+		SCAN ALL FOR monto_ingresado > 0
+			*-- Guardamos datos a grabar
+			cCateg_gasto		=  '0'
+			cGrupo_gasto		=  '0'
+			cModalidad_gasto	=  '00'
+			cElemento_gasto		=  '00'
+			cId_clasificador	= currinde.id_clasificador
+			cSec_func			= currinde.sec_func
+			lnMonto				= currinde.monto_ingresado
+			lnMonto_nacional	= currinde.monto_nacional
+			*-- Buscamos registro nuevo para la meta; si existe le sumamos monto
+			*-- de lo contrario lo creamos
+			IF SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+					lcSecuenciaActual+gc01+cId_clasificador+cSec_func,'c_exp_meta','exp_metap')
+				REPLACE monto WITH c_exp_meta.monto+lnMonto, monto_nacional WITH ;
+					c_exp_meta.monto_nacional+lnMonto_nacional IN c_exp_meta
+			ELSE
+				INSERT INTO c_exp_meta;
+					(ano_eje,sec_ejec,expediente,ciclo,fase,secuencia,correlativo, ;
+					categ_gasto,grupo_gasto,modalidad_gasto,elemento_gasto,id_clasificador,sec_func, ;
+					monto,monto_nacional,ind_proceso, estado_envio, archivo) ;
+					VALUES ;
+					(gcAno_Eje,gcSec_ejec,c_reasig_det.expediente,lcCicloActual,lcFaseActual, ;
+					lcSecuenciaActual,gc01,cCateg_gasto,cGrupo_gasto,cModalidad_gasto, cElemento_gasto, ;
+					cId_clasificador,cSec_func,lnMonto,lnMonto_nacional,'1', 'A', 'DEMO')
+			ENDIF
+		ENDSCAN
+	ENDIF
+	*-- Regresamos a Registros Fase nuevo
+	=SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+		lcSecuenciaActual, 'c_exp_fase','exp_fase')
+	=SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+		lcSecuenciaActual+gc01, 'c_exp_sec','exp_sec')
+	REPLACE c_exp_sec.cod_doc WITH lcCod_doc ;
+		c_exp_sec.num_doc WITH lcNum_doc ;
+		c_exp_sec.fecha_doc WITH ldFecha_doc IN c_exp_sec
+*!*		SELECT currinde
+*!*		USE
+	*-- Fin de Rendición
+
+
+
+ENDPROC 
+
+
+*--------------------------------
+PROCEDURE genera_reasignacion
+*--------------------------------
+	SELECT c_exp_sec
+	SET ORDER to exp_sec
+
+	SELECT currinde
+	GO TOP
+	lcCod_doc 		= currinde.cod_doc
+	lcNum_doc 		= currinde.num_doc
+	ldFecha_doc 	= currinde.Fecha_doc
+	lcMoneda 		= currinde.Moneda
+	lcTipo_cambio 	= currinde.Tipo_cambio
+	SUM monto_ingresado, monto_nacional TO lnMonto, lnMonto_nacional
+
+*!*		IF lnMonto=0
+*!*			*-- Accesamos al registro fase y secuencia nuevo para deshacerlos
+*!*			=SEEK(gcAno_Eje+gcSec_ejec+expediente.expediente+cCicloActual+cFaseActual+ ;
+*!*				cSecuenciaActual, 'expediente_fase','exp_fase')
+*!*			=SEEK(gcAno_Eje+gcSec_ejec+expediente.expediente+cCicloActual+cFaseActual+ ;
+*!*				cSecuenciaActual+gc01, 'expediente_secuencia','exp_sec')
+*!*			RETURN .F.
+*!*		ENDIF
+	*-- Suponemos que seguimos en registro gc01 de la fase anterior
+	REPLACE monto_saldo WITH c_exp_fase.monto_saldo-lnMonto_nacional IN c_exp_fase
+	LOCAL llAnoAnterior
+	SELECT currinde
+	GO TOP
+	llAnoAnterior = VAL(gcano_eje) < YEAR(currinde.Fecha_doc)
+	IF !llAnoAnterior
+*!*			*-- Accesamos registros de girado y devengado para guardar secuencia de operación anterior
+*!*			IF SEEK(gcAno_Eje + gcSec_ejec + c_reasig_det.expediente + 'GG' + ;
+*!*					c_reasig_det.secuencia, 'c_exp_fase','exp_fase')				
+*!*				cDSecuenciaAnterior=c_exp_fase.secuencia_anterior
+*!*			ELSE
+*!*				WAIT 'ERROR ... [Rendición Girado]' WINDOW TIMEOUT 1
+*!*				RETURN .F.
+*!*			ENDIF
+*!*			IF SEEK(gcAno_Eje + gcSec_ejec + c_reasig_det.expediente + 'GD' + ;
+*!*					cDSecuenciaAnterior, 'c_exp_fase','exp_fase')
+*!*				cCSecuenciaAnterior=c_exp_fase.secuencia_anterior
+*!*			ELSE
+*!*				WAIT 'ERROR ... [Rendición Devengado]' WINDOW TIMEOUT 1
+*!*				RETURN .F.
+*!*			ENDIF
+*!*			*------------------------------------------------------------------------------------
+*!*			*-- Guardamos la secuencia del girado para accesar a la rendición
+		SELECT CurRinde
+		GO TOP 
+		SCAN ALL 
+			cGSecuenciaActual = CurRinde.secuencia
+			*-- Ejecutamos las siguientes sentencias para cada fase (montos negativos)
+*!*				lncont=4
+*!*				DO WHILE lncont > 1
+*!*					lncont = lncont - 1
+				lcCicloActual	  = CurRinde.ciclo
+				lcFaseActual	  =	CurRinde.fase
+				lcSecuenciaActual =	CurRinde.secuencia
+				*-- Vamos a Registros Fase y Secuencia
+				=SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+					lcSecuenciaActual, 'c_exp_fase','exp_fase')
+				=SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+					lcSecuenciaActual+gc01, 'c_exp_sec','exp_sec')
+				REPLACE exp_sec.estado_ctb 	WITH 'E'
+				REPLACE exp_sec.edicion 	WITH 'R'	
+				*--////////////////////////////////////////////////////////////////////////
+				*-- Generamos el registro que albergará los montos negativos para cada fase
+				*--
+				lcCorrelativo='0000'
+				i=0
+				SET DELETED OFF
+				SELECT c_exp_sec
+				IF SEEK(gcano_eje + gcsec_ejec + c_exp_fase.expediente + ;
+						c_exp_fase.ciclo+c_exp_fase.fase+c_exp_fase.secuencia)
+					SCAN REST WHILE ano_eje + sec_ejec + expediente + ciclo + fase + secuencia == ;
+							gcano_eje + gcsec_ejec + c_exp_fase.expediente + ;
+							c_exp_fase.ciclo+c_exp_fase.fase+c_exp_fase.secuencia
+						lcCorrelativo=MAX(lcCorrelativo,c_exp_sec.correlativo)
+						IF !DELETED()
+							i=i+1
+						ENDIF
+					ENDSCAN
+				ENDIF
+				lcCorrelativo=PADL(INT(VAL(lcCorrelativo)+1),4,'0')
+				i=i+1
+				SET DELETED ON
+				=SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+					lcSecuenciaActual+gc01, 'c_exp_sec','exp_sec')
+				SCATTER MEMVAR
+				STORE 0 TO m.monto, m.monto_nacional, m.monto_extranjero
+				STORE '' TO m.ano_proceso, m.mes_proceso, m.dia_proceso
+				m.Correlativo			= lcCorrelativo
+				m.Cod_doc				= lcCod_doc
+				m.Num_doc				= lcNum_doc
+				m.Fecha_doc				= ldFecha_doc
+				m.Moneda				= gcSol
+				m.Tipo_cambio			= 0
+				m.Estado_envio			= 'A'
+				m.Estado				= 'T'
+				m.Estado_ctb			= 'E'
+				m.Archivo				= 'DEMO'
+				m.Grupo					= ''
+				m.Edicion				= ''
+				m.fecha_bd_oracle		= ldFecha_doc				
+				m.secuencia_solicitud 	= c_reasig_cab.secuencia_solicitud
+				INSERT INTO c_exp_sec FROM MEMVAR
+				*-- Creamos clasificadores y metas
+				SELECT c_exp_meta
+				lcClave=gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+lcSecuenciaActual
+				IF SEEK(lcClave)
+					SCAN REST WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia=lcClave FOR ;
+							estado_envio = 'A'
+						*-- Si la meta no tiene rendición no hacemos nada
+						lcClasif=id_clasificador
+						lcMeta=sec_func
+						IF SEEK(ano_eje+sec_ejec+expediente+'GG'+cGSecuenciaActual+lcClasif+ ;
+								lcMeta, 'currinde','Meta') AND !currinde.usado
+							SELECT currinde
+							REPLACE currinde.usado WITH .T.
+							SUM monto_ingresado, monto_nacional TO lnMonto,lnMonto_nacional FOR ;
+								id_clasif+meta=lcClasif+lcMeta
+						ELSE
+							LOOP
+						ENDIF
+						*-- Si se creó clasificador lo actualizamos, de lo contrario lo creamos.
+						*-- Guardamos RECNO() de meta para regresar, ya que SEEK moverá el puntero
+						SELECT c_exp_meta
+						lnRegno=RECNO('c_exp_meta')
+						lcClaveMeta=ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo+ ;
+							id_clasificador
+						IF SEEK(ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+lccorrelativo+ ;
+								lcClasif, 'c_exp_clasif','expclasifp')
+							REPLACE monto WITH c_exp_clasif.monto - lnMonto, ;
+								monto_nacional WITH c_exp_clasif.monto_nacional - ;
+								lnMonto_nacional IN c_exp_clasif
+						ELSE
+							SELECT c_exp_clasif
+							IF SEEK(lcClaveMeta,'c_exp_clasif','expclasifp')
+								SCATTER MEMVAR
+								m.Correlativo	= lcCorrelativo
+								m.Monto			= - lnMonto
+								m.Monto_nacional= - lnMonto_nacional
+								m.Estado_envio	= 'A'
+								m.Estado		= ''
+								m.Estado_ctb	= 'N'
+								m.Archivo		= 'DEMO'
+								INSERT INTO c_exp_clasif FROM MEMVAR
+							ELSE
+								WAIT 'ERROR ... [Anulación clasificador]' WINDOW TIMEOUT 1
+								CANCEL
+							ENDIF
+						ENDIF
+						*-- Siempre creamos meta a partir de meta anterior
+						SELECT c_exp_meta
+						GO lnRegno
+						SCATTER MEMVAR
+						m.Correlativo	= lcCorrelativo
+						m.Monto			= - lnMonto
+						m.Monto_nacional= - lnMonto_nacional
+						m.Estado_envio	= 'A'
+						m.Estado		= ''
+						m.Archivo		= 'DEMO'
+						m.Ind_proceso	= '0'	
+						m.Edicion		= ''
+						INSERT INTO c_exp_meta FROM MEMVAR
+						*-- Actualiza acumulado
+	*					=SEEK(ano_eje+gcSec_ejec_meta+sec_func,gcAlias_meta,'meta')
+	*					=Thisform.acumula_gasto(c_exp_meta.monto_nacional,.T.)
+						*--
+						SELECT c_exp_meta 
+						GO lnRegno IN c_exp_meta 
+					ENDSCAN
+				ENDIF
+				*-- Actualizamos secuencia
+				SELECT currinde
+				SUM monto_ingresado, monto_nacional TO lnMonto, lnMonto_nacional
+				REPLACE ALL usado WITH .F.
+				REPLACE monto WITH - lnMonto, ;
+					monto_nacional WITH - lnMonto_nacional IN c_exp_sec
+*			ENDDO
+		ENDSCAN 
+		*-- Ejecutamos las siguientes sentencias para cada fase (montos positivos)
+		SELECT CurRinde
+		GO TOP 
+		SCAN ALL 
+*!*			lncont=0
+*!*			DO WHILE lncont < 3
+*!*				lncont = lncont + 1
+			lcCicloActual		= CurRinde.Ciclo
+			lcFaseActual		= CurRinde.Fase
+			lcSecuenciaActual	= CurRinde.secuencia
+			*-- Vamos a Registros Fase y Secuencia
+			=SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+				lcSecuenciaActual, 'c_exp_fase','exp_fase')
+			=SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+				lcSecuenciaActual+gc01, 'c_exp_sec','exp_sec')
+			*--///////////////////////////////////////////////////////////////////////
+			*-- Generamos el registro que albergará los montos rendidos para cada fase
+			*--
+*!*				SELECT currinde
+*!*				GO TOP
+			lcMoneda=gcSol		&&currinde.moneda
+			lcTipo_cambio=0		&&currinde.tipo_cambio
+			lcCorrelativo='0000'
+			i=0
+			SET DELETED OFF
+			SELECT c_exp_sec
+			IF SEEK(gcano_eje + gcsec_ejec + c_exp_fase.expediente + ;
+					c_exp_fase.ciclo+c_exp_fase.fase+c_exp_fase.secuencia)
+				SCAN REST WHILE ano_eje + sec_ejec + expediente + ciclo + fase + secuencia == ;
+						gcano_eje + gcsec_ejec + c_exp_fase.expediente + ;
+						c_exp_fase.ciclo+c_exp_fase.fase+c_exp_fase.secuencia
+					lcCorrelativo=MAX(lcCorrelativo,c_exp_sec.correlativo)
+					i=i+1
+				ENDSCAN
+			ENDIF
+			lcCorrelativo=PADL(INT(VAL(lcCorrelativo)+1),4,'0')
+			i=i+1
+			SET DELETED ON
+			=SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+				lcSecuenciaActual+gc01, 'c_exp_sec','exp_sec')
+			SCATTER MEMVAR
+			STORE 0 TO m.monto, m.monto_nacional, m.monto_extranjero
+			STORE '' TO m.ano_proceso, m.mes_proceso, m.dia_proceso
+			m.Correlativo			= lcCorrelativo
+			m.Cod_doc				= lcCod_doc
+			m.Num_doc				= lcNum_doc
+			m.Fecha_doc				= ldFecha_doc
+			m.Moneda				= lcMoneda
+			m.Tipo_cambio			= lcTipo_cambio
+			m.Estado_envio			= 'A'
+			m.Estado				= ''
+			m.Estado_ctb			= 'N'
+			m.Archivo				= 'DEMO'
+			m.Grupo					= ''
+			m.Edicion				= 'E'
+			m.fecha_bd_oracle		= ldFecha_doc			
+			m.secuencia_solicitud	= c_reasig_cab.secuencia_solicitud
+			
+			INSERT INTO c_exp_sec FROM MEMVAR
+*			GO RECNO('c_exp_sec') IN c_exp_sec 
+			*-- Copiamos clasificadores de currinde
+			SELECT currinde
+			SCAN ALL FOR monto_ingresado > 0
+				*-- Guardamos datos a grabar
+				lcCateg_gasto		= '0'
+				lcGrupo_gasto		= '0'
+				lcModalidad_gasto	= '00'
+				lcElemento_gasto	= '00'
+				lcIdClasificador	= currinde.id_clasificador
+				lcSec_func			= currinde.sec_func
+				lnMonto				= currinde.monto_ingresado
+				lnMonto_nacional	= currinde.monto_nacional
+				*-- Buscamos registro nuevo para el clasificador; si existe le sumamos monto
+				*-- de lo contrario lo creamos
+				IF SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+						lcSecuenciaActual+lcCorrelativo+lcIdClasificador,'c_exp_clasif','expclasifp')
+					REPLACE monto WITH c_exp_clasif.monto+lnMonto, ;
+						monto_nacional WITH c_exp_clasif.monto_nacional + ;
+						lnMonto_nacional IN c_exp_clasif
+				ELSE
+					INSERT INTO c_exp_clasif;
+						(ano_eje,sec_ejec,expediente,ciclo,fase,secuencia,correlativo, ;
+						categ_gasto,grupo_gasto,modalidad_gasto,elemento_gasto,id_clasificador,secuencia_to,monto, ;
+						monto_nacional,estado_envio,estado, archivo) ;
+						VALUES ;
+						(gcAno_Eje,gcSec_ejec,c_reasig_det.expediente,lcCicloActual,lcFaseActual, ;
+						lcSecuenciaActual,lcCorrelativo,lcCateg_gasto,lcGrupo_gasto, ;
+						lcModalidad_gasto,lcElemento_gasto,lcIdClasificador, '000',lnMonto,lnMonto_nacional, ;
+						'A','','DEMO')
+				ENDIF
+				*-- Buscamos registro nuevo para la meta; si existe le sumamos monto
+				*-- de lo contrario lo creamos
+				IF SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+						lcSecuenciaActual+lcCorrelativo+lcIdclasificador+lcSec_func,'c_exp_meta','exp_metap')
+					REPLACE monto WITH c_exp_meta.monto+lnMonto, monto_nacional WITH ;
+						c_exp_meta.monto_nacional+lnMonto_nacional IN c_exp_meta
+				ELSE
+					INSERT INTO c_exp_meta;
+						(ano_eje,sec_ejec,expediente,ciclo,fase,secuencia,correlativo, ;
+						categ_gasto,grupo_gasto,modalidad_gasto,elemento_gasto,id_clasificador,sec_func, ;
+						monto,monto_nacional,estado_envio,estado,edicion,ind_proceso, archivo) ;
+						VALUES ;
+						(gcAno_Eje,gcSec_ejec,c_reasig_det.expediente,lcCicloActual,lcFaseActual, ;
+						lcSecuenciaActual,lcCorrelativo,lcCateg_gasto,lcGrupo_gasto, ;
+						lcModalidad_gasto,lcElemento_gasto,lcIdClasificador,lcSec_func,lnMonto,lnMonto_nacional, ;
+						'A','','','1','DEMO')
+				ENDIF
+				*-- Actualiza acumulado
+*				=SEEK(ano_eje+gcSec_ejec_meta+sec_func,gcAlias_meta,'meta')
+*				=Thisform.acumula_gasto(lnmonto_nacional,.T.,,,,,.T.)	&& Ya validó contra calendarios cuando se rendía.
+			ENDSCAN
+			*-- Actualizamos secuencia
+			SELECT currinde
+			SUM monto_ingresado, monto_nacional TO lnMonto, lnMonto_nacional
+			REPLACE monto WITH lnMonto, monto_nacional WITH lnMonto_nacional IN c_exp_sec
+		ENDSCAN 
+	ENDIF
+	*-- Sumamos nuevamente currinde para actualizar la fase Rendición
+	SELECT currinde
+	GO TOP
+	lcMoneda = gcSol	&& currinde.Moneda
+	lcTipo_cambio = 0	&& currinde.Tipo_cambio
+	SUM monto_ingresado TO lnMonto
+	lnMonto_nacional	= IIF(lcMoneda=gcSol,lnMonto, SF_ROUND(lnMonto*lcTipo_cambio,2))
+	lnMonto_nacional_f	= lnMonto_nacional
+
+
+ENDPROC 
+
+
+*-----------------
+PROCEDURE sf_round
+*-----------------
+	LPARAMETERS lnExpression, lnDecimals
+	RETURN ROUND(VAL(STR(lnExpression,31,15)), lnDecimals)
+
+ENDPROC 
+
+*--------------------------------
+PROCEDURE rendicion_certificado
+*--------------------------------
+	SELECT currinde
+	GO TOP
+	REPLACE ALL currinde.usado WITH .F.
+	lcCod_doc 			= currinde.cod_doc
+	lcNum_doc 			= currinde.num_doc
+	ldFecha_doc 		= currinde.Fecha_doc
+	lcMoneda 			= currinde.Moneda
+	lcTipo_cambio 		= currinde.Tipo_cambio
+	cGSecuenciaActual	= currinde.certificado_secuencia
+	SUM monto_ingresado, monto_nacional TO lnMonto, lnMonto_nacional
+
+	SELECT currinde
+	GO TOP
+	llAnoAnterior = VAL(gcano_eje) < YEAR(currinde.Fecha_doc)
+	IF !llAnoAnterior
+		*-- Accesamos registros de girado y devengado para guardar secuencia de operación anterior
+		IF SEEK(gcAno_Eje + gcSec_ejec + c_reasig_det.certificado + c_reasig_det.certificado_secuencia , 'c_fase','certi_fase')				
+			cDSecuenciaAnterior=c_fase.secuencia_padre
+		ELSE
+			WAIT 'ERROR ... [Rendición Compromiso Anual]' WINDOW TIMEOUT 1
+			RETURN .F.
+		ENDIF
+		IF SEEK(gcAno_Eje + gcSec_ejec + c_reasig_det.certificado+cDSecuenciaAnterior, 'c_fase','certi_fase')
+			cCSecuenciaAnterior=c_fase.secuencia_padre
+		ELSE
+			WAIT 'ERROR ... [Rendición Certificado]' WINDOW TIMEOUT 1
+			RETURN .F.
+		ENDIF
+		*------------------------------------------------------------------------------------
+		*-- Guardamos la secuencia del girado para accesar a la rendición
+		cGSecuenciaActual=c_reasig_det.secuencia
+		*-- Ejecutamos las siguientes sentencias para cada fase (montos negativos)
+		lncont = 3
+		DO WHILE lncont > 1
+			lncont = lncont - 1
+			lcSecuenciaActual=IIF(lncont=2,cDSecuenciaAnterior, cSecuenciaAnterior)
+			*-- Vamos a Registros Fase y Secuencia
+			=SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.certificado+lcSecuenciaActual, 'c_fase','certi_fase')
+			=SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.certificado+lcSecuenciaActual+gc01, 'c_secuencia','certi_sec')
+			*--////////////////////////////////////////////////////////////////////////
+			*-- Generamos el registro que albergará los montos negativos para cada fase
+			*--
+			lcCorrelativo='0000'
+			i=0
+			SET DELETED OFF
+			SELECT c_secuencia
+			IF SEEK(gcano_eje + gcsec_ejec + c_fase.certificado + c_fase.secuencia)
+				SCAN REST WHILE ano_eje + sec_ejec + certificado + secuencia == ;
+						gcano_eje + gcsec_ejec + c_fase.certificado + c_fase.secuencia
+					lcCorrelativo=MAX(lcCorrelativo,c_secuencia.correlativo)
+					IF !DELETED()
+						i=i+1
+					ENDIF
+				ENDSCAN
+			ENDIF
+			lcCorrelativo=PADL(INT(VAL(lcCorrelativo)+1),4,'0')
+			i=i+1
+			SET DELETED ON
+			=SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.certificado+lcSecuenciaActual+gc01, 'c_secuencia','certi_sec')
+			SCATTER MEMVAR
+			STORE 0 TO m.monto, m.monto_nacional, m.monto_extranjero
+			STORE '' TO m.ano_proceso, m.mes_proceso, m.dia_proceso
+			m.Correlativo			= lcCorrelativo
+			m.Cod_doc				= lcCod_doc
+			m.Num_doc				= lcNum_doc
+			m.Fecha_doc				= ldFecha_doc
+			m.Moneda				= gcSol
+			m.Tipo_cambio			= 0
+			m.Estado_envio			= 'T'
+			m.estado_registro 		= 'A'
+			m.tipo_registro			= 'H'
+			m.Estado_ctb			= ''
+			m.Grupo					= ''
+			m.Edicion				= ''
+			m.fecha_bd_oracle		= ldFecha_doc
+			m.secuencia_solicitud	= c_reasig_cab.secuencia_solicitud
+			INSERT INTO c_secuencia FROM MEMVAR
+			*-- Creamos clasificadores y metas
+			SELECT c_meta
+			lcClave=gcAno_Eje+gcSec_ejec+c_reasig_det.certificado+lcSecuenciaActual
+			IF SEEK(lcClave)
+				SCAN REST WHILE ano_eje+sec_ejec+certificado+secuencia=lcClave FOR ;
+						estado_envio = 'A'
+					*-- Si la meta no tiene rendición no hacemos nada
+					lcClasif	=	id_clasificador
+					lcMeta		=	sec_func
+					IF SEEK(ano_eje+sec_ejec+certificado+cGSecuenciaActual+lcClasif+ ;
+							lcMeta, 'currinde','cMeta') AND !currinde.usado
+						SELECT currinde
+						REPLACE currinde.usado WITH .T.
+						SUM monto_ingresado, monto_nacional TO lnMonto,lnMonto_nacional FOR ;
+							id_clasif+meta=lcClasif+lcMeta
+					ELSE
+						LOOP
+					ENDIF
+					*-- Si se creó clasificador lo actualizamos, de lo contrario lo creamos.
+					*-- Guardamos RECNO() de meta para regresar, ya que SEEK moverá el puntero
+					SELECT c_meta
+					lnRegno=RECNO('c_meta')
+					lcClaveMeta=ano_eje+sec_ejec+certificado+secuencia+id_clasificador
+					IF SEEK(ano_eje+sec_ejec+certificado+secuencia+lccorrelativo+ ;
+							lcClasif, 'c_clasif','certi_clas')
+						REPLACE monto WITH c_clasif.monto - lnMonto, ;
+							monto_nacional WITH c_clasif.monto_nacional - ;
+							lnMonto_nacional IN c_clasif
+					ELSE
+						SELECT c_clasif
+						IF SEEK(lcClaveMeta,'c_clasif','certi_clas')
+							SCATTER MEMVAR
+							m.Correlativo		= lcCorrelativo
+							m.Monto				= - lnMonto
+							m.Monto_nacional	= - lnMonto_nacional
+							m.Estado_envio		= 'T'
+							m.estado_registro 	= 'A'
+							m.Estado			= 'H'
+							m.Estado_ctb		= ''
+							INSERT INTO c_clasif FROM MEMVAR
+						ELSE
+							WAIT 'ERROR ... [Anulación clasificador]' WINDOW TIMEOUT 1
+							CANCEL
+						ENDIF
+					ENDIF
+					*-- Siempre creamos meta a partir de meta anterior
+					SELECT c_meta
+					GO lnRegno
+					SCATTER MEMVAR
+					m.Correlativo		= lcCorrelativo
+					m.Monto				= - lnMonto
+					m.Monto_nacional	= - lnMonto_nacional
+					m.Estado_envio		= 'T'
+					m.Estado_registro 	= 'A'
+					m.Estado			= 'H'
+					m.Ind_proceso		= '0'	
+					m.Edicion			= ''
+					INSERT INTO c_meta FROM MEMVAR
+					*-- Actualiza acumulado
+*					=SEEK(ano_eje+gcSec_ejec_meta+sec_func,gcAlias_meta,'meta')
+*					=Thisform.acumula_gasto(c_exp_meta.monto_nacional,.T.)
+					*--
+					SELECT c_meta 
+					GO lnRegno IN c_meta 
+				ENDSCAN
+			ENDIF
+			*-- Actualizamos secuencia
+			SELECT currinde
+			SUM monto_ingresado, monto_nacional TO lnMonto, lnMonto_nacional
+			REPLACE ALL usado WITH .F.
+			REPLACE monto WITH - lnMonto, ;
+				monto_nacional WITH - lnMonto_nacional IN c_secuencia
+		ENDDO
+		
+		
+		*-- Ejecutamos las siguientes sentencias para cada fase (montos positivos)
+		lncont=0
+		DO WHILE lncont < 3
+			lncont = lncont + 1
+			lcSecuenciaActual=IIF(lncont=2,cSecuenciaAnterior,cDSecuenciaAnterior)
+			*-- Vamos a Registros Fase y Secuencia
+			=SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.certificado+lcSecuenciaActual, 'c_fase','certi_fase')
+			=SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.certificado+lcSecuenciaActual+gc01, 'c_secuencia','certi_sec')
+			*--///////////////////////////////////////////////////////////////////////
+			*-- Generamos el registro que albergará los montos rendidos para cada fase
+			*--
+			SELECT currinde
+			GO TOP
+			lcMoneda		=	gcSol		&&currinde.moneda
+			lcTipo_cambio	=	0		&&currinde.tipo_cambio
+			lcCorrelativo	=	'0000'
+			i=0
+			SET DELETED OFF
+			SELECT c_secuencia
+			IF SEEK(gcano_eje + gcsec_ejec + c_fase.certificado++c_fase.secuencia)
+				SCAN REST WHILE ano_eje + sec_ejec + certificado + secuencia == ;
+						gcano_eje + gcsec_ejec + c_fase.certificado + c_fase.secuencia
+					lcCorrelativo=MAX(lcCorrelativo,c_secuencia.correlativo)
+					i=i+1
+				ENDSCAN
+			ENDIF
+			lcCorrelativo=PADL(INT(VAL(lcCorrelativo)+1),4,'0')
+			i=i+1
+			SET DELETED ON
+			=SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.certificado+lcSecuenciaActual+gc01, 'c_secuencia','certi_sec')
+			SCATTER MEMVAR
+			STORE 0 TO m.monto, m.monto_nacional, m.monto_extranjero
+			STORE '' TO m.ano_proceso, m.mes_proceso, m.dia_proceso
+			m.Correlativo			= lcCorrelativo
+			m.Cod_doc				= lcCod_doc
+			m.Num_doc				= lcNum_doc
+			m.Fecha_doc				= ldFecha_doc
+			m.Moneda				= lcMoneda
+			m.Tipo_cambio			= lcTipo_cambio
+			m.Estado_envio			= 'T'
+			m.Estado				= 'I'
+			m.Estado_ctb			= ''
+			m.Grupo					= ''
+			m.Edicion				= 'I'
+			m.secuencia_solicitud	= c_reasig_cab.secuencia_solicitud
+			
+			INSERT INTO c_secuencia FROM MEMVAR
+			GO RECNO('c_secuencia') IN c_secuencia
+			*-- Copiamos clasificadores de currinde
+			SELECT currinde
+			SCAN ALL FOR monto_ingresado > 0
+				*-- Guardamos datos a grabar
+				lcCateg_gasto		= '0'
+				lcGrupo_gasto		= '0'
+				lcModalidad_gasto	= '00'
+				lcElemento_gasto	= '00'
+				lcIdClasificador	= currinde.id_clasificador
+				lcSec_func			= currinde.sec_func
+*!*					lnMonto				= currinde.monto_ingresado
+*!*					lnMonto_nacional	= currinde.monto_nacional
+				lnMonto				= 0.00
+				lnMonto_nacional	= 0.00
+				*-- Buscamos registro nuevo para el clasificador; si existe le sumamos monto
+				*-- de lo contrario lo creamos
+				IF SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.certificado+lcSecuenciaActual+lcCorrelativo+lcIdClasificador,'c_clasif','certi_clas')
+					REPLACE monto WITH c_clasif.monto+lnMonto, ;
+						monto_nacional WITH c_clasif.monto_nacional + ;
+						lnMonto_nacional IN c_clasif
+				ELSE
+					INSERT INTO c_clasif;
+						(ano_eje,sec_ejec,certificado,secuencia,correlativo, ;
+						id_clasificador,monto,monto_nacional,estado_registro, estado_envio) ;
+						VALUES ;
+						(gcAno_Eje,gcSec_ejec,c_reasig_det.certificado, ;
+						lcSecuenciaActual,lcCorrelativo,;
+						lcIdClasificador,lnMonto,lnMonto_nacional, ;
+						'A','T')
+				ENDIF
+				*-- Buscamos registro nuevo para la meta; si existe le sumamos monto
+				*-- de lo contrario lo creamos
+				IF SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.certificado+lcSecuenciaActual+lcCorrelativo+lcIdclasificador+lcSec_func,'c_meta','certi_meta')
+					REPLACE monto WITH c_meta.monto+lnMonto, monto_nacional WITH ;
+						c_meta.monto_nacional+lnMonto_nacional IN c_meta
+				ELSE
+					INSERT INTO c_meta;
+						(ano_eje,sec_ejec,certificado,secuencia,correlativo, id_clasificador,sec_func, ;
+						monto,monto_nacional,estado_envio,estado_registro) ;
+						VALUES ;
+						(gcAno_Eje,gcSec_ejec,c_reasig_det.certificado,lcSecuenciaActual,lcCorrelativo,;
+						lcIdClasificador,lcSec_func,lnMonto,lnMonto_nacional, ;
+						'T','A')
+				ENDIF
+				*-- Actualiza acumulado
+*				=SEEK(ano_eje+gcSec_ejec_meta+sec_func,gcAlias_meta,'meta')
+*				=Thisform.acumula_gasto(lnmonto_nacional,.T.,,,,,.T.)	&& Ya validó contra calendarios cuando se rendía.
+			ENDSCAN
+			*-- Actualizamos secuencia
+			SELECT currinde
+			SUM monto_ingresado, monto_nacional TO lnMonto, lnMonto_nacional
+			REPLACE monto WITH lnMonto, monto_nacional WITH lnMonto_nacional IN c_secuencia
+		ENDDO
+	ENDIF
+	
+	
+*!*		*-- Sumamos nuevamente currinde para actualizar la fase Rendición
+*!*		SELECT currinde
+*!*		GO TOP
+*!*		lcMoneda = gcSol	&& currinde.Moneda
+*!*		lcTipo_cambio = 0	&& currinde.Tipo_cambio
+*!*		SUM monto_ingresado TO lnMonto
+*!*		lnMonto_nacional	= IIF(lcMoneda=gcSol,lnMonto, SF_ROUND(lnMonto*lcTipo_cambio,2))
+*!*		lnMonto_nacional_f	= lnMonto_nacional
+*!*		*-- Accesamos al registro de fase Rendición para reemplazar
+*!*	**	
+*!*		=SEEK(gcano_eje+gcsec_ejec+c_reasig_det.expediente+c_reasig_det.ciclo+c_reasig_det.fase+c_reasig_det.secuencia,'c_exp_fase','exp_fase')
+*!*		=SEEK(gcano_eje+gcsec_ejec+c_reasig_det.expediente+c_reasig_det.ciclo+c_reasig_det.fase+c_reasig_det.secuencia+c_reasig_det.correlativo,'c_exp_sec','exp_sec')
+*!*		lcMejor_fecha  			= c_exp_fase.mejor_fecha
+*!*		lcOrigen				= c_exp_fase.origen
+*!*		lcFuente_financ 		= c_exp_fase.fuente_financ
+*!*		lcProyecto				= c_exp_fase.proyecto	
+*!*		lcTipo_pago				= c_exp_fase.tipo_pago
+*!*		lcTipo_compromiso 		= c_exp_fase.tipo_compromiso
+*!*		lcTipo_recurso			= c_exp_fase.tipo_recurso
+*!*		lcTipo_financiamiento	= c_exp_fase.tipo_financiamiento
+*!*		lcCertificado			= c_exp_fase.certificado
+*!*		lcCertificado_sec		= c_exp_fase.certificado_secuencia
+*!*		lcBanco 				= ''
+*!*		lcCtacte 				= ''
+*!*		lcTipo_id 				= c_exp_fase.tipo_id
+*!*		lcRuc					= c_exp_fase.ruc
+*!*		lcSecuencia				= '0000'
+*!*		lcCicloActual 			= 'G'
+*!*		lcFaseActual    		= 'R'
+*!*		lcAnoCtacte 			= ''
+*!*		i=0
+*!*		SET DELETED OFF
+*!*		SELECT c_exp_fase
+*!*		IF SEEK(gcano_eje + gcsec_ejec + c_reasig_det.expediente + lcCicloActual)
+*!*			SCAN REST WHILE ano_eje + sec_ejec + expediente + ciclo  == ;
+*!*					gcano_eje + gcsec_ejec + c_reasig_det.expediente + lcCicloActual 
+*!*				lcSecuencia=MAX(lcSecuencia,c_exp_fase.secuencia)
+*!*				i=i+1
+*!*			ENDSCAN
+*!*		ENDIF
+*!*		lcSecuenciaActual=PADL(INT(VAL(lcSecuencia)+1),4,'0')
+*!*		i=i+1
+*!*		SET DELETED ON
+
+*!*		
+*!*		IF !SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+*!*				lcSecuenciaActual, 'c_exp_fase','exp_fase')
+*!*			INSERT INTO c_exp_fase (ano_eje, sec_ejec, expediente, ciclo, fase, secuencia, estado_envio, certificado, certificado_secuencia , archivo, secuencia_solicitud);
+*!*				VALUES (gcano_eje, gcsec_ejec, c_reasig_det.expediente, lcCicloActual, lcFaseActual,lcSecuenciaActual, 'A', lcCertificado, lcCertificado_sec, 'DEMO', c_reasig_cab.secuencia_solicitud)
+*!*				
+*!*			REPLACE ;
+*!*				c_exp_fase.secuencia_padre 		WITH c_reasig_det.secuencia_padre ;
+*!*				c_exp_fase.secuencia_anterior 	WITH c_reasig_det.secuencia ;
+*!*				c_exp_fase.monto_nacional 		WITH lnMonto_nacional ;
+*!*				c_exp_fase.monto_saldo 			WITH lnMonto_nacional ;
+*!*				c_exp_fase.mejor_fecha 			WITH lcMejor_fecha ;
+*!*				c_exp_fase.origen 				WITH lcOrigen ;
+*!*				c_exp_fase.fuente_financ 		WITH lcFuente_financ ;
+*!*				c_exp_fase.proyecto 			WITH lcProyecto ;
+*!*				c_exp_fase.tipo_pago 			WITH lcTipo_pago ;
+*!*				c_exp_fase.ano_cta_cte 			WITH lcAnoCtacte ;		
+*!*				c_exp_fase.tipo_compromiso 		WITH lcTipo_compromiso ;
+*!*				c_exp_fase.tipo_recurso 		WITH lcTipo_recurso ;
+*!*				c_exp_fase.tipo_financiamiento 	WITH lcTipo_financiamiento ;
+*!*				c_exp_sec.banco 				WITH lcBanco ;
+*!*				c_exp_sec.cta_cte 				WITH lcCtacte ;
+*!*				c_exp_fase.tipo_id 				WITH lcTipo_id ;
+*!*				c_exp_fase.ruc 					WITH lcRuc IN c_exp_fase
+*!*				
+
+*!*			*-- Accesamos al registro secuencia nuevo con correlativo gc01 para reemplazar
+*!*			GO RECNO('c_exp_fase') IN c_exp_fase
+*!*			IF !SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+*!*					lcSecuenciaActual+gc01, 'c_exp_sec','exp_sec')
+*!*				INSERT INTO c_exp_sec (ano_eje, sec_ejec, expediente, ciclo, fase, secuencia, correlativo, estado_envio, archivo);
+*!*						VALUES (gcano_eje, gcsec_ejec ,c_reasig_det.expediente, lcCicloActual, lcFaseActual,lcSecuenciaActual, gc01, 'A', 'DEMO') 	
+*!*				REPLACE ;
+*!*					c_exp_sec.cod_doc 		 WITH lcCod_doc ;
+*!*					c_exp_sec.num_doc 		 WITH lcNum_doc ;
+*!*					c_exp_sec.fecha_doc 	 WITH ldFecha_doc ;
+*!*					c_exp_sec.moneda	 	 WITH lcMoneda ;
+*!*					c_exp_sec.tipo_cambio 	 WITH lcTipo_cambio ;
+*!*					c_exp_sec.monto 		 WITH lnMonto ;
+*!*					c_exp_sec.monto_nacional WITH lnMonto_nacional IN c_exp_sec
+*!*			ELSE
+*!*				WAIT 'ERROR ... [Secuencia Actual]' WINDOW TIMEOUT 1
+*!*				RETURN .F.
+*!*			ENDIF
+*!*			*-- Copiamos clasificadores de currinde
+*!*			SELECT currinde
+*!*			SCAN ALL FOR monto_ingresado > 0
+*!*				*-- Guardamos datos a grabar
+*!*				cCateg_gasto		= '0'
+*!*				cGrupo_gasto		= '0'
+*!*				cModalidad_gasto	= '00'
+*!*				cElemento_gasto		= '00'
+*!*				cId_clasificador	= currinde.id_clasificador
+*!*				lnMonto				= currinde.monto_ingresado
+*!*				lnMonto_nacional	= currinde.monto_nacional
+*!*				cSecuencia_to 		= '000'
+*!*				*-- Buscamos registro nuevo para el clasificador; si existe le sumamos monto
+*!*				*-- de lo contrario lo creamos
+*!*				IF SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+*!*						lcSecuenciaActual+gc01+cId_clasificador,'c_exp_clasif','expclasifp')
+*!*					REPLACE monto WITH c_exp_clasif.monto + lnMonto, monto_nacional WITH ;
+*!*						c_exp_clasif.monto_nacional+lnMonto_nacional IN c_exp_clasif
+*!*				ELSE
+*!*					INSERT INTO c_exp_clasif;
+*!*						(ano_eje,sec_ejec,expediente,ciclo,fase,secuencia,correlativo,secuencia_to, ;
+*!*						categ_gasto,grupo_gasto,modalidad_gasto,elemento_gasto,id_clasificador,monto,monto_nacional, estado_envio, archivo) ;
+*!*						VALUES ;
+*!*						(gcAno_Eje,gcSec_ejec,c_reasig_det.expediente,lcCicloActual,lcFaseActual, ;
+*!*						lcSecuenciaActual,gc01,cSecuencia_to,cCateg_gasto,cGrupo_gasto,cModalidad_gasto, ;
+*!*						cElemento_gasto,cId_clasificador,lnMonto,lnMonto_nacional, 'A','DEMO')
+*!*				ENDIF
+*!*			ENDSCAN
+*!*			*-- Copiamos metas de currinde
+*!*			SELECT currinde
+*!*			SCAN ALL FOR monto_ingresado > 0
+*!*				*-- Guardamos datos a grabar
+*!*				cCateg_gasto		=  '0'
+*!*				cGrupo_gasto		=  '0'
+*!*				cModalidad_gasto	=  '00'
+*!*				cElemento_gasto		=  '00'
+*!*				cId_clasificador	= currinde.id_clasificador
+*!*				cSec_func			= currinde.sec_func
+*!*				lnMonto				= currinde.monto_ingresado
+*!*				lnMonto_nacional	= currinde.monto_nacional
+*!*				*-- Buscamos registro nuevo para la meta; si existe le sumamos monto
+*!*				*-- de lo contrario lo creamos
+*!*				IF SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+*!*						lcSecuenciaActual+gc01+cId_clasificador+cSec_func,'c_exp_meta','exp_metap')
+*!*					REPLACE monto WITH c_exp_meta.monto+lnMonto, monto_nacional WITH ;
+*!*						c_exp_meta.monto_nacional+lnMonto_nacional IN c_exp_meta
+*!*				ELSE
+*!*					INSERT INTO c_exp_meta;
+*!*						(ano_eje,sec_ejec,expediente,ciclo,fase,secuencia,correlativo, ;
+*!*						categ_gasto,grupo_gasto,modalidad_gasto,elemento_gasto,id_clasificador,sec_func, ;
+*!*						monto,monto_nacional,ind_proceso, estado_envio, archivo) ;
+*!*						VALUES ;
+*!*						(gcAno_Eje,gcSec_ejec,c_reasig_det.expediente,lcCicloActual,lcFaseActual, ;
+*!*						lcSecuenciaActual,gc01,cCateg_gasto,cGrupo_gasto,cModalidad_gasto, cElemento_gasto, ;
+*!*						cId_clasificador,cSec_func,lnMonto,lnMonto_nacional,'1', 'A', 'DEMO')
+*!*				ENDIF
+*!*			ENDSCAN
+*!*		ENDIF
+*!*		*-- Regresamos a Registros Fase nuevo
+*!*		=SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+*!*			lcSecuenciaActual, 'c_exp_fase','exp_fase')
+*!*		=SEEK(gcAno_Eje+gcSec_ejec+c_reasig_det.expediente+lcCicloActual+lcFaseActual+ ;
+*!*			lcSecuenciaActual+gc01, 'c_exp_sec','exp_sec')
+*!*		REPLACE c_exp_sec.cod_doc WITH lcCod_doc ;
+*!*			c_exp_sec.num_doc WITH lcNum_doc ;
+*!*			c_exp_sec.fecha_doc WITH ldFecha_doc IN c_exp_sec
+
+	
+
+
+ENDPROC 
+
+*----------------------*
+FUNCTION rinde_igual
+*----------------------*
+	llesigual = .T.
+	SELECT c_reasig_meta
+	SEEK gcano_eje+gcsec_ejec+c_reasig_cab.secuencia_solicitud+c_reasig_det.sec_x_expediente
+	SCAN ALL 
+	      lnmonto_ori 		= lnmonto_ori + c_reasig_meta.monto_nacional
+	      llcuenta_destino 	= 0
+	      *-
+	      lnmonto_dst 		= 0
+	      IF !llesigual THEN 
+	      	LOOP 
+	      ENDIF 
+	      SELECT c_reasig_dst
+	      SEEK gcano_eje+gcsec_ejec+c_reasig_meta.secuencia_solicitud+c_reasig_meta.sec_x_expediente+;
+	      	   c_reasig_meta.id_clasificador+c_reasig_meta.sec_func
+	      SCAN WHILE ano_eje+sec_ejec+secuencia_solicitud+sec_x_expediente+id_clasificador+sec_func = ;
+	                              gcano_eje+gcsec_ejec+c_reasig_meta.secuencia_solicitud+c_reasig_meta.sec_x_expediente+;
+						     	  c_reasig_meta.id_clasificador+c_reasig_meta.sec_func FOR !EMPTY(monto_nacional)
+	            *-
+	            llcuenta_destino = llcuenta_destino + 1
+	            lnmonto_dst = lnmonto_dst + c_reasig_dst.monto_nacional
+	            IF c_reasig_meta.id_clasificador <> c_reasig_dst.id_clasificador_dst THEN 
+	            	llesigual = .F.
+	            ENDIF 
+	            
+	            *-
+	      ENDSCAN
+		  IF llcuenta_destino > 1 THEN	  
+			    llesigual = .F.	  
+		  ENDIF 
+		  
+	      
+	ENDSCAN
+
+RETURN llesigual
+
+

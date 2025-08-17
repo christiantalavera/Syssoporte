@@ -1,0 +1,37 @@
+USE siaf!intf_adm_cab 		IN 0   
+USE cert!control_interfase 	IN 0 ORDER tag sec_ejec
+USE cert!registro_ingreso	IN 0 ORDER tag cabecera descending 
+USE cert!comprobante_pago	IN 0 ORDER tag nro_cp
+
+SELECT MAX(PADL(INT(VAL(secuencial)),20,'0')) as secuencial WHERE sec_ejec = gcsec_ejec FROM siaf!intf_adm_cab INTO CURSOR curmax
+SELECT curMax
+lcSecuencial = IIF(ISNULL(curMax.secuencial),'00000000000000000000',curMax.secuencial)
+lcSecuencial = PADL(INT(VAL(lcSecuencial)+1),20,'0')
+llOk = .T.
+DO WHILE llOk
+	IF !SEEK(lcSecuencial,'registro_ingreso') THEN 
+		llOk = .F.
+	ELSE 
+		lcSecuencial = PADL(INT(VAL(lcSecuencial)+1),20,'0')
+	ENDIF 
+ENDDO  
+
+SELECT MAX(PADL(INT(VAL(secuencial)),20,'0')) as secuencial WHERE sec_ejec = gcsec_ejec FROM registro_ingreso INTO CURSOR curmaxIngreso
+SELECT curMaxIngreso
+lcSecuencialINgreso = IIF(ISNULL(curMaxIngreso.secuencial),'00000000000000000000',curMaxIngreso.secuencial)
+lcSecuencialIngreso = PADL(INT(VAL(lcSecuencialINgreso)+1),20,'0')
+
+IF VAL(lcSecuencial) < VAL(lcSecuencialIngreso) THEN 
+	lcSecuencial = lcSecuencialIngreso
+ENDIF 
+
+IF SEEK(gcsec_ejec,'control_interfase') THEN 
+	REPLACE control_interfase.operacion WITH lcSecuencial
+ELSE
+	INSERT INTO control_interfase VALUES (gcsec_ejec, lcSecuencial)
+ENDIF 
+
+
+USE IN intf_adm_cab
+USE IN control_interfase
+USE IN registro_ingreso

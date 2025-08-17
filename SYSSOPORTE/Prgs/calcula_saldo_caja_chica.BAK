@@ -1,0 +1,219 @@
+PARAMETERS lcMes, lcExpediente_encargante, lcSec_ejec2
+*-- Si no existe fuente o fase no es compromiso no sumamos
+*!*	IF EMPTY(lcFuente) &&OR expediente_secuencia.fase <> 'C'
+*!*		RETURN
+*!*	ENDIF
+*-- Este método se utiliza para hallar:
+*-- 1. El total (apertura+ampliaciones) del FPPE que es usado como techo. (Registros tipo "F")
+*-- 2. El saldo mensual (total-usado)
+*-- 3. Lo usado en el mes
+
+LOCAL lcApertura, lcRendicion, lcMes1, lnfpe_mes, lnfpe_ano, lngasto_mes, ;
+	lngasto_ano, lnoldalias, lcask, lnMonto
+
+lcApertura='C '
+lcRendicion='RC'
+*lcMes=gcmes_ejec
+lnOldAlias=SELECT()
+USE siaf!expediente 			IN 0 AGAIN ALIAS a_expediente ORDER tipo_ope
+USE siaf!expediente_fase 		IN 0 AGAIN ALIAS a_fase ORDER exp_fase
+USE siaf!expediente_secuencia 	IN 0 AGAIN ALIAS a_secuencia ORDER exp_sec
+USE siaf!expediente_clasif 		IN 0 AGAIN ALIAS a_clasif ORDER exp_sec
+USE siaf!expediente_meta		IN 0 AGAIN ALIAS a_meta ORDER exp_metap
+USE siaf!maestro_clasificador	IN 0 AGAIN ALIAS a_clasificador ORDER idclasif
+
+
+CREATE CURSOR cur_Caja (ano_eje						c(4),;
+					   sec_ejec						c(6),;
+					   origen						c(1),;
+					   fuente_financ				c(2),;
+					   id_clasificador				c(7),;
+					   clasificador					c(10),;
+					   sec_func						c(4),;
+					   monto_inicial				n(19,2),;
+					   monto_utilizado_anual		n(19,2),;
+					   monto_utilizado_mensual		n(19,2),;
+					   monto_reembolsado_anual		n(19,2),;
+					   monto_reembolsado_mensual	n(19,2),;
+					   monto_saldo					n(19,2))
+					   
+INDEX on ano_eje+sec_ejec+origen+fuente_financ+id_clasificador+sec_func TAG inx1
+					   
+
+SELECT a_expediente
+SET ORDER TO tipo_ope
+SET RELATION TO
+SELECT a_fase
+SET ORDER TO exp_fase
+SET RELATION TO
+SELECT a_secuencia
+SET ORDER TO exp_sec
+SET RELATION TO
+SELECT a_clasif
+SET ORDER TO exp_sec
+SET RELATION TO ano_eje + sec_ejec + expediente + ciclo + fase + secuencia INTO a_fase
+SET RELATION TO ano_eje + sec_ejec + expediente + ciclo + fase + secuencia + correlativo INTO a_secuencia ADDITIVE
+
+STORE 0 TO lnfpe_mes, lnfpe_ano, lngasto_mes, lngasto_ano, lnreemb_mes, lnreemb_ano
+*--
+SELECT a_expediente
+IF SEEK(gcAno_eje + gcSec_ejec + lcApertura)
+	SCAN REST WHILE ano_eje + sec_ejec + tipo_operacion = gcAno_eje + gcSec_ejec + lcApertura
+		*-- Chequeo de encargo x ejecutora y expediente
+		IF !EMPTY(lcexpediente_encargante)
+			IF a_expediente.sec_ejec2 <> lcsec_ejec2 OR ;
+				a_expediente.expediente_encargante <> lcexpediente_encargante
+				LOOP
+			ENDIF
+		ELSE
+			IF a_expediente.sec_ejec2 <> lcsec_ejec2 THEN 
+				LOOP
+			ENDIF
+		ENDIF
+		SELECT a_clasif
+		IF SEEK(gcAno_eje+gcSec_ejec+a_expediente.expediente+'GG')
+			SCAN REST WHILE ;
+				ano_eje+sec_ejec+expediente+ciclo+fase = gcAno_eje+gcSec_ejec+a_expediente.expediente+'GG' FOR estado_envio = 'A'
+				xclave = a_clasif.ano_eje+a_clasif.sec_ejec+a_clasif.expediente+a_clasif.ciclo+a_clasif.fase+a_clasif.secuencia+a_clasif.correlativo+a_clasif.id_clasificador				
+				SELECT a_meta
+				SEEK xclave
+				SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo+id_clasificador =  xclave
+					SCATTER MEMVAR 
+					m.origen 				  = a_fase.origen
+					m.fuente_financ 		  = a_fase.fuente_financ
+					m.monto_inicial			  = m.monto_nacional
+					m.monto_utilizado_anual   = m.monto_nacional
+					m.monto_utilizado_mensual = 0.00
+					m.clasificador 			  = IIF(SEEK(m.ano_eje+m.id_clasificador,'a_clasificador'),a_clasificador.clasificador,'')
+					
+					lnfpe_ano 				  = lnfpe_ano + m.monto_nacional
+					lcMes1	  				  = PADL(MONTH(a_secuencia.fecha_doc),2,'0')
+					IF lcMes1 > lcMes THEN 
+						LOOP 
+					ENDIF 
+					
+					
+					IF lcMes1 <= lcMes
+						m.monto_utilizado_mensual = m.monto_nacional
+						lnfpe_mes=lnfpe_mes+monto_nacional
+					ENDIF
+					
+					IF !SEEK(m.ano_eje+m.sec_ejec+m.origen+m.fuente_financ+m.id_clasificador+m.sec_func,'cur_caja') THEN 
+						INSERT INTO cur_caja (ano_eje, sec_ejec, origen, fuente_financ, id_clasificador, sec_func, monto_inicial, monto_utilizado_anual, monto_utilizado_mensual, clasificador);
+								VALUES (m.ano_eje, m.sec_ejec, m.origen, m.fuente_financ, m.id_clasificador, m.sec_func,m.monto_inicial, m.monto_utilizado_anual, m.monto_utilizado_mensual, m.clasificador)   
+					ELSE 
+						REPLACE monto_inicial				WITH monto_inicial + m.monto_nacional				IN cur_Caja
+						REPLACE monto_utilizado_mensual 	WITH monto_utilizado_mensual + m.monto_nacional		IN cur_Caja
+						REPLACE monto_utilizado_anual		WITH monto_utilizado_anual + m.monto_nacional	 	IN cur_Caja
+					ENDIF 
+					
+				ENDSCAN  
+			ENDSCAN
+		ENDIF
+		IF SEEK(gcAno_eje+gcSec_ejec+a_expediente.expediente+'GR')
+			SCAN REST WHILE ;
+				ano_eje+sec_ejec+expediente+ciclo+fase=gcAno_eje+gcSec_ejec+ a_expediente.expediente+'GR'
+				SELECT a_meta
+				xclave = a_clasif.ano_eje+a_clasif.sec_ejec+a_clasif.expediente+a_clasif.ciclo+a_clasif.fase+a_clasif.secuencia+a_clasif.correlativo+a_clasif.id_clasificador
+				SEEK xclave
+				SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo+id_clasificador = xclave
+					SCATTER memvar				 	
+					m.origen 				  = a_fase.origen
+					m.fuente_financ 		  = a_fase.fuente_financ
+					lnfpe_ano=lnfpe_ano+(m.monto_nacional*-1)
+					lcMes1=PADL(MONTH(a_secuencia.fecha_doc),2,'0')
+					IF SEEK(m.ano_eje+m.sec_ejec+m.origen+m.fuente_financ+m.id_clasificador+m.sec_func,'cur_caja') THEN 					
+						REPLACE monto_utilizado_anual		WITH monto_utilizado_anual + (m.monto_nacional * -1	) 	IN cur_Caja
+						IF lcMes1 <= lcMes
+							REPLACE monto_utilizado_mensual WITH monto_utilizado_mensual + (m.monto_nacional * -1) 	IN cur_Caja						
+							lnfpe_mes=lnfpe_mes+monto_nacional
+						ENDIF
+					ENDIF 
+				ENDSCAN 
+			ENDSCAN
+		ENDIF
+	ENDSCAN
+ENDIF
+SELECT a_expediente
+IF SEEK(gcAno_eje+gcSec_ejec+lcRendicion)
+	SCAN REST WHILE ano_eje+sec_ejec+tipo_operacion=gcAno_eje+gcSec_ejec+lcRendicion
+		*-- Chequeo de encargo x ejecutora y expediente
+		IF !EMPTY(lcexpediente_encargante)
+			IF a_expediente.sec_ejec2 <> lcsec_ejec2 OR ;
+				a_expediente.expediente_encargante <> lcexpediente_encargante
+				LOOP
+			ENDIF
+		ELSE
+			IF a_expediente.sec_ejec2 <> lcsec_ejec2
+				LOOP
+			ENDIF
+		ENDIF
+		SELECT a_clasif
+		IF SEEK(gcAno_eje+gcSec_ejec+a_expediente.expediente+'GC')
+			SCAN REST WHILE ano_eje+sec_ejec+expediente+ciclo+fase=gcAno_eje+gcSec_ejec+ a_expediente.expediente+'GC' 
+				xclave = a_clasif.ano_eje+a_clasif.sec_ejec+a_clasif.expediente+a_clasif.ciclo+a_clasif.fase+a_clasif.secuencia+a_clasif.correlativo+a_clasif.id_clasificador				
+				SELECT a_meta
+				SEEK xclave
+				SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo+id_clasificador = xclave
+					SCATTER MEMVAR 
+					m.origen 				  = a_fase.origen
+					m.fuente_financ 		  = a_fase.fuente_financ
+					
+					lngasto_ano	=	lngasto_ano + m.monto_nacional					
+					lcMes1		=	PADL(MONTH(a_secuencia.fecha_doc),2,'0')
+					IF SEEK(m.ano_eje+m.sec_ejec+m.origen+m.fuente_financ+m.id_clasificador+m.sec_func,'cur_caja') THEN 					
+						REPLACE monto_utilizado_anual		WITH monto_utilizado_anual + m.monto_nacional 	 	IN cur_Caja
+						IF lcMes1 = lcMes
+							REPLACE monto_utilizado_mensual WITH monto_utilizado_mensual + m.monto_nacional 	IN cur_Caja		
+							lngasto_mes	=	lngasto_mes + m.monto_nacional
+						ENDIF
+						
+						IF lcMes1 <= lcMes
+							REPLACE monto_utilizado_mensual WITH monto_utilizado_mensual + m.monto_nacional 	IN cur_Caja						
+							lnfpe_mes=lnfpe_mes+monto_nacional
+						ENDIF
+					ENDIF 
+
+
+				ENDSCAN 				
+
+			ENDSCAN
+		ENDIF
+		SELECT a_clasif
+		IF SEEK(gcAno_eje+gcSec_ejec+a_expediente.expediente+'GG')
+			SCAN REST WHILE ano_eje+sec_ejec+expediente+ciclo+fase=gcAno_eje+gcSec_ejec+ a_expediente.expediente+'GG' FOR estado_envio = 'A'
+				xclave = a_clasif.ano_eje+a_clasif.sec_ejec+a_clasif.expediente+a_clasif.ciclo+a_clasif.fase+a_clasif.secuencia+a_clasif.correlativo+a_clasif.id_clasificador							
+				SELECT a_meta 
+				SEEK xclave
+				SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo+id_clasificador = xclave
+					SCATTER MEMVAR 
+					m.origen 				  = a_fase.origen
+					m.fuente_financ 		  = a_fase.fuente_financ
+				
+					lnreemb_ano	=	lnreemb_ano+monto_nacional
+					lcMes1=PADL(MONTH(a_secuencia.fecha_doc),2,'0')
+					IF SEEK(m.ano_eje+m.sec_ejec+m.origen+m.fuente_financ+m.id_clasificador+m.sec_func,'cur_caja') THEN 										
+						REPLACE monto_reembolsado_anual WITH monto_reembolsado_anual + m.monto_nacional IN cur_caja
+						IF lcMes1 <= lcMes
+							REPLACE monto_reembolsado_mensual	WITH monto_reembolsado_mensual + m.monto_nacional IN cur_caja
+							lnreemb_mes=lnreemb_mes+monto_nacional
+						ENDIF
+					
+					ENDIF 
+				ENDSCAN 
+			ENDSCAN
+		ENDIF
+	ENDSCAN
+ENDIF
+
+USE IN a_expediente
+USE IN a_fase
+USE IN a_secuencia
+USE IN a_clasif
+USE IN a_meta 
+USE IN a_clasificador
+
+SELECT (lnoldalias)
+
+
+

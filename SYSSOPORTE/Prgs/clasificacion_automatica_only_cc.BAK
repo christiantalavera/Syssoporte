@@ -1,0 +1,257 @@
+USE siaf!certificado 				IN 0 AGAIN ORDER TAG certi
+USE siaf!certificado_fase 			IN 0 AGAIN ORDER TAG certi_fase
+USE siaf!certificado_secuencia 		IN 0 AGAIN ORDER TAG certi_sec
+USE siaf!certificado_clasif			IN 0 AGAIN ORDER TAG certi_clas
+USE siaf!certificado_meta			IN 0 AGAIN ORDER TAG certi_clas
+USE siaf!expediente					IN 0 AGAIN ORDER tag expediente 
+USE siaf!expediente_fase			IN 0 AGAIN ORDER tag cer_fase		ALIAS exp_fase
+USE siaf!expediente_secuencia		IN 0 AGAIN ORDER tag exp_sec		ALIAS exp_sec 
+USE siaf!expediente_secuencia		IN 0 AGAIN ORDER tag exp_sec		
+USE siaf!expediente_fase			IN 0 AGAIN ORDER tag exp_fase
+USE siaf!expediente_clasif			IN 0 AGAIN ORDER tag exp_clasif
+USE siaf!expediente_meta			IN 0 AGAIN ORDER TAG exp_metap
+USE cert!expediente_meta_detalle	IN 0 AGAIN ORDER tag expmetadet
+USE cert!meta_cc					IN 0 AGAIN ORDER tag pkmetacc
+USE cert!certificado_detalle		IN 0 AGAIN ORDER tag cert_det
+USE CERT!certificados				IN 0 AGAIN ORDER tag cert_det 
+USE siaf!especifica_det				IN 0 AGAIN ORDER tag idclasif
+USE cert!memo_campos				IN 0 AGAIN ORDER tag codigo 
+USE siaf!meta						IN 0 AGAIN ORDER tag meta
+USE cert!centro_costo				IN 0 AGAIN ORDER tag cc
+
+
+lSuccess=CURSORSETPROP("Buffering", 1, "certificado_detalle")
+lSuccess=CURSORSETPROP("Buffering", 1, "expediente_meta_detalle")
+
+xalias = ALIAS()
+
+SELECT ano_eje, sec_ejec, sec_func, COUNT(*) as contador FROM meta_cc ;
+	WHERE ano_eje+sec_ejec = gcano_eje+gcsec_ejec AND !DELETED() GROUP BY 1,2,3 INTO CURSOR cur1
+
+SELECT * FROM cur1 WHERE contador = 1 INTO CURSOR cur_meta
+
+SELECT cur_meta
+INDEX on ano_eje+sec_ejec+sec_func TAG inx1 
+
+
+	WAIT WINDOW 'Cargando Certificados y Compromisos Anuales' NOWAIT 
+	i = 0
+
+
+	SELECT Certificado_Fase
+	SEEK gcAno_eje+gcSec_ejec
+	SCAN WHILE ano_eje+sec_ejec==gcAno_eje+gcSec_ejec ;
+		FOR !DELETED()
+		SCATTER MEMVAR
+		*
+		SELECT Certificado_Secuencia
+		SEEK m.ano_eje+m.sec_ejec+m.certificado+m.secuencia
+		SCAN WHILE ano_eje+sec_ejec+certificado+secuencia==m.ano_eje+m.sec_ejec+m.certificado+m.secuencia ;
+			FOR certificado_secuencia.estado_registro='A' AND !DELETED() ;
+
+			SCATTER MEMVAR
+			SELECT certificado_clasif
+			SEEK m.ano_eje+m.sec_ejec+m.certificado+m.secuencia+m.correlativo
+			SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo =	m.ano_eje+m.sec_ejec+m.certificado+m.secuencia+m.correlativo
+				SCATTER MEMVAR 
+				IF DELETED() THEN 
+					LOOP 
+				ENDIF 
+				SELECT certificado_meta
+				SEEK m.ano_eje+m.sec_ejec+m.certificado+m.secuencia+m.correlativo+m.id_clasificador
+				SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo+id_clasificador = m.ano_eje+m.sec_ejec+m.certificado+m.secuencia+m.correlativo+m.id_clasificador
+					SCATTER MEMVAR 
+					IF DELETED() THEN 
+						LOOP 
+					ENDIF 
+					IF !SEEK(certificado_meta.ano_eje+certificado_meta.sec_ejec+certificado_meta.sec_func,'cur_meta') THEN 
+						LOOP 
+					ENDIF 
+					IF certificado_meta.estado_registro <> 'A' THEN 
+						LOOP 
+					ENDIF 
+				 	SELECT meta_cc
+				 	SEEK gcano_eje+gcsec_ejec+certificado_meta.sec_func
+				 	SCAN WHILE ano_eje+sec_ejec+sec_func = gcano_eje+gcsec_ejec+certificado_meta.sec_func
+				 		SCATTER MEMVAR 
+						IF !SEEK(m.ano_eje+m.sec_ejec+m.certificado+m.secuencia+m.correlativo+m.id_clasificador+m.sec_func+meta_cc.id_centro_costo,'certificado_detalle','cert_det') THEN 
+							i = i + 1
+							WAIT WINDOW 'Insertando Registro ===>'+PADL(i,10,'0') NOWAIT 
+							INSERT INTO certificado_detalle ( ano_eje, sec_ejec, certificado,;
+															   secuencia, correlativo, id_clasificador,;
+															   sec_func, id_centro_costo, monto_nacional);
+													VALUES ( gcano_eje, gcsec_ejec, m.certificado,;
+															 certificado_meta.secuencia, certificado_meta.correlativo, certificado_meta.id_clasificador,;
+															 certificado_meta.sec_func, meta_cc.id_centro_costo, certificado_meta.monto_nacional+certificado_meta.monto_nacional_ajuste)
+																   
+						ENDIF 
+				 	
+				 	
+				 	ENDSCAN 
+				ENDSCAN
+
+			ENDSCAN 		
+		ENDSCAN
+	ENDSCAN
+*	
+	WAIT WINDOW 'Cargando Registros Administrativos' NOWAIT 
+	SELECT Expediente_fase
+	SEEK gcAno_eje+gcSec_ejec
+	SCAN WHILE ano_eje+sec_ejec==gcAno_eje+gcSec_ejec ;
+		FOR !DELETED()
+		SCATTER MEMVAR
+		*
+		SELECT Expediente_Secuencia
+		SEEK m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia
+		SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia==m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia ;
+			FOR expediente_secuencia.estado_envio =='A' AND !DELETED() 
+
+			SCATTER MEMVAR
+			SELECT expediente_clasif
+			SEEK m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo
+			SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo =	m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo
+				SCATTER MEMVAR 
+				SELECT expediente_meta
+				SEEK m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo+m.id_clasificador
+				SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo+id_clasificador = m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo+m.id_clasificador
+					SCATTER MEMVAR 
+				 	IF !SEEK(m.ano_eje+m.sec_ejec+m.sec_func,'cur_meta') THEN 
+				 		LOOP 
+				 	ENDIF 
+				 	IF m.estado_envio <> 'A' THEN 
+				 		LOOP 
+				 	ENDIF 
+				 	SELECT meta_cc
+				 	SEEK gcano_eje+gcsec_ejec+m.sec_func
+				 	SCAN WHILE ano_eje+sec_ejec+sec_func = gcano_eje+gcsec_ejec+m.sec_func
+				 		SCATTER MEMVAR 
+						IF !SEEK(m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo+m.id_clasificador+m.sec_func+meta_cc.id_centro_costo,'expediente_meta_detalle') THEN 
+							i = i + 1
+							WAIT WINDOW 'Insertando Registro ===>'+PADL(i,10,'0') NOWAIT 
+						
+							INSERT INTO expediente_meta_detalle ;
+								( ano_eje, sec_ejec, expediente, ciclo ,fase,;
+													   secuencia, correlativo, id_clasificador,;
+													   sec_func, id_centro_costo, monto_nacional);
+											VALUES ( gcano_eje, gcsec_ejec, m.expediente, m.ciclo,m.fase,;
+													 m.secuencia, m.correlativo, m.id_clasificador,;
+													 m.sec_func, m.id_centro_costo, expediente_meta.monto_nacional)
+															   
+						ENDIF 
+				 	
+				 	
+				 	ENDSCAN 
+				ENDSCAN 				
+			ENDSCAN 		
+		ENDSCAN
+	ENDSCAN
+	
+SELECT certificado_secuencia
+SET RELATION TO ano_eje+sec_ejec+certificado+secuencia INTO certificado_fase ADDITIVE 
+
+SELECT certificado_meta
+SET RELATION TO ano_eje+sec_ejec+sec_func INTO meta ADDITIVE 
+
+SELECT Certificado_secuencia
+SEEK gcano_eje+gcsec_ejec
+SCAN WHILE ano_eje+sec_ejec = gcano_eje+gcsec_ejec AND !DELETED()
+	SCATTER MEMVAR 
+	clave_sec = m.ano_eje+m.sec_ejec+m.certificado+m.secuencia+m.correlativo	
+	IF m.estado_registro <> 'A' THEN 
+		LOOP 
+	ENDIF 
+	IF certificado_fase.etapa <> '1' THEN 
+		LOOP 
+	ENDIF 
+	SELECT certificado_clasif
+	SEEK clave_sec
+	SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo = clave_sec AND !DELETED()
+		SCATTER MEMVAR 
+		clave_cla = clave_sec + m.id_clasificador
+		SELECT certificado_meta 
+		SEEK clave_cla
+		SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo+id_clasificador = clave_cla AND !DELETED()
+			SCATTER memvar
+		     m.cadfuncional = meta.programa_ppto + "." + meta.act_proy + "." + meta.componente + "." + meta.funcion+  "." + meta.programa + "." + meta.sub_programa
+			=SEEK(gcano_eje+m.id_clasificador,"especifica_det")
+			m.clasificador = especifica_det.tipo_transaccion + '.' + especifica_det.generica + '.' +  especifica_det.subgenerica +  especifica_det.subgenerica_det + '.'+ especifica_det.especifica + especifica_det.especifica_det
+			m.origen = '1'
+			m.fuente_financ = certificado_fase.fuente_financ 
+			m.glosa = certificado_fase.glosa
+			m.moneda = certificado_secuencia.moneda
+			m.descarea = centro_costo.nombre
+			m.especifica= m.clasificador
+			m.monto = certificado_meta.monto
+			m.monto_nacional = certificado_meta.monto_nacional
+			m.impsol = certificado_meta.monto_nacional
+			m.impaprob = certificado_meta.monto_nacional
+			m.imptaprobxcert = certificado_secuencia.monto_nacional	
+			m.tipo_registro = certificado_secuencia.tipo_registro
+			m.num_doc	= certificado_secuencia.num_doc
+			m.id_centro_costo = meta_cc.id_centro_costo
+			m.desc_area = centro_costo.nombre
+			m.moneda = certificado_secuencia.moneda
+			lcRemitente    = IIF(SEEK(PADR('DIRIGIDO_A',15,' '),'MEMO_CAMPOS','codigo'),RTRIM(MEMO_CAMPOS.NOMBRE)+CHR(13)+RTRIM(MEMO_CAMPOS.CARGO),'')		
+			lcFirmante	   = IIF(SEEK(PADR('FIRMA',15,' '),'MEMO_CAMPOS','codigo'),RTRIM(MEMO_CAMPOS.NOMBRE)+CHR(13)+RTRIM(MEMO_CAMPOS.CARGO),'')		
+			m.dirigido_a = lcRemitente	
+			m.firmado_por = lcFirmante
+			IF EMPTY(m.sec_func) THEN 
+				LOOP 
+			ENDIF 
+			IF !SEEK(m.ano_eje+m.sec_ejec+m.certificado+m.secuencia+m.correlativo+m.id_clasificador+m.sec_func,'certificados','cert_det') THEN 
+				INSERT INTO certificados FROM MEMVAR 
+			ELSE
+				REPLACE certificados.id_centro_costo    WITH meta_cc.id_centro_costo
+				REPLACE certificados.descarea			WITH centro_costo.nombre
+*			REPLACE certificados.moneda				WITH certificado_secuencia.moneda
+				REPLACE certificados.dirigido_a			WITH lcRemitente
+				REPLACE certificados.firmado_por		WITH lcfirmante 
+
+				
+			ENDIF 
+			
+		ENDSCAN 
+		
+	
+	ENDSCAN 
+	
+
+
+ENDSCAN 
+
+
+
+
+
+
+	
+
+
+*!*	USE IN certificado 				
+*!*	USE IN certificado_fase
+*!*	USE IN certificado_secuencia
+*!*	USE IN certificado_clasif
+*!*	USE IN certificado_meta
+*!*	USE IN expediente
+*!*	USE IN expediente_fase
+*!*	USE IN expediente_clasif
+*!*	USE IN expediente_meta
+*!*	USE IN expediente_meta_detalle
+*!*	USE IN meta_cc
+*!*	USE IN certificado_detalle 
+*!*	USE IN especifica_det
+*!*	USE IN memo_campos
+*!*	USE IN centro_costo
+*!*	USE IN certificados
+
+ DIMENSION aTablas(1)
+   nTablas = AUSED(aTablas)
+
+   IF nTablas > 0 
+  FOR EACH oTabla IN aTablas
+     SELECT (oTabla)
+     USE 
+  ENDFOR 
+   ENDIF
+
+

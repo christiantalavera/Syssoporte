@@ -1,0 +1,142 @@
+SET PATH TO fORMS, PRGS, menus, graficos, include, data , clases, reports
+SET CLASSLIB TO  .\clases\manage
+SET DATE  BRITISH
+SET CENTURY ON 
+SET SAFETY OFF
+SET TALK OFF
+SET PROCEDURE TO rutinas
+
+
+_screen.backcolor = RGB(223,227,239 )
+
+
+DO DeclaraTodo
+DO check_ini
+DO check_estructura
+****	
+*!*	TRY
+*!*		DO DeclaraTodo
+*!*		oAppEnv = CREATEOBJECT( 'Environ' )
+*!*		IF TYPE( "oAppEnv" ) = "O"
+*!*			 If CheckInitial()
+*!*			 	oAppEnv.Do("USER-01")
+*!*			 ENDIF
+*!*		ELSE
+*!*			MESSAGEBOX("NO SE PUDO INICIALIZAR LA APLICACION", 16,"Alerta")
+*!*		ENDIF
+*!*	CATCH TO loExc
+*!*	*!*		MESSAGEBOX(ReporteErrores(loExc, 0),64,"Problemas Encontrados")
+*!*	ENDTRY
+
+
+DO menu_reportes.mpr
+
+**AERRORARRAY = 7
+**CR=CHR(13)
+SET EXCLUSIVE OFF 
+SET DELETED ON 
+
+xRutaActual = FULLPATH(CURDIR())
+*!*	SET DEFAULT TO &xRutaActual
+*!*	xRutaCert = gcRutaCert+'CERT'
+*!*	OPEN DATABASE &XRutaCert SHARED 
+xRutaSiaf = gcRutaSiaf+'SIAF'
+OPEN DATABASE &xRutaSiaf SHARED 
+
+READ events
+
+
+
+
+********************
+PROCEDURE DeclaraTodo
+********************
+PUBLIC gcAno_Eje,gcSec_Ejec, gcTipo_Unidad,GCTIPO_UE, gcOldCaption,gcOldClassLib,gcOldDir,gcOldEscape,;
+gcOldPath,gcOldTalk,gcMonto,gcFileIni  ,gcSession , gcOpcRpt, gcFiltroPca, gcMes, gcRutaSiaf, gcRutaCert, glmuestra_fuente_agregada, gcnom_fuente ,gcnom_fuente_abrev,;
+gcCab_mod, gcId_rep, gcVersion 
+#include ..\include\CERT.h
+
+*-- Instrucciones DECLARE DLL para leer/escribir en archivos INI privados
+DECLARE INTEGER GetPrivateProfileString IN Win32API  AS GetPrivStr ;
+	String cSection, String cKey, String cDefault, String @cBuffer, ;
+	Integer nBufferSize, String cINIFile
+
+DECLARE INTEGER WritePrivateProfileString IN Win32API AS WritePrivStr ;
+	String cSection, String cKey, String cValue, String cINIFile
+gcMes=""
+gcFiltroPca=""	
+gcOpcRpt='EST_V'	
+gcOldCaption=""
+gcOldDir=CURDIR()
+gcOldPath=fullpath(CURDIR())
+gcOldEscape="ON"
+gcOldTalk="ON"
+gcFileIni = 'cert.ini'
+gcSession = "PARAMETROS DEL CERT"
+gcnom_fuente = 'RUBRO'
+gcnom_fuente_abrev = 'RB'
+glmuestra_fuente_agregada = .T.
+gcAno_Eje = '2011'
+gcTipo_Unidad='E'
+GCTIPO_UE='01'
+gcMonto = ''
+gcVersion = 'Versión 1.1'
+gcCab_mod = 'Reportes Ejecución' 
+
+
+
+*** SETEANDO DATOS DE LA PANTALLA
+_screen.Icon 		= 'Cert.ICO'
+_screen.Picture 	= 'bghome.gif'
+_screen.Caption 	= 'Reportes Ejecución' 
+_screen.BorderStyle = 3
+
+**2
+_screen.windowstate = 2
+_screen.Closable = .F.
+_SCREEN.CONTROLBOX=.T.
+_screen.AlwaysOnTop = .F. 
+
+**DO SYSTEM.APP
+
+ENDPROC
+
+PROCEDURE CHECK_INI
+lcArchivo = 'cert.ini'
+IF FILE('&lcArchivo.')
+	lnFileHandle = FOPEN(lcArchivo,2)
+	DO WHILE !FEOF(lnFileHandle)
+		lcString = ALLTRIM(FGETS(lnFileHandle, 254))
+		lnSize = FSEEK(lnFileHandle,0,1)
+		DO CASE
+			CASE 'SEC_EJEC' $ UPPER(lcString)
+				gcsec_ejec = decodificar(SUBSTR(lcString,AT('=',lcString)+1))
+				gcsec_ejec = PADL(gcsec_ejec,6,'0')
+			CASE 'RUTASIAF' $ UPPER(lcString)
+				gcRutaSiaf = SUBSTR(lcString,AT('=',lcString)+1)
+*			CASE 'RUTACERT' $ UPPER(lcString)
+*				gcRutaCert = SUBSTR(lcString,AT('=',lcString)+1)
+		ENDCASE
+	ENDDO
+	=FCLOSE(lnFileHandle)
+ELSE
+	MESSAGEBOX('No Existe el Archivo de Configuración.',0+64,'Aviso')
+ENDIF
+ENDPROC 
+
+
+PROCEDURE CHECK_ESTRUCTURA
+
+lcruta	= SYS(5)+SYS(2003)
+
+DIMENSION ladirectory(13)
+
+STORE lcruta+'\Listados' TO ladirectory(1)
+
+FOR i=1 TO 1
+	IF !DIRECTORY(ladirectory(i)) THEN 
+		MKDIR &ladirectory(i).
+	ENDIF 
+ENDFOR 
+
+ENDPROC 

@@ -1,0 +1,144 @@
+USE siaf!intf_adm_cab 			IN 0   	ALIAS intf_cabecera_origen
+USE siaf!intf_adm_det_2009		IN 0 	ALIAS intf_detalle_origen
+USE siaf!intf_cert_cab			IN 0 	ALIAS cert_cabecera_origen
+USE siaf!intf_cert_det			IN 0 	ALIAS cert_detalle_origen
+USE siaf!certificado_secuencia	IN 0 	ALIAS c_certificado_secuencia 	ORDER tag certi_sec
+USE siaf!expediente_secuencia	IN 0 	ALIAS c_expediente_secuencia 	ORDER tag exp_sec
+
+gcExiste_tabla = .F.
+xCabecera = gcRutaInterfase+'INTF_CAB.dbf'
+xDetalle  = gcRutaInterfase+'INTF_DET09.dbf'
+xNota	  = gcRutaInterfase+'INTF_NOT.dbf'
+IF FILE(xcabecera) THEN 
+	USE &xCabecera		IN 0 SHARED ORDER tag cabecera ALIAS intf_cabecera_destino AGAIN 
+	IF FILE(xdetalle) THEN 
+		USE &xdetalle		IN 0 SHARED ORDER tag detalle ALIAS intf_detalle_destino AGAIN 
+		gcExiste_tabla = .T.	
+*!*			IF FILE(xNota) THEN 
+*!*				USE &xNota		IN 0 SHARED ORDER tag Nota ALIAS intf_nota AGAIN 
+*!*				gcExiste_tabla = .T.	
+*!*			ELSE 
+*!*				gcExiste_tabla = .F.	
+*!*			ENDIF 
+	ELSE 
+		gcExiste_tabla = .F.	
+		
+	ENDIF
+ELSE
+	gcExiste_tabla = .F.
+ENDIF 
+
+IF gcExiste_tabla THEN 
+	gcExiste_tabla = .F.
+	xCabecera = gcRutaInterfase+'CERT_CAB.dbf'
+	xDetalle  = gcRutaInterfase+'CERT_DET.dbf'
+
+	IF FILE(xcabecera) THEN 
+		USE &xCabecera		IN 0 SHARED ORDER tag cabecera ALIAS cert_cabecera_destino AGAIN 
+		IF FILE(xdetalle) THEN 
+			USE &xdetalle		IN 0 SHARED ORDER tag detalle ALIAS cert_detalle_destino AGAIN 
+			gcExiste_tabla = .T.	
+		ELSE 
+			gcExiste_tabla = .F.	
+			
+		ENDIF
+	ELSE
+		gcExiste_tabla = .F.
+	ENDIF 
+ENDIF 
+
+
+IF gcExiste_tabla THEN 
+	SELECT cert_cabecera_origen
+	SCAN ALL 
+		SCATTER MEMVAR 
+		IF !SEEK(m.secuencial+m.ano_eje+m.sec_ejec,'cert_cabecera_destino','CABECERA') THEN 
+			INSERT INTO cert_cabecera_destino FROM MEMVAR 
+		ENDIF 
+	ENDSCAN 
+
+	SELECT cert_detalle_origen
+	SCAN ALL 
+		SCATTER MEMVAR 
+		IF !SEEK(m.secuencial+m.clasifniv1+m.clasifniv2+m.clasifniv3+m.clasifniv4+m.clasifniv5+m.clasifniv6+m.sec_func,'cert_detalle_destino','DETALLE') THEN 
+			INSERT INTO cert_detalle_destino FROM MEMVAR 
+		ENDIF 
+	ENDSCAN 
+
+
+	SELECT intf_cabecera_origen
+	SCAN ALL 
+		SCATTER MEMVAR 
+		IF !SEEK(m.secuencial+m.ano_eje+m.sec_ejec,'intf_cabecera_destino','CABECERA') THEN 
+			INSERT INTO intf_cabecera_destino FROM MEMVAR 
+		ENDIF 
+	ENDSCAN 
+
+	SELECT intf_detalle_origen
+	SCAN ALL 
+		SCATTER MEMVAR 
+		IF !SEEK(m.secuencial+m.clasifniv1+m.clasifniv2+m.clasifniv3+m.clasifniv4+m.clasifniv5+m.clasifniv6+m.sec_func,'intf_detalle_destino','DETALLE') THEN 
+			INSERT INTO intf_detalle_destino FROM MEMVAR 
+		ENDIF 
+	ENDSCAN 
+
+
+ENDIF 
+
+DO sincroniza_certificado
+DO sincroniza_expediente
+DO cierra_tablas
+
+PROCEDURE sincroniza_certificado
+	SELECT cert_cabecera_destino
+	xorden = ORDER()
+	SET ORDER TO SIAF_INTF
+	SEEK gcano_eje
+	SCAN WHILE ano_eje = gcano_eje FOR INLIST(mef_estado,' ','V')
+		SCATTER MEMVAR 
+		lckey = gcano_eje+gcsec_ejec+m.siaf_cer+siaf_sec+siaf_cor
+		WAIT WINDOW 'Sincronizando : '+lckey NOWAIT 
+		IF SEEK(lckey,'c_certificado_secuencia','certi_sec')
+			replace mef_estado 	with c_certificado_secuencia.estado_registro, ;
+					mef_error	with c_certificado_secuencia.cod_error, ;
+					mef_mensa	with c_certificado_secuencia.cod_mensa in cert_cabecera_destino
+		ENDIF 
+	ENDSCAN 
+ENDPROC 
+
+
+PROCEDURE sincroniza_expediente
+	llerror	= .F.
+
+	SELECT intf_cabecera_destino
+	SET ORDER TO estado_reg
+	IF SEEK(gcano_eje+gcsec_ejec+' ') THEN
+		SCAN WHILE ano_eje+sec_ejec=gcano_eje+gcsec_ejec AND EMPTY(estado_reg)
+			SCATTER MEMVAR
+			lcsec	= m.secuencial
+			lckey	= gcano_eje + gcsec_ejec + m.siaf_exp + m.ciclo + m.fase + m.siaf_sec + m.siaf_cor
+			WAIT WINDOW lckey NOWAIT
+			SET DELETED OFF
+			IF SEEK(lckey,'c_expediente_secuencia','exp_sec') THEN
+				m.mef_estado	= c_expediente_secuencia.estado_envio
+			ENDIF
+			SET DELETED ON
+			REPLACE mef_estado WITH m.mef_estado IN intf_cabecera_destino
+		ENDSCAN
+
+	ENDIF 
+ENDPROC 
+
+PROCEDURE cierra_tablas
+ DIMENSION aTablas(1)
+   nTablas = AUSED(aTablas)
+
+   IF nTablas > 0 
+  FOR EACH oTabla IN aTablas
+     SELECT (oTabla)
+     USE 
+  ENDFOR 
+   ENDIF
+
+ENDPROC 
+

@@ -1,0 +1,201 @@
+USE siaf!certificado 				IN 0 AGAIN ORDER TAG certi
+USE siaf!certificado_fase 			IN 0 AGAIN ORDER TAG certi_fase
+USE siaf!certificado_secuencia 		IN 0 AGAIN ORDER TAG certi_sec
+USE siaf!certificado_clasif			IN 0 AGAIN ORDER TAG certi_clas
+USE siaf!certificado_meta			IN 0 AGAIN ORDER TAG certi_clas
+USE siaf!expediente					IN 0 AGAIN ORDER tag expediente 
+USE siaf!expediente_fase			IN 0 AGAIN ORDER tag cer_fase		ALIAS exp_fase
+USE siaf!expediente_secuencia		IN 0 AGAIN ORDER tag exp_sec		ALIAS exp_sec 
+USE siaf!expediente_secuencia		IN 0 AGAIN ORDER tag exp_sec		
+USE siaf!expediente_fase			IN 0 AGAIN ORDER tag CER_FASE
+USE siaf!expediente_clasif			IN 0 AGAIN ORDER tag exp_clasif
+USE siaf!expediente_meta			IN 0 AGAIN ORDER TAG exp_metap
+USE cert!expediente_meta_detalle	IN 0 AGAIN ORDER tag expmetadet
+USE cert!meta_gpr					IN 0 AGAIN ORDER tag pkmetagpr
+USE cert!certificado_detalle		IN 0 AGAIN ORDER tag cert_det
+USE cert!centro_costo_gpr			IN 0 AGAIN ORDER tag pkccgpr
+
+lSuccess=CURSORSETPROP("Buffering", 1, "certificado_detalle")     
+lSuccess=CURSORSETPROP("Buffering", 1, "expediente_meta_detalle")   
+
+xalias = ALIAS()
+
+CREATE CURSOR cur_pivot (ano_eje			c(4),;
+						 sec_ejec			c(6),;
+						 certificado		c(10),;
+						 secuencia			c(4),;
+						 secuencia_padre	c(4),;
+						 sec_area			c(4),;
+						 id_centro_costo	c(6),;
+						 id_gpr				c(6))
+
+
+SELECT certificado_fase
+SEEK gcano_eje+gcsec_ejec
+SCAN WHILE ano_eje+sec_ejec = gcano_eje + gcsec_ejec 
+	SCATTER MEMVAR 
+	IF m.es_compromiso <> 'S' THEN 
+		LOOP 
+	ENDIF 
+	IF m.estado_registro <> 'A' THEN 
+		LOOP 
+	ENDIF 
+	clave_fase = gcano_eje+gcsec_ejec+m.certificado+m.secuencia
+	m.id_centro_costo	= ''
+	m.id_gpr			= ''
+	IF SEEK(gcano_eje+gcsec_ejec+m.sec_area,'centro_costo_gpr','area')	THEN 
+		m.id_centro_costo = centro_costo_gpr.id_centro_costo
+		m.id_gpr		  = centro_costo_gpr.id_gpr
+	ENDIF 
+	INSERT INTO cur_pivot FROM MEMVAR 
+
+ENDSCAN 
+
+SELECT cur_pivot
+SCAN ALL 
+	SCATTER MEMVAR 
+	SELECT certificado_fase
+	IF SEEK(gcano_eje+gcsec_ejec+m.certificado+m.secuencia_padre,'certificado_fase') THEN 
+		SELECT certificado_secuencia
+		SEEK gcano_eje+gcsec_ejec+m.certificado+m.secuencia_padre
+		SCAN WHILE ano_eje+sec_ejec+certificado+secuencia = gcano_eje+gcsec_ejec+m.certificado+m.secuencia_padre
+			lcClave_secuencia = gcano_eje+gcsec_ejec+m.certificado+m.secuencia_padre+certificado_secuencia.correlativo
+			IF certificado_secuencia.estado_registro <> 'A' THEN 
+				LOOP 
+			ENDIF 			
+			SELECT certificado_clasif
+			SEEK lcClave_secuencia
+			SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo = lcClave_secuencia
+				lcClave_clasif = lcClave_secuencia + certificado_clasif.id_clasificador
+				SELECT certificado_meta
+				SEEK lcClave_clasif
+				SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo+id_clasificador = lcClave_clasif
+					lcClave_meta = lcClave_clasif + certificado_meta.sec_func
+*					IF !SEEK(lcClave_meta+m.id_centro_costo+m.id_gpr,'certificado_detalle','cert_det') THEN 
+					IF !SEEK(lcClave_meta,'certificado_detalle','cert_det') THEN 
+						INSERT INTO certificado_detalle (ano_eje,sec_ejec, certificado, secuencia, correlativo, id_clasificador, sec_func,;
+														 id_centro_costo, id_gpr, monto_nacional);
+											VALUES ( gcano_eje, gcsec_ejec, m.certificado,m.secuencia_padre, certificado_secuencia.correlativo,;
+													 certificado_meta.id_clasificador, certificado_meta.sec_func, m.id_centro_costo, m.id_gpr,;
+													 certificado_meta.monto_nacional)
+					ELSE
+						REPLACE certificado_detalle.id_centro_costo	WITH m.id_centro_costo
+						REPLACE certificado_detalle.id_gpr			WITH m.id_gpr
+						REPLACE certificado_detalle.monto_nacional	WITH certificado_meta.monto_nacional
+					
+					ENDIF 
+					
+					
+				ENDSCAN 
+			
+			ENDSCAN 
+
+		
+		ENDSCAN 
+	ENDIF 
+ENDSCAN 
+
+SELECT cur_pivot
+GO TOP 
+SCAN ALL 
+	SCATTER MEMVAR 
+	SELECT certificado_fase
+	IF SEEK(gcano_eje+gcsec_ejec+m.certificado+m.secuencia,'certificado_fase') THEN 
+		SELECT certificado_secuencia
+		SEEK gcano_eje+gcsec_ejec+m.certificado+m.secuencia
+		SCAN WHILE ano_eje+sec_ejec+certificado+secuencia = gcano_eje+gcsec_ejec+m.certificado+m.secuencia
+			lcClave_secuencia = gcano_eje+gcsec_ejec+m.certificado+m.secuencia+certificado_secuencia.correlativo
+			IF certificado_secuencia.estado_registro <> 'A' THEN 
+				LOOP 
+			ENDIF 
+			SELECT certificado_clasif
+			SEEK lcClave_secuencia
+			SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo = lcClave_secuencia
+				lcClave_clasif = lcClave_secuencia + certificado_clasif.id_clasificador
+				SELECT certificado_meta
+				SEEK lcClave_clasif
+				SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo+id_clasificador = lcClave_clasif
+					lcClave_meta = lcClave_clasif + certificado_meta.sec_func
+*					IF !SEEK(lcClave_meta+m.id_centro_costo+m.id_gpr,'certificado_detalle','cert_det') THEN 
+					IF !SEEK(lcClave_meta,'certificado_detalle','cert_det') THEN 
+						INSERT INTO certificado_detalle (ano_eje,sec_ejec, certificado, secuencia, correlativo, id_clasificador, sec_func,;
+														 id_centro_costo, id_gpr, monto_nacional);
+											VALUES ( gcano_eje, gcsec_ejec, m.certificado,m.secuencia, certificado_secuencia.correlativo,;
+													 certificado_meta.id_clasificador, certificado_meta.sec_func, m.id_centro_costo, m.id_gpr,;
+													 certificado_meta.monto_nacional)
+					ELSE
+						REPLACE certificado_detalle.id_centro_costo	WITH m.id_centro_costo
+						REPLACE certificado_detalle.id_gpr			WITH m.id_gpr
+						REPLACE certificado_detalle.monto_nacional	WITH certificado_meta.monto_nacional
+					
+					ENDIF 
+					
+					
+				ENDSCAN 
+			
+			ENDSCAN 
+
+		
+		ENDSCAN 
+	ENDIF	
+	
+	SELECT expediente_fase
+	SEEK gcano_eje+gcsec_ejec+m.certificado+m.secuencia
+	SCAN WHILE ano_eje+sec_ejec+certificado+certificado_secuencia = gcano_eje+gcsec_ejec+m.certificado+m.secuencia 
+		lcClave_fase = gcano_eje+gcsec_ejec+expediente_fase.expediente+expediente_fase.ciclo+;
+					   expediente_fase.fase+expediente_fase.secuencia
+
+		SELECT Expediente_Secuencia
+		SEEK lcClave_fase 
+		SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia== lcClave_fase 	FOR expediente_secuencia.estado_envio =='A' AND !DELETED() 
+			lcClave_secuencia = lcClave_fase + expediente_secuencia.correlativo
+			SELECT expediente_clasif
+			SEEK lcClave_secuencia
+			SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo = lcClave_secuencia
+				lcClave_clasif = lcClave_secuencia + expediente_clasif.id_clasificador
+				SELECT expediente_meta
+				SEEK lcClave_clasif
+				SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo+id_clasificador = lcClave_clasif
+					lcClave_meta = lcClave_clasif + expediente_meta.sec_func
+
+					SELECT expediente_meta_detalle
+					IF SEEK(lcClave_meta,'expediente_meta_detalle') THEN 
+						REPLACE expediente_meta_detalle.id_centro_costo WITH m.id_centro_costo
+						REPLACE expediente_meta_detalle.id_gpr			WITH m.id_gpr
+						REPLACE expediente_meta_detalle.monto_nacional	WITH expediente_meta.monto_nacional
+					ELSE
+						INSERT INTO expediente_meta_detalle (ano_eje, sec_ejec, expediente, ciclo, fase, secuencia, correlativo ,;
+															 id_clasificador, sec_func, id_centro_costo, id_gpr, monto_nacional);
+												VALUES (gcano_eje, gcsec_ejec , expediente_fase.expediente, expediente_fase.ciclo,;
+														expediente_fase.fase, expediente_fase.secuencia, expediente_secuencia.correlativo,;
+														expediente_meta.id_clasificador, expediente_meta.sec_func, ;
+														 m.id_centro_costo, m.id_gpr, expediente_meta.monto_nacional)
+						
+					ENDIF 
+
+				ENDSCAN 				
+			ENDSCAN 		
+		ENDSCAN
+	ENDSCAN	
+
+
+ENDSCAN 
+
+
+
+
+
+
+
+
+ DIMENSION aTablas(1)
+   nTablas = AUSED(aTablas)
+
+   IF nTablas > 0 
+  FOR EACH oTabla IN aTablas
+     SELECT (oTabla)
+     USE 
+  ENDFOR 
+   ENDIF
+
+

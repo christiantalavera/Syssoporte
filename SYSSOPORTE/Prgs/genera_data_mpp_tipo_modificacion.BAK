@@ -1,0 +1,1416 @@
+PUBLIC  lano_eje, lsec_ejec
+PUBLIC larchivo, lcmes, lmes_eje, lcformato, lcsalida, gctipoArchi, lcCod_doc, lcTipoArchi,lcNombreArchivo
+larchivo = ''
+gctipoArchi = '0'
+lano_eje = gcano_eje
+lsec_ejec = gcsec_ejec
+lmes_eje = '12'
+lcNombreArchivo = 'LISTADOS\'+gcsec_ejec+'_Marco_vs_ejecucion_'+DTOS(DATE())
+
+
+USE siaf!gasto							IN 0 SHARED AGAIN order tag mp_gastop
+USE siaf!meta							IN 0 SHARED AGAIN ORDER tag	meta
+USE siaf!fuente_financ					IN 0 SHARED AGAIN ORDER tag fuente_fin
+USE siaf!fuente_financ_agregada			IN 0 SHARED AGAIN ORDER tag fte_agreg
+USE siaf!maestro_clasificador			IN 0 SHARED AGAIN ORDER tag idclasif
+USE siaf!expediente_fase				IN 0 SHARED AGAIN ORDER tag exp_fase ALIAS exp_fase
+USE siaf!expediente_secuencia			IN 0 SHARED AGAIN ORDER tag fec_bd_ora ALIAS exp_sec
+USE siaf!expediente_documento			IN 0 SHARED AGAIN ORDER tag exp_doc ALIAS exp_doc
+USE siaf!expediente_clasif				IN 0 SHARED AGAIN ORDER tag expclasifp ALIAS exp_clasif
+USE siaf!expediente_meta				IN 0 SHARED AGAIN ORDER tag exp_metap ALIAS exp_meta
+USE siaf!expediente						IN 0 SHARED AGAIN ORDER tag expediente ALIAS exp 
+USE siaf!expediente_ingreso				IN 0 ALIAS exp_ing
+USE siaf!sector							IN 0 SHARED AGAIN ORDER tag sector
+USE siaf!pliego							IN 0 SHARED AGAIN ORDER tag pliego
+USE siaf!ejecutora						IN 0 SHARED AGAIN ORDER tag sec_ejec 
+USE siaf!funcion						IN 0 SHARED AGAIN ORDER tag funcion
+USE siaf!programa_nombre				IN 0 SHARED AGAIN ORDER tag programa
+USE siaf!sub_programa_nombre			IN 0 SHARED AGAIN ORDER tag sub_prog
+USE siaf!programa_ppto_nombre			IN 0 SHARED AGAIN ORDER tag PROGPPTO_N
+USE siaf!act_proy_nombre				IN 0 SHARED AGAIN ORDER tag act_proy
+USE siaf!generica						IN 0 shared AGAIN ORDER tag generica
+USE siaf!tipo_transaccion				IN 0 SHARED AGAIN ORDER tag tipotrn
+USE siaf!subgenerica					IN 0 SHARED AGAIN ORDER tag sgenerica
+USE siaf!especifica						IN 0 SHARED AGAIN ORDER TAG ESPECIF
+
+USE siaf!subgenerica_det				IN 0 SHARED AGAIN ORDER tag sgenericad
+USE siaf!especifica_det					IN 0 SHARED AGAIN ORDER tag especifdet
+USE siaf!categoria_gasto				IN 0 SHARED AGAIN ORDER tag categoria
+USE siaf!maestro_detalle				IN 0 SHARED AGAIN ORDER TAG cod_det
+USE siaf!finalidad						IN 0 SHARED AGAIN ORDER tag finalidad
+USE siaf!ejecucion_mpp					IN 0 SHARED AGAIN ORDER tag ejec_mppp
+USE siaf!mes							IN 0 SHARED AGAIN ORDER tag mes 
+USE siaf!certificado					IN 0 ALIAS certi			again 
+USE siaf!certificado_secuencia			IN 0 ALIAS certi_sec  		AGAIN 
+USE siaf!certificado_fase				IN 0 ALIAS certi_fase 		AGAIN 
+USE siaf!certificado_clasif				IN 0 ALIAS certi_clasif 	order tag certi_clas AGAIN 
+USE siaf!certificado_meta				IN 0 ALIAS certi_meta		order tag certi_meta AGAIN 
+USE siaf!unidad_medida					IN 0						order tag unidad
+USE siaf!componente_nombre				IN 0 						order tag COMPONENTE
+USE siaf!tipo_recurso					IN 0 						order tag tipo
+USE siaf!meta_trimestral				IN 0 						order tag meta_trim
+USE siaf!departamento					IN 0 						order tag DEPARTAMEN
+USE siaf!provincia						IN 0 						order tag provincia
+USE siaf!distrito						IN 0 						order tag distrito
+USE siaf!ejecucion_mpp					IN 0 SHARED AGAIN 			order tag ejec_mppp
+USE siaf!departamento					IN 0 AGAIN ALIAS meta_departamento	order tag DEPARTAMEN
+USE siaf!provincia						IN 0 AGAIN ALIAS meta_provincia		order tag provincia
+USE siaf!distrito						IN 0 AGAIN ALIAS meta_distrito		order tag distrito
+
+USE siaf!nota_modificatoria_cab			IN 0 SHARED AGAIN ORDER TAG mp_notacab	ALIAS nota_cab
+USE siaf!nota_modificatoria_sec			IN 0 SHARED AGAIN ORDER TAG mp_notasec 	ALIAS nota_sec
+USE siaf!nota_modificatoria_det			IN 0 SHARED AGAIN ORDER TAG mp_notadet 	ALIAS nota_det
+USE siaf!nota_modificatoria_doc 		IN 0 SHARED AGAIN ORDER tag mp_notadoc  ALIAS nota_doc
+USE siaf!nota_modificatoria_doc_sec 	IN 0 SHARED AGAIN ORDER tag mp_notados  ALIAS nota_doc_sec
+
+
+CREATE CURSOR curcab (	ano_eje           c(0004) 	NULL, ;
+						ejecutora		  c(007) 		, ;
+						sec_ejec		  c(0006) 	NULL, ;
+						sec_ejec2		  c(0006) 	NULL, ;
+						sec_nota		  c(0010) 	NULL, ;
+						secuencia		  c(0004)   NULL, ;
+						mes_eje			  c(0002)	NULL, ;
+						ind_habilita	  c(0001)	NULL, ;
+						tipo_modificacion c(0003)	NULL, ;
+						cod_doc			  c(0003)	NULL, ;
+						num_doc			  c(0020)	NULL, ;
+						fecha_doc		  d			NULL, ;
+						cod_doc2		  c(0003)	NULL, ;
+						num_doc2		  c(0020)	NULL, ;
+						fecha_doc2		  d			NULL, ;
+						monto			  N(0019)	NULL, ;
+						notas			  c(0150)	NULL, ;
+						estado			  c(0001)	NULL, ;
+						estado2			  c(0001)	NULL, ;
+						estado_envio	  c(0001)	NULL, ;
+						estado_envio2	  c(0001)	NULL, ;
+						estado_envio3	  c(0001)	NULL, ;
+						seleccionar 	  N(0001)		, ;
+						detalle			  N(0001)	NULL, ;
+						fecha			  d		  	,;
+						observacion		  c(0150)	,;
+						unico			  c(0001)	)
+SELECT curcab
+INDEX ON  ano_eje+sec_ejec+sec_ejec2+sec_nota+secuencia TAG NOTA
+INDEX ON ALLTRIM(STR(seleccionar)) TAG seleccion
+SET ORDER TO NOTA
+
+*!* Cargando el cursor con las notas modificatorias
+SELEC nota_cab
+SEEK gcano_eje
+SCAN WHILE ano_eje = gcano_eje
+	SCATTER MEMVAR
+	lckey=M.ano_eje+M.sec_ejec+M.sec_ejec2+m.sec_nota
+	IF SEEK(lckey,'NOTA_SEC','mp_notasec')
+		SELECT nota_sec
+		SCAN WHILE ano_eje+sec_ejec+sec_ejec2+sec_nota=lckey
+			xkey = gcANO_EJE+gcSEC_EJEC_pliego+nota_sec.SEC_DOC
+			IF nota_sec.estado = 'A' then
+				* Reporte modificado por BB y LG el 05/09/2005
+				m.estado 	= nota_sec.estado
+				m.secuencia = nota_sec.secuencia
+				SELECT curcab
+				APPEND BLANK
+				GATHER MEMVAR
+			ENDIF
+		ENDSCAN
+	ELSE
+		LOOP
+	ENDIF
+ENDSCAN
+
+SELECT * FROM curcab WHERE secuencia='0002' INTO CURSOR caux
+SELECT caux
+SCAN ALL
+	SCATTER MEMVAR
+	IF m.estado='A'
+		lckey=M.ano_eje+M.sec_ejec+M.sec_ejec2+m.sec_nota
+		=SEEK (lckey,'curcab','nota')
+		SELECT curcab
+		DELE WHILE ano_eje+sec_ejec+sec_ejec2+sec_nota=lckey
+	ENDIF
+	SELECT caux
+ENDSCAN
+
+
+
+
+
+	CREATE CURSOR curGasto(	ano_eje							c(0004),;
+							sec_ejec						c(0006),;
+							departamento					c(0002),;
+							provincia						c(0002),;
+							distrito						c(0002),;
+							fuente_financ					c(0002),;
+							fuente_financ_agregada			c(0001),;
+							tipo_recurso					c(0002),;
+							categoria_gasto					c(0001),;
+							tipo_transaccion 				c(0001),;
+							generica						c(0001),;
+							subgenerica						c(0002),;
+							subgenerica_det					c(0002),;
+							especifica						c(0002),;
+							especifica_det					c(0002),;
+							sec_func						c(0004),;
+							unidad_medida					c(0005),;
+						    programa_ppto      				C(0004),;
+						    act_proy           				C(0007),;
+						    componente      	   			C(0007),;
+							funcion							c(0002),;
+							programa						c(0003),;
+							sub_programa					c(0004),;
+							finalidad						c(0007),;
+							meta							c(0005),;
+							pia								N(19,2),;
+							modificacion					N(19,2),;
+							pim								N(19,2),;
+							monto_certificado				N(19,2),;
+							monto_comprometido_anual		N(19,2),;
+							Mto_at_Comp_01					N(19,2),;
+							Mto_at_Comp_02					N(19,2),;
+							Mto_at_Comp_03					N(19,2),;
+							Mto_at_Comp_04					N(19,2),;
+							Mto_at_Comp_05					N(19,2),;
+							Mto_at_Comp_06					N(19,2),;
+							Mto_at_Comp_07					N(19,2),;
+							Mto_at_Comp_08					N(19,2),;
+							Mto_at_Comp_09					N(19,2),;
+							Mto_at_Comp_10					N(19,2),;
+							Mto_at_Comp_11					N(19,2),;
+							Mto_at_Comp_12					N(19,2),;
+							Mto_devenga_01					N(19,2),;
+							Mto_devenga_02					N(19,2),;
+							Mto_devenga_03					N(19,2),;
+							Mto_devenga_04					N(19,2),;
+							Mto_devenga_05					N(19,2),;
+							Mto_devenga_06					N(19,2),;
+							Mto_devenga_07					N(19,2),;
+							Mto_devenga_08					N(19,2),;
+							Mto_devenga_09					N(19,2),;
+							Mto_devenga_10					N(19,2),;
+							Mto_devenga_11					N(19,2),;
+							Mto_devenga_12					N(19,2),;
+							Mto_girado_01					N(19,2),;
+							Mto_girado_02					N(19,2),;
+							Mto_girado_03					N(19,2),;
+							Mto_girado_04					N(19,2),;
+							Mto_girado_05					N(19,2),;
+							Mto_girado_06					N(19,2),;
+							Mto_girado_07					N(19,2),;
+							Mto_girado_08					N(19,2),;
+							Mto_girado_09					N(19,2),;
+							Mto_girado_10					N(19,2),;
+							Mto_girado_11					N(19,2),;
+							Mto_girado_12					N(19,2),;
+							Mto_pagado_01					N(19,2),;
+							Mto_pagado_02					N(19,2),;
+							Mto_pagado_03					N(19,2),;
+							Mto_pagado_04					N(19,2),;
+							Mto_pagado_05					N(19,2),;
+							Mto_pagado_06					N(19,2),;
+							Mto_pagado_07					N(19,2),;
+							Mto_pagado_08					N(19,2),;
+							Mto_pagado_09					N(19,2),;
+							Mto_pagado_10 					N(19,2),;
+							Mto_pagado_11					N(19,2),;
+							Mto_pagado_12					N(19,2),;
+							monto_compromiso				N(19,2),;
+							monto_devengado					N(19,2),;
+							monto_girado					N(19,2),;
+							monto_pagado					N(19,2),;
+							cantidad_inicial				N(19,3),;
+							cantidad_semestral				N(19,3),;
+							avance_fisico_semestral			N(19,3),;
+							avance_fisico_anual				N(19,3),;
+							departamento_meta				c(0002),;
+							provincia_meta					c(0002),;
+							distrito_meta					c(0002),;
+							modificacion_01					N(19,2),;
+							modificacion_02					N(19,2),;
+							modificacion_03					N(19,2),;
+							modificacion_04					N(19,2),;
+							modificacion_05					N(19,2),;
+							modificacion_06					N(19,2),;
+							modificacion_07					N(19,2),;
+							modificacion_08					N(19,2),;
+							modificacion_09					N(19,2),;
+							modificacion_10					N(19,2),;
+							modificacion_11					N(19,2),;
+							modificacion_12					N(19,2),;
+							modificacion_01_t01				N(19,2),;
+							modificacion_01_t02				N(19,2),;
+							modificacion_01_t03				N(19,2),;
+							modificacion_01_t04				N(19,2),;
+							modificacion_01_t05				N(19,2),;
+							modificacion_01_t06				N(19,2),;
+							modificacion_01_t07				N(19,2),;
+							modificacion_02_t01				N(19,2),;
+							modificacion_02_t02				N(19,2),;
+							modificacion_02_t03				N(19,2),;
+							modificacion_02_t04				N(19,2),;
+							modificacion_02_t05				N(19,2),;
+							modificacion_02_t06				N(19,2),;
+							modificacion_02_t07				N(19,2),;
+							modificacion_03_t01				N(19,2),;
+							modificacion_03_t02				N(19,2),;
+							modificacion_03_t03				N(19,2),;
+							modificacion_03_t04				N(19,2),;
+							modificacion_03_t05				N(19,2),;
+							modificacion_03_t06				N(19,2),;
+							modificacion_03_t07				N(19,2),;
+							modificacion_04_t01				N(19,2),;
+							modificacion_04_t02				N(19,2),;
+							modificacion_04_t03				N(19,2),;
+							modificacion_04_t04				N(19,2),;
+							modificacion_04_t05				N(19,2),;
+							modificacion_04_t06				N(19,2),;
+							modificacion_04_t07				N(19,2),;
+							modificacion_05_t01				N(19,2),;
+							modificacion_05_t02				N(19,2),;
+							modificacion_05_t03				N(19,2),;
+							modificacion_05_t04				N(19,2),;
+							modificacion_05_t05				N(19,2),;
+							modificacion_05_t06				N(19,2),;
+							modificacion_05_t07				N(19,2),;
+							modificacion_06_t01				N(19,2),;
+							modificacion_06_t02				N(19,2),;
+							modificacion_06_t03				N(19,2),;
+							modificacion_06_t04				N(19,2),;
+							modificacion_06_t05				N(19,2),;
+							modificacion_06_t06				N(19,2),;
+							modificacion_06_t07				N(19,2),;
+							modificacion_07_t01				N(19,2),;
+							modificacion_07_t02				N(19,2),;
+							modificacion_07_t03				N(19,2),;
+							modificacion_07_t04				N(19,2),;
+							modificacion_07_t05				N(19,2),;
+							modificacion_07_t06				N(19,2),;
+							modificacion_07_t07				N(19,2),;
+							modificacion_08_t01				N(19,2),;
+							modificacion_08_t02				N(19,2),;
+							modificacion_08_t03				N(19,2),;
+							modificacion_08_t04				N(19,2),;
+							modificacion_08_t05				N(19,2),;
+							modificacion_08_t06				N(19,2),;
+							modificacion_08_t07				N(19,2),;
+							modificacion_09_t01				N(19,2),;
+							modificacion_09_t02				N(19,2),;
+							modificacion_09_t03				N(19,2),;
+							modificacion_09_t04				N(19,2),;
+							modificacion_09_t05				N(19,2),;
+							modificacion_09_t06				N(19,2),;
+							modificacion_09_t07				N(19,2),;
+							modificacion_10_t01				N(19,2),;
+							modificacion_10_t02				N(19,2),;
+							modificacion_10_t03				N(19,2),;
+							modificacion_10_t04				N(19,2),;
+							modificacion_10_t05				N(19,2),;
+							modificacion_10_t06				N(19,2),;
+							modificacion_10_t07				N(19,2),;
+							modificacion_11_t01				N(19,2),;
+							modificacion_11_t02				N(19,2),;
+							modificacion_11_t03				N(19,2),;
+							modificacion_11_t04				N(19,2),;
+							modificacion_11_t05				N(19,2),;
+							modificacion_11_t06				N(19,2),;
+							modificacion_11_t07				N(19,2),;
+							modificacion_12_t01				N(19,2),;
+							modificacion_12_t02				N(19,2),;
+							modificacion_12_t03				N(19,2),;
+							modificacion_12_t04				N(19,2),;
+							modificacion_12_t05				N(19,2),;
+							modificacion_12_t06				N(19,2),;
+							modificacion_12_t07				N(19,2),;
+							mto_modificaciones_TOTAL		N(19,2),;
+							mto_certificado_01				N(19,2),;
+							mto_certificado_02				N(19,2),;
+							mto_certificado_03				N(19,2),;
+							mto_certificado_04				N(19,2),;
+							mto_certificado_05				N(19,2),;
+							mto_certificado_06				N(19,2),;
+							mto_certificado_07				N(19,2),;
+							mto_certificado_08				N(19,2),;
+							mto_certificado_09				N(19,2),;
+							mto_certificado_10				N(19,2),;
+							mto_certificado_11				N(19,2),;
+							mto_certificado_12				N(19,2))
+
+							
+							
+INDEX on ano_eje+sec_ejec+fuente_financ+tipo_recurso+categoria_gasto+tipo_transaccion+generica+subgenerica+subgenerica_det+especifica+especifica_det+sec_func TAG inxGasto
+
+CREATE CURSOR TIPO_PROD_PROY	(TIPO_PROD_PROY		C(1),;
+								 NOMBRE				C(10))
+SELECT TIPO_PROD_PROY
+INDEX ON TIPO_PROD_PROY TAG INX1
+
+
+CREATE CURSOR TIPO_ACT_OBRA		(TIPO_ACT_OBRA		C(1),;
+								 NOMBRE				C(20))
+								 
+SELECT TIPO_ACT_OBRA
+INDEX ON TIPO_ACT_OBRA TAG INX1
+
+INSERT INTO TIPO_PROD_PROY	VALUES ('2','PROYECTO')
+INSERT INTO TIPO_PROD_PROY	VALUES ('3','PRODUCTO')
+
+INSERT INTO TIPO_ACT_OBRA	VALUES ('4','OBRA')						 
+INSERT INTO TIPO_ACT_OBRA	VALUES ('5','ACTIVIDAD')						 
+INSERT INTO TIPO_ACT_OBRA	VALUES ('6','ACCION DE INVERSION')						 
+
+IF INLIST(gctipo_unidad,'E','R','N','O') THEN 
+
+	CREATE CURSOR curgen(	Ano_eje							c(0004),;
+							Nivel_gob						c(0100),;
+							sector							c(0150),;
+							pliego							c(0150),;
+							U_Ejecutora						c(0150),;
+							sec_ejec						c(0006),;
+							Programa_pptal					c(0150),;
+							Tipo_prod_proy					c(0010),;
+							Producto_Proyecto				c(0150),;
+							Tipo_Act_Obra_AC				c(0030),;
+							Activ_Obra_AccInv				c(0150),;
+							funcion							c(0150),;
+							Division_Fn						c(0150),;
+							Grupo_Fn						c(0150),;
+							Meta							c(0005),;
+							Finalidad						c(0150),;
+							unidad_medida					c(0150),;
+							cant_meta_anual					N(19,3),;
+							cant_meta_sem					N(19,3),;
+							avan_fisico_anual				N(19,3),;
+							avan_fisico_sem					N(19,3),;
+							sec_func						c(0004),;
+							departamento_meta				c(0100),;
+							provincia_meta					c(0100),;
+							distrito_meta					c(0100),;
+							fuente_financ					c(0100),;
+							rubro							c(0100),;
+							categoria_gasto					c(0150),;
+							tipo_transaccion				c(0150),;
+							generica						c(0150),;
+							subgenerica						c(0150),;
+							subgenerica_det					c(0150),;
+							especifica						c(0150),;
+							especifica_det					c(0150),;
+							tipo_recurso					c(0100),;
+							Mto_pia							N(19,2),;
+							Mto_modificaciones				N(19,2),;
+							Mto_pim							N(19,2),;
+							Mto_certificado					N(19,2),;
+							Mto_compro_anual				N(19,2),;
+							Mto_at_Comp_01					N(19,2),;
+							Mto_at_Comp_02					N(19,2),;
+							Mto_at_Comp_03					N(19,2),;
+							Mto_at_Comp_04					N(19,2),;
+							Mto_at_Comp_05					N(19,2),;
+							Mto_at_Comp_06					N(19,2),;
+							Mto_at_Comp_07					N(19,2),;
+							Mto_at_Comp_08					N(19,2),;
+							Mto_at_Comp_09					N(19,2),;
+							Mto_at_Comp_10					N(19,2),;
+							Mto_at_Comp_11					N(19,2),;
+							Mto_at_Comp_12					N(19,2),;
+							Mto_at_Comp_total				N(19,2),;
+							Mto_devenga_01					N(19,2),;
+							Mto_devenga_02					N(19,2),;
+							Mto_devenga_03					N(19,2),;
+							Mto_devenga_04					N(19,2),;
+							Mto_devenga_05					N(19,2),;
+							Mto_devenga_06					N(19,2),;
+							Mto_devenga_07					N(19,2),;
+							Mto_devenga_08					N(19,2),;
+							Mto_devenga_09					N(19,2),;
+							Mto_devenga_10					N(19,2),;
+							Mto_devenga_11					N(19,2),;
+							Mto_devenga_12					N(19,2),;
+							Mto_devenga_total				N(19,2),;
+							Mto_girado_01					N(19,2),;
+							Mto_girado_02					N(19,2),;
+							Mto_girado_03					N(19,2),;
+							Mto_girado_04					N(19,2),;
+							Mto_girado_05					N(19,2),;
+							Mto_girado_06					N(19,2),;
+							Mto_girado_07					N(19,2),;
+							Mto_girado_08					N(19,2),;
+							Mto_girado_09					N(19,2),;
+							Mto_girado_10					N(19,2),;
+							Mto_girado_11					N(19,2),;
+							Mto_girado_12					N(19,2),;
+							Mto_girado_total				N(19,2),;
+							Mto_pagado_01					N(19,2),;
+							Mto_pagado_02					N(19,2),;
+							Mto_pagado_03					N(19,2),;
+							Mto_pagado_04					N(19,2),;
+							Mto_pagado_05					N(19,2),;
+							Mto_pagado_06					N(19,2),;
+							Mto_pagado_07					N(19,2),;
+							Mto_pagado_08					N(19,2),;
+							Mto_pagado_09					N(19,2),;
+							Mto_pagado_10 					N(19,2),;
+							Mto_pagado_11					N(19,2),;
+							Mto_pagado_12					N(19,2),;
+							Mto_pagado_total				N(19,2),;
+							modificacion_01					N(19,2),;
+							modificacion_02					N(19,2),;
+							modificacion_03					N(19,2),;
+							modificacion_04					N(19,2),;
+							modificacion_05					N(19,2),;
+							modificacion_06					N(19,2),;
+							modificacion_07					N(19,2),;
+							modificacion_08					N(19,2),;
+							modificacion_09					N(19,2),;
+							modificacion_10					N(19,2),;
+							modificacion_11					N(19,2),;
+							modificacion_12					N(19,2),;
+							modificacion_01_t01				N(19,2),;
+							modificacion_01_t02				N(19,2),;
+							modificacion_01_t03				N(19,2),;
+							modificacion_01_t04				N(19,2),;
+							modificacion_01_t05				N(19,2),;
+							modificacion_01_t06				N(19,2),;
+							modificacion_01_t07				N(19,2),;
+							modificacion_02_t01				N(19,2),;
+							modificacion_02_t02				N(19,2),;
+							modificacion_02_t03				N(19,2),;
+							modificacion_02_t04				N(19,2),;
+							modificacion_02_t05				N(19,2),;
+							modificacion_02_t06				N(19,2),;
+							modificacion_02_t07				N(19,2),;
+							modificacion_03_t01				N(19,2),;
+							modificacion_03_t02				N(19,2),;
+							modificacion_03_t03				N(19,2),;
+							modificacion_03_t04				N(19,2),;
+							modificacion_03_t05				N(19,2),;
+							modificacion_03_t06				N(19,2),;
+							modificacion_03_t07				N(19,2),;
+							modificacion_04_t01				N(19,2),;
+							modificacion_04_t02				N(19,2),;
+							modificacion_04_t03				N(19,2),;
+							modificacion_04_t04				N(19,2),;
+							modificacion_04_t05				N(19,2),;
+							modificacion_04_t06				N(19,2),;
+							modificacion_04_t07				N(19,2),;
+							modificacion_05_t01				N(19,2),;
+							modificacion_05_t02				N(19,2),;
+							modificacion_05_t03				N(19,2),;
+							modificacion_05_t04				N(19,2),;
+							modificacion_05_t05				N(19,2),;
+							modificacion_05_t06				N(19,2),;
+							modificacion_05_t07				N(19,2),;
+							modificacion_06_t01				N(19,2),;
+							modificacion_06_t02				N(19,2),;
+							modificacion_06_t03				N(19,2),;
+							modificacion_06_t04				N(19,2),;
+							modificacion_06_t05				N(19,2),;
+							modificacion_06_t06				N(19,2),;
+							modificacion_06_t07				N(19,2),;
+							modificacion_07_t01				N(19,2),;
+							modificacion_07_t02				N(19,2),;
+							modificacion_07_t03				N(19,2),;
+							modificacion_07_t04				N(19,2),;
+							modificacion_07_t05				N(19,2),;
+							modificacion_07_t06				N(19,2),;
+							modificacion_07_t07				N(19,2),;
+							modificacion_08_t01				N(19,2),;
+							modificacion_08_t02				N(19,2),;
+							modificacion_08_t03				N(19,2),;
+							modificacion_08_t04				N(19,2),;
+							modificacion_08_t05				N(19,2),;
+							modificacion_08_t06				N(19,2),;
+							modificacion_08_t07				N(19,2),;
+							modificacion_09_t01				N(19,2),;
+							modificacion_09_t02				N(19,2),;
+							modificacion_09_t03				N(19,2),;
+							modificacion_09_t04				N(19,2),;
+							modificacion_09_t05				N(19,2),;
+							modificacion_09_t06				N(19,2),;
+							modificacion_09_t07				N(19,2),;
+							modificacion_10_t01				N(19,2),;
+							modificacion_10_t02				N(19,2),;
+							modificacion_10_t03				N(19,2),;
+							modificacion_10_t04				N(19,2),;
+							modificacion_10_t05				N(19,2),;
+							modificacion_10_t06				N(19,2),;
+							modificacion_10_t07				N(19,2),;
+							modificacion_11_t01				N(19,2),;
+							modificacion_11_t02				N(19,2),;
+							modificacion_11_t03				N(19,2),;
+							modificacion_11_t04				N(19,2),;
+							modificacion_11_t05				N(19,2),;
+							modificacion_11_t06				N(19,2),;
+							modificacion_11_t07				N(19,2),;
+							modificacion_12_t01				N(19,2),;
+							modificacion_12_t02				N(19,2),;
+							modificacion_12_t03				N(19,2),;
+							modificacion_12_t04				N(19,2),;
+							modificacion_12_t05				N(19,2),;
+							modificacion_12_t06				N(19,2),;
+							modificacion_12_t07				N(19,2),;
+							mto_modificaciones_TOTAL		N(19,2),;
+							mto_pim_01						N(19,2),;
+							mto_pim_02						N(19,2),;
+							mto_pim_03						N(19,2),;
+							mto_pim_04						N(19,2),;
+							mto_pim_05						N(19,2),;
+							mto_pim_06						N(19,2),;
+							mto_pim_07						N(19,2),;
+							mto_pim_08						N(19,2),;
+							mto_pim_09						N(19,2),;
+							mto_pim_10						N(19,2),;
+							mto_pim_11						N(19,2),;
+							mto_pim_12						N(19,2),;
+							mto_certificado_01				N(19,2),;
+							mto_certificado_02				N(19,2),;
+							mto_certificado_03				N(19,2),;
+							mto_certificado_04				N(19,2),;
+							mto_certificado_05				N(19,2),;
+							mto_certificado_06				N(19,2),;
+							mto_certificado_07				N(19,2),;
+							mto_certificado_08				N(19,2),;
+							mto_certificado_09				N(19,2),;
+							mto_certificado_10				N(19,2),;
+							mto_certificado_11				N(19,2),;
+							mto_certificado_12				N(19,2),;
+							mto_certificado_total			N(19,2))
+							
+
+ELSE
+	CREATE CURSOR curgen(	Ano_eje							c(0004),;
+							Nivel_gob						c(0100),;
+							departamento					c(0150),;
+							provincia						c(0150),;
+							distrito						c(0150),;
+							sec_ejec						c(0006),;
+							Programa_pptal					c(0150),;
+							Tipo_prod_proy					c(0010),;
+							Producto_Proyecto				c(0150),;
+							Tipo_Act_Obra_AC				c(0030),;
+							Activ_Obra_AccInv				c(0150),;
+							funcion							c(0150),;
+							Division_Fn						c(0150),;
+							Grupo_Fn						c(0150),;
+							Meta							c(0005),;
+							Finalidad						c(0150),;
+							unidad_medida					c(0150),;
+							cant_meta_anual					N(19,3),;
+							cant_meta_sem					N(19,3),;
+							avan_fisico_anual				N(19,3),;
+							avan_fisico_sem					N(19,3),;
+							sec_func						c(0004),;
+							departamento_meta				c(0100),;
+							provincia_meta					c(0100),;
+							distrito_meta					c(0100),;
+							fuente_financ					c(0100),;
+							rubro							c(0100),;
+							categoria_gasto					c(0150),;
+							tipo_transaccion				c(0150),;
+							generica						c(0150),;
+							subgenerica						c(0150),;
+							subgenerica_det					c(0150),;
+							especifica						c(0150),;
+							especifica_det					c(0150),;
+							tipo_recurso					c(0100),;
+							Mto_pia							N(19,2),;
+							Mto_modificaciones				N(19,2),;
+							Mto_pim							N(19,2),;
+							Mto_certificado					N(19,2),;
+							Mto_compro_anual				N(19,2),;
+							Mto_at_Comp_01					N(19,2),;
+							Mto_at_Comp_02					N(19,2),;
+							Mto_at_Comp_03					N(19,2),;
+							Mto_at_Comp_04					N(19,2),;
+							Mto_at_Comp_05					N(19,2),;
+							Mto_at_Comp_06					N(19,2),;
+							Mto_at_Comp_07					N(19,2),;
+							Mto_at_Comp_08					N(19,2),;
+							Mto_at_Comp_09					N(19,2),;
+							Mto_at_Comp_10					N(19,2),;
+							Mto_at_Comp_11					N(19,2),;
+							Mto_at_Comp_12					N(19,2),;
+							Mto_at_Comp_total				N(19,2),;
+							Mto_devenga_01					N(19,2),;
+							Mto_devenga_02					N(19,2),;
+							Mto_devenga_03					N(19,2),;
+							Mto_devenga_04					N(19,2),;
+							Mto_devenga_05					N(19,2),;
+							Mto_devenga_06					N(19,2),;
+							Mto_devenga_07					N(19,2),;
+							Mto_devenga_08					N(19,2),;
+							Mto_devenga_09					N(19,2),;
+							Mto_devenga_10					N(19,2),;
+							Mto_devenga_11					N(19,2),;
+							Mto_devenga_12					N(19,2),;
+							Mto_devenga_total				N(19,2),;
+							Mto_girado_01					N(19,2),;
+							Mto_girado_02					N(19,2),;
+							Mto_girado_03					N(19,2),;
+							Mto_girado_04					N(19,2),;
+							Mto_girado_05					N(19,2),;
+							Mto_girado_06					N(19,2),;
+							Mto_girado_07					N(19,2),;
+							Mto_girado_08					N(19,2),;
+							Mto_girado_09					N(19,2),;
+							Mto_girado_10					N(19,2),;
+							Mto_girado_11					N(19,2),;
+							Mto_girado_12					N(19,2),;
+							Mto_girado_total				N(19,2),;
+							Mto_pagado_01					N(19,2),;
+							Mto_pagado_02					N(19,2),;
+							Mto_pagado_03					N(19,2),;
+							Mto_pagado_04					N(19,2),;
+							Mto_pagado_05					N(19,2),;
+							Mto_pagado_06					N(19,2),;
+							Mto_pagado_07					N(19,2),;
+							Mto_pagado_08					N(19,2),;
+							Mto_pagado_09					N(19,2),;
+							Mto_pagado_10 					N(19,2),;
+							Mto_pagado_11					N(19,2),;
+							Mto_pagado_12					N(19,2),;
+							Mto_pagado_total				N(19,2),;
+							modificacion_01					N(19,2),;
+							modificacion_02					N(19,2),;
+							modificacion_03					N(19,2),;
+							modificacion_04					N(19,2),;
+							modificacion_05					N(19,2),;
+							modificacion_06					N(19,2),;
+							modificacion_07					N(19,2),;
+							modificacion_08					N(19,2),;
+							modificacion_09					N(19,2),;
+							modificacion_10					N(19,2),;
+							modificacion_11					N(19,2),;
+							modificacion_12					N(19,2),;
+							modificacion_01_t01				N(19,2),;
+							modificacion_01_t02				N(19,2),;
+							modificacion_01_t03				N(19,2),;
+							modificacion_01_t04				N(19,2),;
+							modificacion_01_t05				N(19,2),;
+							modificacion_01_t06				N(19,2),;
+							modificacion_01_t07				N(19,2),;
+							modificacion_02_t01				N(19,2),;
+							modificacion_02_t02				N(19,2),;
+							modificacion_02_t03				N(19,2),;
+							modificacion_02_t04				N(19,2),;
+							modificacion_02_t05				N(19,2),;
+							modificacion_02_t06				N(19,2),;
+							modificacion_02_t07				N(19,2),;
+							modificacion_03_t01				N(19,2),;
+							modificacion_03_t02				N(19,2),;
+							modificacion_03_t03				N(19,2),;
+							modificacion_03_t04				N(19,2),;
+							modificacion_03_t05				N(19,2),;
+							modificacion_03_t06				N(19,2),;
+							modificacion_03_t07				N(19,2),;
+							modificacion_04_t01				N(19,2),;
+							modificacion_04_t02				N(19,2),;
+							modificacion_04_t03				N(19,2),;
+							modificacion_04_t04				N(19,2),;
+							modificacion_04_t05				N(19,2),;
+							modificacion_04_t06				N(19,2),;
+							modificacion_04_t07				N(19,2),;
+							modificacion_05_t01				N(19,2),;
+							modificacion_05_t02				N(19,2),;
+							modificacion_05_t03				N(19,2),;
+							modificacion_05_t04				N(19,2),;
+							modificacion_05_t05				N(19,2),;
+							modificacion_05_t06				N(19,2),;
+							modificacion_05_t07				N(19,2),;
+							modificacion_06_t01				N(19,2),;
+							modificacion_06_t02				N(19,2),;
+							modificacion_06_t03				N(19,2),;
+							modificacion_06_t04				N(19,2),;
+							modificacion_06_t05				N(19,2),;
+							modificacion_06_t06				N(19,2),;
+							modificacion_06_t07				N(19,2),;
+							modificacion_07_t01				N(19,2),;
+							modificacion_07_t02				N(19,2),;
+							modificacion_07_t03				N(19,2),;
+							modificacion_07_t04				N(19,2),;
+							modificacion_07_t05				N(19,2),;
+							modificacion_07_t06				N(19,2),;
+							modificacion_07_t07				N(19,2),;
+							modificacion_08_t01				N(19,2),;
+							modificacion_08_t02				N(19,2),;
+							modificacion_08_t03				N(19,2),;
+							modificacion_08_t04				N(19,2),;
+							modificacion_08_t05				N(19,2),;
+							modificacion_08_t06				N(19,2),;
+							modificacion_08_t07				N(19,2),;
+							modificacion_09_t01				N(19,2),;
+							modificacion_09_t02				N(19,2),;
+							modificacion_09_t03				N(19,2),;
+							modificacion_09_t04				N(19,2),;
+							modificacion_09_t05				N(19,2),;
+							modificacion_09_t06				N(19,2),;
+							modificacion_09_t07				N(19,2),;
+							modificacion_10_t01				N(19,2),;
+							modificacion_10_t02				N(19,2),;
+							modificacion_10_t03				N(19,2),;
+							modificacion_10_t04				N(19,2),;
+							modificacion_10_t05				N(19,2),;
+							modificacion_10_t06				N(19,2),;
+							modificacion_10_t07				N(19,2),;
+							modificacion_11_t01				N(19,2),;
+							modificacion_11_t02				N(19,2),;
+							modificacion_11_t03				N(19,2),;
+							modificacion_11_t04				N(19,2),;
+							modificacion_11_t05				N(19,2),;
+							modificacion_11_t06				N(19,2),;
+							modificacion_11_t07				N(19,2),;
+							modificacion_12_t01				N(19,2),;
+							modificacion_12_t02				N(19,2),;
+							modificacion_12_t03				N(19,2),;
+							modificacion_12_t04				N(19,2),;
+							modificacion_12_t05				N(19,2),;
+							modificacion_12_t06				N(19,2),;
+							modificacion_12_t07				N(19,2),;
+							mto_modificaciones_TOTAL		N(19,2),;
+							mto_pim_01						N(19,2),;
+							mto_pim_02						N(19,2),;
+							mto_pim_03						N(19,2),;
+							mto_pim_04						N(19,2),;
+							mto_pim_05						N(19,2),;
+							mto_pim_06						N(19,2),;
+							mto_pim_07						N(19,2),;
+							mto_pim_08						N(19,2),;
+							mto_pim_09						N(19,2),;
+							mto_pim_10						N(19,2),;
+							mto_pim_11						N(19,2),;
+							mto_pim_12						N(19,2),;
+							mto_certificado_01				N(19,2),;
+							mto_certificado_02				N(19,2),;
+							mto_certificado_03				N(19,2),;
+							mto_certificado_04				N(19,2),;
+							mto_certificado_05				N(19,2),;
+							mto_certificado_06				N(19,2),;
+							mto_certificado_07				N(19,2),;
+							mto_certificado_08				N(19,2),;
+							mto_certificado_09				N(19,2),;
+							mto_certificado_10				N(19,2),;
+							mto_certificado_11				N(19,2),;
+							mto_certificado_12				N(19,2),;
+							mto_certificado_total			N(19,2))
+
+
+
+							
+							
+
+ENDIF 							
+							
+SELECT LEFT(cod_detalle,1) as tipo_unidad, nombre ;
+	FROM maestro_detalle WHERE cod_maestro = 'TIPO_UNIDAD' INTO CURSOR CUR_TIPO_UNIDAD
+SELECT CUR_TIPO_UNIDAD
+INDEX ON tipo_unidad TAG tipo 	 						
+
+
+DO carga_cursor_general
+DO carga_modificacion
+DO carga_ejecucion_mensual
+DO genera_cursor_definitivo
+DO ejecutar
+DO cierra_tablas
+
+
+
+PROCEDURE carga_cursor_general
+	SELECT meta
+	SET RELATION TO departamento							INTO meta_departamento ADDITIVE 
+	SET RELATION TO departamento+provincia					INTO meta_provincia ADDITIVE 
+	SET RELATION TO departamento+provincia+distrito			INTO meta_distrito ADDITIVE 
+	
+	SELECT gasto
+	SET RELATION TO ano_eje+sec_ejec+sec_func 				INTO meta ADDITIVE 
+	SET RELATION TO ano_eje+'1'+fuente_financ				INTO fuente_financ ADDITIVE 
+	SET RELATION TO ano_eje+sec_ejec						INTO ejecutora ADDITIVE 
+	
+	IF gctipo_ue = '01' THEN 
+		xbusqueda = 'gcano_eje+gcsec_ejec'
+		xambito	  = 'ano_eje+sec_ejec = gcano_eje+gcsec_ejec '
+	ELSE
+		xbusqueda = 'gcano_eje'
+		xambito	  = 'ano_eje = gcano_eje'
+	ENDIF 
+	SELECT gasto
+	SEEK &xBusqueda
+	SCAN WHILE &xAmbito
+		SCATTER MEMVAR
+		IF m.sec_func = '0000' THEN 
+			LOOP 
+		ENDIF 	  
+		
+		SELECT maestro_clasificador
+		IF SEEK(m.ano_eje+m.id_clasificador,'maestro_clasificador') THEN 
+			m.clasificador 		= maestro_clasificador.clasificador
+			m.tipo_transaccion	= SUBSTR(m.clasificador,1,1)
+			m.generica			= SUBSTR(m.clasificador,2,1)
+			m.subgenerica		= SUBSTR(m.clasificador,3,2)
+			m.subgenerica_det	= SUBSTR(m.clasificador,5,2)
+			m.especifica		= SUBSTR(m.clasificador,7,2)
+			m.especifica_det	= SUBSTR(m.clasificador,9,2)
+			llave1=m.ano_eje+m.tipo_transaccion+m.generica+m.subgenerica+m.subgenerica_det
+			IF SEEK(llave1,'subgenerica_det') THEN
+				m.categoria_gasto = subgenerica_det.categoria_gasto
+			ENDIF
+		ENDIF 
+		m.fuente_financ_agregada	= fuente_financ.fuente_financ_agregada
+		m.pia 						= m.presupuesto
+		m.pim						= m.presupuesto
+		m.modificacion 				= 0.00
+		m.programa_ppto  			= meta.programa_ppto
+		m.act_proy					= meta.act_proy
+		m.componente				= meta.componente
+		m.funcion					= meta.funcion
+		m.programa					= meta.programa
+		m.sub_programa				= meta.sub_programa
+		m.meta						= meta.meta
+		m.sec_func					= meta.sec_func
+		m.finalidad			   		= meta.finalidad
+		m.unidad_medida				= meta.unidad_medida
+		m.departamento				= ejecutora.departamento
+		m.provincia					= ejecutora.provincia
+		m.distrito					= ejecutora.distrito
+		m.departamento_meta			= meta.departamento
+		m.provincia_meta			= meta.provincia
+		m.distrito_meta				= meta.distrito
+		m.monto_certificado 		= 0.00
+		m.monto_comprometido_anual 	= 0.00
+		
+		
+		STORE 0 TO lcAvance_fisico_semestral, lcAvance_fisico_anual
+		SELECT meta_trimestral
+		SEEK gcano_eje+gcsec_ejec+m.sec_func
+		SCAN WHILE ano_eje+sec_ejec+sec_func = gcano_eje+gcsec_ejec+m.sec_func
+			IF INLIST(meta_trimestral.trimestre,'1','2') THEN 
+				lcAvance_fisico_semestral = lcAvance_fisico_semestral + meta_trimestral.avance
+			ENDIF 
+			lcAvance_fisico_anual = lcAvance_fisico_anual + meta_trimestral.avance
+		ENDSCAN 
+		m.avance_fisico_semestral	= lcAvance_fisico_semestral
+		m.avance_fisico_anual		= lcAvance_fisico_anual 
+		m.cantidad_semestral 		= meta.cantidad_semestral
+		m.cantidad_inicial		  	= meta.cantidad
+		
+		lcClave = m.ano_eje+m.sec_ejec+m.fuente_financ+m.tipo_recurso+m.categoria_gasto+m.tipo_transaccion+m.generica+;
+				  m.subgenerica+m.subgenerica_det+m.especifica+m.especifica_det+m.sec_func
+				  
+		IF !SEEK(lcClave,'curGasto') THEN 
+			INSERT INTO curGasto FROM MEMVAR 
+		ELSE
+			REPLACE curGasto.pia 			WITH curGasto.pia + m.pia
+		ENDIF 
+
+		
+	ENDSCAN 
+	
+	SELECT gasto 
+	SET RELATION TO 
+ENDPROC 
+
+PROCEDURE carga_modificacion
+	IF gctipo_ue = '01' THEN 
+		xbusqueda = 'gcano_eje+gcsec_ejec'
+		xambito	  = 'ano_eje+sec_ejec = gcano_eje+gcsec_ejec '
+	ELSE
+		xbusqueda = 'gcano_eje'
+		xambito	  = 'ano_eje = gcano_eje'
+	ENDIF 
+
+	SELECT nota_det
+	SET RELATION TO ano_eje+sec_ejec+sec_func 	INTO meta		ADDITIVE
+	SET RELATION TO ano_eje+sec_ejec 			INTO ejecutora 	ADDITIVE
+	SET RELATION TO ano_eje+origen+fuente_financ+tipo_recurso INTO tipo_recurso additive
+	SET RELATION TO ano_eje+origen+fuente_financ INTO fuente_financ additive
+
+	SEEK &xbusqueda
+	SCAN WHILE &xAmbito
+		SCATTER MEMVAR
+		lckey=m.ano_eje+m.sec_ejec+m.sec_ejec2+m.sec_nota
+		IF !SEEK(lckey,'curcab','nota')
+			LOOP
+		ELSE
+			=SEEK(lckey,'nota_cab','mp_notacab')
+			SELECT nota_cab
+			SCATTER MEMVAR
+			SELECT nota_det
+		ENDIF
+
+		
+		SELECT maestro_clasificador
+		IF SEEK(gcano_eje+m.id_clasificador,'maestro_clasificador','IDCLASIF') THEN 
+			m.clasificador 		= maestro_clasificador.clasificador
+			m.tipo_transaccion	= SUBSTR(m.clasificador,1,1)
+			m.generica			= SUBSTR(m.clasificador,2,1)
+			m.subgenerica		= SUBSTR(m.clasificador,3,2)
+			m.subgenerica_det	= SUBSTR(m.clasificador,5,2)
+			m.especifica		= SUBSTR(m.clasificador,7,2)
+			m.especifica_det	= SUBSTR(m.clasificador,9,2)
+			llave1=m.ano_eje+m.tipo_transaccion+m.generica+m.subgenerica+m.subgenerica_det
+			IF SEEK(llave1,'subgenerica_det') THEN
+				m.categoria_gasto = subgenerica_det.categoria_gasto
+			ENDIF
+		ELSE
+			LOOP
+		ENDIF
+
+		IF tipo_recurso.es_presupuestal = 'N' then
+			m.tipo_recurso = '0 '
+		ENDIF
+		
+		lcClave = m.ano_eje+m.sec_ejec+m.fuente_financ+m.tipo_recurso+m.categoria_gasto+m.tipo_transaccion+m.generica+;
+				  m.subgenerica+m.subgenerica_det+m.especifica+m.especifica_det+m.sec_func
+		SELECT curGasto
+		IF SEEK(lcClave,'CurGasto') THEN 
+			REPLACE curGasto.pim 			WITH curGasto.pim + m.monto_a - m.monto_de
+			REPLACE curGasto.modificacion  	WITH curGasto.modificacion + m.monto_a - m.monto_de
+			lccampomes='curGasto.Modificacion_'+m.mes_eje
+			REPLACE &lccampomes WITH &lccampomes + m.monto_a - m.monto_de
+			DO CASE 
+				CASE nota_cab.tipo_modificacion = '001'
+					lcTipo_modificacion = '001'
+					lccampomes_tipo = 'curGasto.modificacion_'+m.mes_eje+'_t'+RIGHT(lctipo_modificacion,2)
+					REPLACE &lccampomes_tipo WITH &lccampomes_tipo + m.monto_a - m.monto_de
+				CASE nota_cab.tipo_modificacion = '002'
+					lcTipo_modificacion = '002'
+					lccampomes_tipo = 'curGasto.modificacion_'+m.mes_eje+'_t'+RIGHT(lctipo_modificacion,2)
+					REPLACE &lccampomes_tipo WITH &lccampomes_tipo + m.monto_a - m.monto_de
+				
+				CASE nota_cab.tipo_modificacion = '003'
+					lcTipo_modificacion = '003'
+					lccampomes_tipo = 'curGasto.modificacion_'+m.mes_eje+'_t'+RIGHT(lctipo_modificacion,2)
+					REPLACE &lccampomes_tipo WITH &lccampomes_tipo + m.monto_a - m.monto_de
+				
+				CASE nota_cab.tipo_modificacion = '004'
+					lcTipo_modificacion = '004'
+					lccampomes_tipo = 'curGasto.modificacion_'+m.mes_eje+'_t'+RIGHT(lctipo_modificacion,2)
+					REPLACE &lccampomes_tipo WITH &lccampomes_tipo + m.monto_a - m.monto_de
+				
+				CASE nota_cab.tipo_modificacion = '005'
+					lcTipo_modificacion = '005'
+					lccampomes_tipo = 'curGasto.modificacion_'+m.mes_eje+'_t'+RIGHT(lctipo_modificacion,2)
+					REPLACE &lccampomes_tipo WITH &lccampomes_tipo + m.monto_a - m.monto_de
+				
+				CASE nota_cab.tipo_modificacion = '006'
+					lcTipo_modificacion = '006'
+					lccampomes_tipo = 'curGasto.modificacion_'+m.mes_eje+'_t'+RIGHT(lctipo_modificacion,2)
+					REPLACE &lccampomes_tipo WITH &lccampomes_tipo + m.monto_a - m.monto_de
+				
+				CASE nota_cab.tipo_modificacion = '007'
+					lcTipo_modificacion = '007'
+					lccampomes_tipo = 'curGasto.modificacion_'+m.mes_eje+'_t'+RIGHT(lctipo_modificacion,2)
+					REPLACE &lccampomes_tipo WITH &lccampomes_tipo + m.monto_a - m.monto_de
+				
+
+			
+			ENDCASE 					
+		ENDIF 
+		SELECT nota_det		
+	ENDSCAN
+
+	SELECT nota_det
+	SET RELATION TO
+
+
+ENDPROC 
+
+
+PROCEDURE carga_ejecucion_mensual
+	DO carga_ejecucion_mpp  WITH gcAno_eje, gcSec_ejec, '12', 1
+	
+	IF gctipo_ue = '01' THEN 
+		xTabla = 'cur_ejecucion_mpp'
+		xbusqueda = 'gcano_eje+gcsec_ejec'
+		xambito	  = 'ano_eje+sec_ejec = gcano_eje+gcsec_ejec '
+	ELSE
+		xTabla = 'ejecucion_mpp'	
+		xbusqueda = 'gcano_eje'
+		xambito	  = 'ano_eje = gcano_eje'
+	ENDIF 	
+	SELECT &xTabla
+	SET RELATION TO ano_eje+'1'+fuente_financ							INTO fuente_financ ADDITIVE 	
+	SET RELATION TO ano_eje+sec_ejec+sec_func							INTO meta ADDITIVE 
+	SET RELATION TO ano_eje+sec_ejec									INTO ejecutora ADDITIVE 
+	
+	SELECT &xTabla
+	SEEK &xBusqueda
+	SCAN WHILE &xAmbito
+		SCATTER MEMVAR 
+		IF m.sec_func = '0000' THEN 
+			LOOP 
+		ENDIF 	  
+		
+		SELECT maestro_clasificador
+		IF SEEK(m.ano_eje+m.id_clasificador,'maestro_clasificador') THEN 
+			m.clasificador 		= maestro_clasificador.clasificador
+			m.tipo_transaccion	= SUBSTR(m.clasificador,1,1)
+			m.generica			= SUBSTR(m.clasificador,2,1)
+			m.subgenerica		= SUBSTR(m.clasificador,3,2)
+			m.subgenerica_det	= SUBSTR(m.clasificador,5,2)
+			m.especifica		= SUBSTR(m.clasificador,7,2)
+			m.especifica_det	= SUBSTR(m.clasificador,9,2)
+			llave1=m.ano_eje+m.tipo_transaccion+m.generica+m.subgenerica+m.subgenerica_det
+			IF SEEK(llave1,'subgenerica_det') THEN
+				m.categoria_gasto = subgenerica_det.categoria_gasto
+			ENDIF
+		ENDIF 
+		m.fuente_financ_agregada	= fuente_financ.fuente_financ_agregada
+		m.programa_ppto  			= meta.programa_ppto
+		m.act_proy					= meta.act_proy
+		m.componente				= meta.componente
+		m.funcion					= meta.funcion
+		m.programa					= meta.programa
+		m.sub_programa				= meta.sub_programa
+		m.meta						= meta.meta
+		lcMes						= m.mes_eje
+		m.cantidad_inicial			= meta.cantidad_inicial
+		m.cantidad_semestral		= meta.cantidad_semestral
+		m.programa_ppto  			= meta.programa_ppto
+		m.act_proy					= meta.act_proy
+		m.componente				= meta.componente
+		m.funcion					= meta.funcion
+		m.programa					= meta.programa
+		m.sub_programa				= meta.sub_programa
+		m.meta						= meta.meta
+		m.sec_func					= meta.sec_func
+		m.finalidad			   		= meta.finalidad
+		m.unidad_medida				= meta.unidad_medida
+		m.departamento				= ejecutora.departamento
+		m.provincia					= ejecutora.provincia
+		m.distrito					= ejecutora.distrito
+		m.departamento_meta			= meta.departamento
+		m.provincia_meta			= meta.provincia
+		m.distrito_meta				= meta.distrito
+		m.monto_certificado 		= m.certificado
+		m.monto_comprometido_anual 	= m.comprometido_anual 
+		
+		STORE 0.00 TO lcMonto_compromiso, lcMonto_devengado, lcMonto_girado, lcMonto_pagado, lcMonto_certificado, lcMonto_comprometido_anual
+		lcmonto_compromiso 			= m.compromiso
+		lcmonto_devengado 		    = m.devengado
+		lcmonto_girado     			= m.girado
+		lcmonto_pagado	  		 	= m.pagado
+		lcmonto_certificado			= m.certificado
+
+		
+		lcClave = m.ano_eje+m.sec_ejec+m.fuente_financ+m.tipo_recurso+m.categoria_gasto+m.tipo_transaccion+m.generica+;
+				  m.subgenerica+m.subgenerica_det+m.especifica+m.especifica_det+m.sec_func
+		IF !SEEK(lcClave,'curGasto') THEN 
+			INSERT INTO curGasto FROM MEMVAR 	
+
+			DO CASE
+				CASE lcMes = '01'
+					REPLACE curGasto.Mto_at_Comp_01		WITH lcmonto_compromiso
+					REPLACE curGasto.Mto_devenga_01		WITH lcmonto_devengado  
+					REPLACE curGasto.Mto_girado_01		WITH lcmonto_girado     							
+					REPLACE curGasto.Mto_pagado_01		WITH lcmonto_pagado	 
+					REPLACE curGasto.mto_certificado_01	WITH lcmonto_certificado			
+					
+				CASE lcMes = '02'
+					REPLACE curGasto.Mto_at_Comp_02		WITH lcmonto_compromiso
+					REPLACE curGasto.Mto_devenga_02		WITH lcmonto_devengado  
+					REPLACE curGasto.Mto_girado_02		WITH lcmonto_girado     							
+					REPLACE curGasto.Mto_pagado_02		WITH lcmonto_pagado	 			
+					REPLACE curGasto.mto_certificado_02	WITH lcmonto_certificado			
+				CASE lcMes = '03'
+					REPLACE curGasto.Mto_at_Comp_03		WITH lcmonto_compromiso
+					REPLACE curGasto.Mto_devenga_03		WITH lcmonto_devengado  
+					REPLACE curGasto.Mto_girado_03		WITH lcmonto_girado     							
+					REPLACE curGasto.Mto_pagado_03		WITH lcmonto_pagado	 			
+					REPLACE curGasto.mto_certificado_03	WITH lcmonto_certificado								
+				CASE lcMes = '04'
+					REPLACE curGasto.Mto_at_Comp_04		WITH lcmonto_compromiso
+					REPLACE curGasto.Mto_devenga_04		WITH lcmonto_devengado  
+					REPLACE curGasto.Mto_girado_04		WITH lcmonto_girado     							
+					REPLACE curGasto.Mto_pagado_04		WITH lcmonto_pagado	 			
+					REPLACE curGasto.mto_certificado_04	WITH lcmonto_certificado								
+				CASE lcMes = '05'
+					REPLACE curGasto.Mto_at_Comp_05		WITH lcmonto_compromiso
+					REPLACE curGasto.Mto_devenga_05		WITH lcmonto_devengado  
+					REPLACE curGasto.Mto_girado_05		WITH lcmonto_girado     							
+					REPLACE curGasto.Mto_pagado_05		WITH lcmonto_pagado	 			
+					REPLACE curGasto.mto_certificado_05	WITH lcmonto_certificado								
+				CASE lcMes = '06'
+					REPLACE curGasto.Mto_at_Comp_06		WITH lcmonto_compromiso
+					REPLACE curGasto.Mto_devenga_06		WITH lcmonto_devengado  
+					REPLACE curGasto.Mto_girado_06		WITH lcmonto_girado     							
+					REPLACE curGasto.Mto_pagado_06		WITH lcmonto_pagado	 			
+					REPLACE curGasto.mto_certificado_06	WITH lcmonto_certificado								
+				CASE lcMes = '07'
+					REPLACE curGasto.Mto_at_Comp_07		WITH lcmonto_compromiso
+					REPLACE curGasto.Mto_devenga_07		WITH lcmonto_devengado  
+					REPLACE curGasto.Mto_girado_07		WITH lcmonto_girado     							
+					REPLACE curGasto.Mto_pagado_07		WITH lcmonto_pagado	 			
+					REPLACE curGasto.mto_certificado_07	WITH lcmonto_certificado								
+				CASE lcMes = '08'
+					REPLACE curGasto.Mto_at_Comp_08		WITH lcmonto_compromiso
+					REPLACE curGasto.Mto_devenga_08		WITH lcmonto_devengado  
+					REPLACE curGasto.Mto_girado_08		WITH lcmonto_girado     							
+					REPLACE curGasto.Mto_pagado_08		WITH lcmonto_pagado	 			
+					REPLACE curGasto.mto_certificado_08	WITH lcmonto_certificado								
+				CASE lcMes = '09'
+					REPLACE curGasto.Mto_at_Comp_09		WITH lcmonto_compromiso
+					REPLACE curGasto.Mto_devenga_09		WITH lcmonto_devengado  
+					REPLACE curGasto.Mto_girado_09		WITH lcmonto_girado     							
+					REPLACE curGasto.Mto_pagado_09		WITH lcmonto_pagado	 			
+					REPLACE curGasto.mto_certificado_09	WITH lcmonto_certificado								
+				CASE lcMes = '10'
+					REPLACE curGasto.Mto_at_Comp_10		WITH lcmonto_compromiso
+					REPLACE curGasto.Mto_devenga_10		WITH lcmonto_devengado  
+					REPLACE curGasto.Mto_girado_10		WITH lcmonto_girado     							
+					REPLACE curGasto.Mto_pagado_10		WITH lcmonto_pagado	 			
+					REPLACE curGasto.mto_certificado_10	WITH lcmonto_certificado								
+				CASE lcMes = '11'
+					REPLACE curGasto.Mto_at_Comp_11		WITH lcmonto_compromiso
+					REPLACE curGasto.Mto_devenga_11		WITH lcmonto_devengado  
+					REPLACE curGasto.Mto_girado_11		WITH lcmonto_girado     							
+					REPLACE curGasto.Mto_pagado_11		WITH lcmonto_pagado	 			
+					REPLACE curGasto.mto_certificado_11	WITH lcmonto_certificado								
+				CASE lcMes = '12'																																																																																								
+					REPLACE curGasto.Mto_at_Comp_12		WITH lcmonto_compromiso
+					REPLACE curGasto.Mto_devenga_12		WITH lcmonto_devengado  
+					REPLACE curGasto.Mto_girado_12		WITH lcmonto_girado     							
+					REPLACE curGasto.Mto_pagado_12		WITH lcmonto_pagado	 			
+					REPLACE curGasto.mto_certificado_12	WITH lcmonto_certificado								
+			ENDCASE 
+					
+		ELSE
+			REPLACE curGasto.monto_compromiso 		  WITH curGasto.monto_compromiso 		 + lcmonto_compromiso
+			REPLACE curGasto.monto_devengado  		  WITH curGasto.monto_devengado  		 + lcmonto_devengado  
+			REPLACE curGasto.monto_girado 			  WITH curGasto.monto_girado 			 + lcmonto_girado 
+			REPLACE curGasto.monto_pagado			  WITH curGasto.monto_pagado			 + lcmonto_pagado 
+			REPLACE	curGasto.monto_certificado 		  WITH curGasto.monto_certificado 		 + m.certificado 
+			REPLACE curGasto.monto_comprometido_anual WITH curGasto.monto_comprometido_anual + m.comprometido_anual 
+
+
+			DO CASE
+				CASE lcMes = '01'
+					REPLACE curGasto.Mto_at_Comp_01		WITH curGasto.Mto_at_Comp_01 + lcmonto_compromiso
+					REPLACE curGasto.Mto_devenga_01		WITH curGasto.Mto_devenga_01 + lcmonto_devengado  
+					REPLACE curGasto.Mto_girado_01		WITH curGasto.Mto_girado_01  + lcmonto_girado     							
+					REPLACE curGasto.Mto_pagado_01		WITH curGasto.Mto_pagado_01  + lcmonto_pagado	 			
+					REPLACE curGasto.mto_certificado_01	WITH curGasto.mto_certificado_01 + lcmonto_certificado													
+				CASE lcMes = '02'
+					REPLACE curGasto.Mto_at_Comp_02		WITH curGasto.Mto_at_Comp_02 + lcmonto_compromiso
+					REPLACE curGasto.Mto_devenga_02		WITH curGasto.Mto_devenga_02 + lcmonto_devengado  
+					REPLACE curGasto.Mto_girado_02		WITH curGasto.Mto_girado_02  + lcmonto_girado     							
+					REPLACE curGasto.Mto_pagado_02		WITH curGasto.Mto_pagado_02  + lcmonto_pagado	 			
+					REPLACE curGasto.mto_certificado_02	WITH curGasto.mto_certificado_02 + lcmonto_certificado																		
+				CASE lcMes = '03'
+					REPLACE curGasto.Mto_at_Comp_03		WITH curGasto.Mto_at_Comp_03 + lcmonto_compromiso
+					REPLACE curGasto.Mto_devenga_03		WITH curGasto.Mto_devenga_03 + lcmonto_devengado  
+					REPLACE curGasto.Mto_girado_03		WITH curGasto.Mto_girado_03  + lcmonto_girado     							
+					REPLACE curGasto.Mto_pagado_03		WITH curGasto.Mto_pagado_03  + lcmonto_pagado	 			
+					REPLACE curGasto.mto_certificado_03	WITH curGasto.mto_certificado_03 + lcmonto_certificado																		
+				CASE lcMes = '04'
+					REPLACE curGasto.Mto_at_Comp_04		WITH curGasto.Mto_at_Comp_04 + lcmonto_compromiso
+					REPLACE curGasto.Mto_devenga_04		WITH curGasto.Mto_devenga_04 + lcmonto_devengado  
+					REPLACE curGasto.Mto_girado_04		WITH curGasto.Mto_girado_04  + lcmonto_girado     							
+					REPLACE curGasto.Mto_pagado_04		WITH curGasto.Mto_pagado_04  + lcmonto_pagado	 			
+					REPLACE curGasto.mto_certificado_04	WITH curGasto.mto_certificado_04 + lcmonto_certificado																		
+				CASE lcMes = '05'
+					REPLACE curGasto.Mto_at_Comp_05		WITH curGasto.Mto_at_Comp_05 + lcmonto_compromiso
+					REPLACE curGasto.Mto_devenga_05		WITH curGasto.Mto_devenga_05 + lcmonto_devengado  
+					REPLACE curGasto.Mto_girado_05		WITH curGasto.Mto_girado_05  + lcmonto_girado     							
+					REPLACE curGasto.Mto_pagado_05		WITH curGasto.Mto_pagado_05  + lcmonto_pagado	 			
+					REPLACE curGasto.mto_certificado_05	WITH curGasto.mto_certificado_05 + lcmonto_certificado																		
+				CASE lcMes = '06'
+					REPLACE curGasto.Mto_at_Comp_06		WITH curGasto.Mto_at_Comp_06 + lcmonto_compromiso
+					REPLACE curGasto.Mto_devenga_06		WITH curGasto.Mto_devenga_06 + lcmonto_devengado  
+					REPLACE curGasto.Mto_girado_06		WITH curGasto.Mto_girado_06  + lcmonto_girado     							
+					REPLACE curGasto.Mto_pagado_06		WITH curGasto.Mto_pagado_06  + lcmonto_pagado	 			
+					REPLACE curGasto.mto_certificado_06	WITH curGasto.mto_certificado_06 + lcmonto_certificado																		
+					
+				CASE lcMes = '07'
+					REPLACE curGasto.Mto_at_Comp_07		WITH curGasto.Mto_at_Comp_07 + lcmonto_compromiso
+					REPLACE curGasto.Mto_devenga_07		WITH curGasto.Mto_devenga_07 + lcmonto_devengado  
+					REPLACE curGasto.Mto_girado_07		WITH curGasto.Mto_girado_07  + lcmonto_girado     							
+					REPLACE curGasto.Mto_pagado_07		WITH curGasto.Mto_pagado_07  + lcmonto_pagado	 			
+					REPLACE curGasto.mto_certificado_07	WITH curGasto.mto_certificado_07 + lcmonto_certificado																		
+				CASE lcMes = '08'
+					REPLACE curGasto.Mto_at_Comp_08		WITH curGasto.Mto_at_Comp_08 + lcmonto_compromiso
+					REPLACE curGasto.Mto_devenga_08		WITH curGasto.Mto_devenga_08 + lcmonto_devengado  
+					REPLACE curGasto.Mto_girado_08		WITH curGasto.Mto_girado_08  + lcmonto_girado     							
+					REPLACE curGasto.Mto_pagado_08		WITH curGasto.Mto_pagado_08  + lcmonto_pagado	 			
+					REPLACE curGasto.mto_certificado_08	WITH curGasto.mto_certificado_08 + lcmonto_certificado																		
+				CASE lcMes = '09'
+					REPLACE curGasto.Mto_at_Comp_09		WITH curGasto.Mto_at_Comp_09 + lcmonto_compromiso
+					REPLACE curGasto.Mto_devenga_09		WITH curGasto.Mto_devenga_09 + lcmonto_devengado  
+					REPLACE curGasto.Mto_girado_09		WITH curGasto.Mto_girado_09  + lcmonto_girado     							
+					REPLACE curGasto.Mto_pagado_09		WITH curGasto.Mto_pagado_09  + lcmonto_pagado	 			
+					REPLACE curGasto.mto_certificado_09	WITH curGasto.mto_certificado_09 + lcmonto_certificado																		
+				CASE lcMes = '10'
+					REPLACE curGasto.Mto_at_Comp_10		WITH curGasto.Mto_at_Comp_10 + lcmonto_compromiso
+					REPLACE curGasto.Mto_devenga_10		WITH curGasto.Mto_devenga_10 + lcmonto_devengado  
+					REPLACE curGasto.Mto_girado_10		WITH curGasto.Mto_girado_10  + lcmonto_girado     							
+					REPLACE curGasto.Mto_pagado_10		WITH curGasto.Mto_pagado_10  + lcmonto_pagado	 			
+					REPLACE curGasto.mto_certificado_10	WITH curGasto.mto_certificado_10 + lcmonto_certificado																		
+				CASE lcMes = '11'
+					REPLACE curGasto.Mto_at_Comp_11		WITH curGasto.Mto_at_Comp_11 + lcmonto_compromiso
+					REPLACE curGasto.Mto_devenga_11		WITH curGasto.Mto_devenga_11 + lcmonto_devengado  
+					REPLACE curGasto.Mto_girado_11		WITH curGasto.Mto_girado_11  + lcmonto_girado     							
+					REPLACE curGasto.Mto_pagado_11		WITH curGasto.Mto_pagado_11  + lcmonto_pagado	 			
+					REPLACE curGasto.mto_certificado_11	WITH curGasto.mto_certificado_11 + lcmonto_certificado																		
+				CASE lcMes = '12'																																																																																								
+					REPLACE curGasto.Mto_at_Comp_12		WITH curGasto.Mto_at_Comp_12 + lcmonto_compromiso
+					REPLACE curGasto.Mto_devenga_12		WITH curGasto.Mto_devenga_12 + lcmonto_devengado  
+					REPLACE curGasto.Mto_girado_12		WITH curGasto.Mto_girado_12  + lcmonto_girado     							
+					REPLACE curGasto.Mto_pagado_12		WITH curGasto.Mto_pagado_12  + lcmonto_pagado	 			
+					REPLACE curGasto.mto_certificado_12	WITH curGasto.mto_certificado_12 + lcmonto_certificado																		
+			ENDCASE 
+		ENDIF 
+	ENDSCAN 
+	SELECT &xTabla
+	SET RELATION TO 
+
+ENDPROC 
+
+PROCEDURE genera_cursor_definitivo
+	SELECT ejecutora
+	SET RELATION TO 
+	SET RELATION TO ano_eje+sector						INTO sector ADDITIVE 
+	SET RELATION TO ano_eje+sector+pliego 				INTO pliego ADDITIVE 
+	SET RELATION TO tipo_unidad							INTO cur_tipo_unidad ADDITIVE 
+	SET RELATION TO departamento						INTO departamento ADDITIVE 
+	SET RELATION TO departamento+provincia				INTO provincia ADDITIVE 
+	SET RELATION TO departamento+provincia+distrito 	INTO distrito ADDITIVE 
+
+
+	SELECT curGasto
+	SET RELATION TO 
+	SET RELATION TO ano_eje+'1'+fuente_financ 			INTO fuente_financ ADDITIVE 
+	SET RELATION TO ano_eje+fuente_financ_agregada 		INTO fuente_financ_agregada ADDITIVE 	
+	
+	SET RELATION TO ano_eje+sec_ejec INTO ejecutora ADDITIVE 
+	SET RELATION TO ano_eje+funcion INTO funcion ADDITIVE 
+	SET RELATION TO ano_eje+programa INTO programa_nombre ADDITIVE 
+	SET RELATION TO ano_eje+sub_programa INTO sub_programa_nombre ADDITIVE 
+	SET RELATION TO ano_eje+programa_ppto INTO programa_ppto_nombre ADDITIVE 
+	SET RELATION TO ano_eje+act_proy	INTO act_proy_nombre ADDITIVE 
+	SET RELATION TO ano_eje+categoria_gasto INTO categoria_gasto ADDITIVE 
+	SET RELATION TO ano_eje+tipo_transaccion INTO tipo_transaccion ADDITIVE 
+	SET RELATION TO ano_eje+tipo_transaccion+generica INTO generica ADDITIVE 
+	SET RELATION TO ano_eje+tipo_transaccion+generica+subgenerica INTO subgenerica ADDITIVE 
+	SET RELATION TO ano_eje+tipo_transaccion+generica+subgenerica+subgenerica_det INTO subgenerica_det ADDITIVE 
+	SET RELATION TO ano_eje+tipo_transaccion+generica+subgenerica+subgenerica_det+especifica INTO especifica ADDITIVE 
+	SET RELATION TO ano_eje+tipo_transaccion+generica+subgenerica+subgenerica_det+especifica+especifica_det INTO especifica_det ADDITIVE 
+	SET RELATION TO ano_eje+finalidad INTO finalidad ADDITIVE 
+	SET RELATION TO unidad_medida INTO unidad_medida ADDITIVE 
+	SET RELATION TO ano_eje+componente INTO componente_nombre ADDITIVE 
+	SET RELATION TO ano_eje+'1'+fuente_financ+tipo_recurso INTO tipo_recurso ADDITIVE 
+
+	
+
+
+	SELECT curGasto
+	SCAN ALL 
+		SCATTER MEMVAR 
+		m.u_ejecutora			= ejecutora.ejecutora+'. '+ejecutora.nombre	
+		m.sector 				= ejecutora.sector+'. '+sector.nombre
+		m.pliego				= ejecutora.pliego+'. '+pliego.nombre
+		m.ejecutora 			= ejecutora.ejecutora+'. '+ejecutora.nombre
+		m.programa_pptal		= m.programa_ppto+ '. '+programa_ppto_nombre.nombre
+		m.tipo_prod_proy		= act_proy_nombre.tipo_act_proy+'.'+IIF(SEEK(act_proy_nombre.tipo_act_proy,'TIPO_PROD_PROY'),TIPO_PROD_PROY.NOMBRE,'')		
+		m.producto_proyecto 	= m.act_proy+'. '+act_proy_nombre.nombre
+		m.tipo_act_obra_ac  	= componente_nombre.tipo_componente+'.'+IIF(SEEK(componente_nombre.tipo_componente,'TIPO_ACT_OBRA'),TIPO_ACT_OBRA.NOMBRE,'')
+		m.activ_obra_accinv 	= m.componente+'. '+componente_nombre.nombre
+		m.funcion 				= m.funcion + '. '+funcion.nombre
+		m.division_fn			= m.programa+ '. '+programa_nombre.nombre
+		m.grupo_fn				= m.sub_programa + '. '+sub_programa_nombre.nombre
+		m.finalidad				= m.finalidad + '. '+finalidad.nombre
+		m.unidad_medida			= m.unidad_medida + ' - ' + unidad_medida.nombre		
+		m.categoria_gasto		= m.categoria_gasto+'. '+categoria_gasto.nombre
+		m.tipo_transaccion	    = m.tipo_transaccion+'. '+tipo_transaccion.descripcion
+		m.generica				= m.generica+'. '+generica.descripcion
+		m.subgenerica			= m.subgenerica+'. '+subgenerica.descripcion
+		m.subgenerica_det		= m.subgenerica_det+'. '+subgenerica_det.descripcion
+		m.especifica			= m.especifica+'. '+especifica.descripcion
+		m.especifica_det		= m.especifica_det+'. '+especifica_det.descripcion		
+		m.tipo_recurso			= m.tipo_recurso+'. '+tipo_recurso.nombre
+		m.mto_pia				= m.pia
+		m.mto_modificaciones	= m.modificacion
+		m.compro_anual			= m.monto_comprometido_anual
+		m.nivel_gob				= cur_tipo_unidad.nombre
+		m.mto_certificado		= m.monto_certificado
+		m.mto_compro_anual		= m.monto_comprometido_anual
+		m.mto_pim				= m.pim
+		m.avan_fisico_sem		= m.avance_fisico_semestral
+		m.avan_fisico_anual		= m.avance_fisico_anual
+		m.cant_meta_anual		= m.cantidad_inicial
+		m.cant_meta_sem			= m.cantidad_semestral
+		m.departamento			= m.departamento + '. '+departamento.nombre
+		m.provincia				= m.provincia + '. '+provincia.nombre
+		m.distrito				= m.distrito + '. '+distrito.nombre
+		m.avan_fisico_sem		= m.avance_fisico_semestral
+		m.avan_fisico_anual	  	= m.avance_fisico_anual
+		m.departamento_meta		= m.departamento+'.'+departamento.nombre
+		m.provincia_meta		= m.provincia+'.'+provincia.nombre
+		m.distrito_meta			= m.distrito+'.'+distrito.nombre
+		m.mto_modificaciones_TOTAL = m.modificacion_01 + m.modificacion_02 + m.modificacion_03 + m.modificacion_04 + m.modificacion_05 + m.modificacion_06 + m.modificacion_07 + m.modificacion_08 +;
+									 m.modificacion_09 + m.modificacion_10 + m.modificacion_11 + m.modificacion_12
+
+		m.mto_certificado_total	= m.mto_certificado_01 + m.mto_certificado_02 + m.mto_certificado_03 + m.mto_certificado_04 + m.mto_certificado_05 + m.mto_certificado_06 + m.mto_certificado_07 + m.mto_certificado_08 + ;
+								  m.mto_certificado_09 + m.mto_certificado_10 + m.mto_certificado_11 + m.mto_certificado_12
+								  
+		m.mto_pim_01 			= m.mto_pia + m.modificacion_01
+		m.mto_pim_02 			= m.mto_pia + m.modificacion_02
+		m.mto_pim_03 			= m.mto_pia + m.modificacion_03
+		m.mto_pim_04 			= m.mto_pia + m.modificacion_04
+		m.mto_pim_05 			= m.mto_pia + m.modificacion_05
+		m.mto_pim_06 			= m.mto_pia + m.modificacion_06
+		m.mto_pim_07 			= m.mto_pia + m.modificacion_07
+		m.mto_pim_08 			= m.mto_pia + m.modificacion_08
+		m.mto_pim_09 			= m.mto_pia + m.modificacion_09
+		m.mto_pim_10 			= m.mto_pia + m.modificacion_10
+		m.mto_pim_11 			= m.mto_pia + m.modificacion_11		
+		m.mto_pim_12 			= m.mto_pia + m.modificacion_12
+		m.Mto_at_Comp_total		= m.Mto_at_Comp_01 + m.Mto_at_Comp_02 + m.Mto_at_Comp_03 + m.Mto_at_Comp_04 + m.Mto_at_Comp_05 + m.Mto_at_Comp_06 + m.Mto_at_Comp_07 + m.Mto_at_Comp_08 + m.Mto_at_Comp_09 + m.Mto_at_Comp_10 + m.Mto_at_Comp_11 + m.Mto_at_Comp_12
+		m.Mto_devenga_total     = m.Mto_devenga_01 + m.Mto_devenga_02 + m.Mto_devenga_03 + m.Mto_devenga_04 + m.Mto_devenga_05 + m.Mto_devenga_06 + m.Mto_devenga_07 + m.Mto_devenga_08 + m.Mto_devenga_09 + m.Mto_devenga_10 + m.Mto_devenga_11 + m.Mto_devenga_12
+		m.Mto_girado_total      = m.Mto_girado_01 + m.Mto_girado_02 + m.Mto_girado_03 + m.Mto_girado_04 + m.Mto_girado_05 + m.Mto_girado_06 + m.Mto_girado_07 + m.Mto_girado_08 + m.Mto_girado_09 + m.Mto_girado_10 + m.Mto_girado_11 + m.Mto_girado_12
+		m.Mto_pagado_total		= m.Mto_pagado_01 + m.Mto_pagado_02 + m.Mto_pagado_03 + m.Mto_pagado_04 + m.Mto_pagado_05 + m.Mto_pagado_06 + m.Mto_pagado_07 + m.Mto_pagado_08 + m.Mto_pagado_09 + m.Mto_pagado_10 + m.Mto_pagado_11 + m.Mto_pagado_12
+		INSERT INTO curgen FROM MEMVAR 
+
+		REPLACE fuente_financ	WITH m.fuente_financ_agregada+'. '+fuente_financ_agregada.nombre IN curgen
+		REPLACE rubro			WITH m.fuente_financ+'. '+fuente_financ.nombre IN curgen 
+		
+
+	ENDSCAN 
+
+ENDPROC 
+
+PROCEDURE cierra_tablas
+ DIMENSION aTablas(1)
+   nTablas = AUSED(aTablas)
+
+   IF nTablas > 0 
+  FOR EACH oTabla IN aTablas
+     SELECT (oTabla)
+     USE 
+  ENDFOR 
+   ENDIF
+
+ENDPROC 
+
+PROCEDURE ejecutar
+lcTipoArchivo=0
+do form frmarchivo_new to lcTipoArchivo
+SELECT curgen
+IF EMPTY(ALLTRIM(lcNombreArchivo))  THEN 
+	 RETURN 
+ENDIF 
+
+IF lcTipoArchivo = 0
+	COPY TO &lcNombreArchivo.
+ENDIF
+IF lcTipoArchivo = 1
+	COPY TO &lcNombreArchivo. TYPE XL5
+ENDIF 
+IF lcTipoArchivo = 2
+	COPY TO &lcNombreArchivo.
+ENDIF
+MESSAGEBOX('Se ha generado el Archivo : ' + lcNombreArchivo,0+64,"Aviso del Sistema")
+
+lcTipoArchivo=0
+RETURN 
+
+ENDPROC 

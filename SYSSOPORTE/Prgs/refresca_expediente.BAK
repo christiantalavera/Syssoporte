@@ -1,0 +1,542 @@
+DO ABRE_TABLAS
+DO REFRESCAR_SALDOS
+DO CERRAR_TABLAS
+
+PROCEDURE ABRE_TABLAS
+
+	USE SIAF!EJECUTORA						IN 0 SHARED AGAIN ORDER tag sec_ejec
+	USE siaf!expediente						IN 0 SHARED AGAIN ORDER tag expediente
+	USE siaf!expediente_documento			IN 0 SHARED AGAIN ORDER tag exp_doc
+	USE siaf!expediente_fase				IN 0 SHARED AGAIN ORDER tag exp_fase
+	USE siaf!expediente_secuencia			IN 0 SHARED AGAIN ORDER tag exp_sec
+	USE siaf!expediente_ingreso				IN 0 SHARED AGAIN ORDER tag exp_ing
+	USE siaf!expediente_meta				IN 0 SHARED AGAIN ORDER tag exp_metap
+	USE siaf!expediente_encargo				IN 0 SHARED AGAIN ORDER TAG expencargp
+	USE siaf!expediente_clasif				IN 0 SHARED AGAIN ORDER TAG EXPCLASIFP
+	USE siaf!expediente_enlace				IN 0 SHARED AGAIN ORDER tag exp_sec
+	USE siaf!expediente_fase				IN 0 SHARED AGAIN ORDER tag exp_fase 	ALIAS e_fase
+	USE siaf!expediente_clasif				IN 0 SHARED AGAIN ORDER TAG EXPCLASIFP 	ALIAS e_clasif
+	USE siaf!expediente_secuencia			IN 0 SHARED AGAIN ORDER tag exp_sec 	ALIAS e_secuencia
+	USE siaf!expediente_ingreso				IN 0 SHARED AGAIN ORDER tag exp_ingp	ALIAS e_ingreso
+	USE siaf!expediente_meta				IN 0 SHARED AGAIN ORDER tag exp_metap	ALIAS e_meta
+	USE siaf!meta							IN 0 SHARED AGAIN ORDER tag meta
+	USE siaf!meta_encargo					IN 0 SHARED AGAIN ORDER tag meta
+	USE siaf!gasto							IN 0 SHARED AGAIN ORDER tag mp_gastop
+	USE siaf!gasto_acumulado				IN 0 SHARED AGAIN ORDER tag mpgtoacump
+	USE siaf!maestro_clasificador			IN 0 SHARED AGAIN ORDER tag idclasif
+	USE siaf!generica						IN 0 SHARED AGAIN ORDER tag generica
+	USE siaf!tipo_recurso					IN 0 SHARED AGAIN ORDER tag tipo
+	USE siaf!tipo_recurso_ejec_x_mes		IN 0 SHARED AGAIN ORDER tag rec_ejec
+	USE siaf!subgenerica_det				IN 0 SHARED AGAIN ORDER tag sgenericad
+	USE siaf!calendario						IN 0 SHARED AGAIN ORDER tag calendario
+	USE siaf!calendario_distribuido_cab		IN 0 SHARED AGAIN ORDER tag dmp_cab
+	USE siaf!calendario_distribuido			IN 0 SHARED AGAIN ORDER tag dmp_dst
+	USE siaf!calendario_x_distribuir		IN 0 SHARED AGAIN ORDER tag dmp_ori
+	USE siaf!acumulado						IN 0 SHARED AGAIN ORDER tag acumulado
+	USE siaf!acumulado_2009					IN 0 SHARED AGAIN ORDER tag acumulado
+	USE siaf!acumulado_presupuestal			IN 0 SHARED AGAIN ORDER tag acupto
+	USE siaf!acumulado_mensual_presupuesto	IN 0 SHARED AGAIN ORDER tag trimestre
+	USE siaf!acumulado_presupuestal_mensual	IN 0 SHARED AGAIN ORDER tag acuptomes
+	USE siaf!certificado_fase 				IN 0 SHARED	AGAIN ORDER TAG CERTI_FASE
+
+
+
+	CREATE CURSOR cur_reg (ano_eje					C(04)    ,;
+						   sec_ejec					C(06)    ,;
+						   expediente				c(10)	 ,;
+						   secuencia				c(4)	 ,;
+						   correlativo				c(4)	 ,;
+						   ciclo					c(1)	 ,;
+						   fase						c(1)	 ,;
+						   num_doc					c(20)	 ,;
+						   fecha_doc				date	 ,;
+						   monto_nacional			n(19,2)	 ,;
+						   estado					c(1)	 ,;
+						   estado_envio				c(1)	 ,;
+						   seleccionado				N(1))
+						   
+
+	SELECT cur_reg
+	INDEX on ano_eje+sec_ejec+expediente+secuencia+correlativo	 TAG inx1
+
+
+
+
+	CREATE CURSOR cur_ca  (ano_eje					C(04)    ,;
+						   sec_ejec					C(06)    ,;
+						   certificado				c(10)	 ,;
+						   secuencia				c(4)	 )
+						   
+
+	SELECT cur_ca
+	INDEX on ano_eje+sec_ejec+certificado+secuencia TAG inx1
+
+
+	gctipo_unidad=IIF(SEEK(gcano_eje+gcsec_ejec),ejecutora.tipo_unidad,'E')
+
+ENDPROC 
+
+PROCEDURE REFRESCAR_SALDOS
+	ZAP IN cur_ca 
+
+	SELECT cur_reg
+	SCAN ALL FOR seleccionado = 1
+	     DO CASE 
+	        CASE ciclo+fase='GC'
+	     		DO proceso_3 WITH cur_reg.expediente
+	     	CASE ciclo+fase='ID'	
+	     		DO proceso_4 WITH cur_reg.expediente
+	     endcase		
+	ENDSCAN 
+
+
+ENDPROC 
+
+
+PROCEDURE PROCESO_3
+	*****************************************************************************
+	*-- Proceso de Expediente_meta que actualiza administrativo y otros módulos *
+	*****************************************************************************
+	PARAMETERS xExpediente
+
+
+	SELECT e_meta
+	SET RELATION OFF INTO e_fase
+	SET RELATION TO ano_eje+sec_ejec+expediente+ciclo+fase+secuencia INTO e_fase
+	SELECT expediente_meta
+	SET ORDER TO exp_metap
+	SET RELATION OFF INTO expediente
+	SET RELATION OFF INTO expediente_fase
+	SET RELATION OFF INTO expediente_secuencia
+	SET RELATION OFF INTO meta
+	SET RELATION OFF INTO meta_encargo
+	*--
+	SET RELATION TO ano_eje+sec_ejec+expediente INTO expediente
+	SET RELATION TO ano_eje+sec_ejec+expediente+ciclo+fase+secuencia INTO expediente_fase ADDITIVE
+	SET RELATION TO ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo INTO expediente_secuencia	ADDITIVE
+	SET RELATION TO ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo+id_clasificador INTO expediente_clasif	ADDITIVE
+	SET RELATION TO ano_eje+sec_ejec+sec_func INTO meta ADDITIVE
+	SET RELATION TO ano_eje+expediente.sec_ejec2+sec_func INTO meta_encargo ADDITIVE
+	*--
+	STORE 'Nada' TO lcfaseclave, lcclave, lcclasif
+	STORE 0 TO lncount
+	STORE 0 TO lnmonto_sec, lnmonto_clas, lnmonto_nacional_sec, lnmonto_nacional_clas, lnmonto_saldo
+	*--
+	SELECT expediente_meta
+	=SEEK(gcano_eje + gcsec_ejec + xExpediente)
+	SCAN REST WHILE ano_eje = gcano_eje AND sec_ejec = gcsec_ejec AND expediente = xExpediente
+		IF INLIST(estado_envio, 'P', 'R', 'N') AND ;
+				( EOF('expediente_secuencia') OR EOF('expediente_fase') OR EOF('expediente_clasif') )
+			DELETE
+			LOOP
+		ENDIF
+		*--
+		IF expediente_secuencia.estado_envio = 'A' AND expediente_meta.estado_envio <> 'A'
+			REPLACE expediente_meta.estado_envio WITH 'A' IN expediente_meta
+		ENDIF
+		*--
+		IF expediente_meta.sec_func='0000' AND expediente.tipo_operacion <> 'SU'
+			LOOP
+		ENDIF
+		*--
+		gcmes_ejec = IIF(THISFORM.les2010, PADL(MONTH(expediente_secuencia.fecha_doc),2,'0'), expediente.mes_eje)
+		IF EMPTY(monto_nacional)
+			lnmonto_nacional=IIF(expediente_secuencia.moneda = 'S/.  ', monto, ;
+				ROUND(VAL(STR(monto*expediente_secuencia.tipo_cambio,31,15)), 2))
+			REPLACE monto_nacional WITH lnmonto_nacional
+		ELSE
+			lnmonto_nacional=monto_nacional
+		ENDIF
+		IF ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo <> lcclave OR ;
+				id_clasificador <> lcclasif
+			lncount=lncount+1
+			IF lncount > 1
+				THISFORM.actualiza_gasto
+			ENDIF
+			SELECT expediente_meta
+			lcclave=ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo
+			lcclasif=id_clasificador
+			lcfaseclave=ano_eje+sec_ejec+expediente+ciclo+fase+secuencia
+		ENDIF
+		lnmonto_clas = lnmonto_clas + monto
+		lnmonto_sec  = lnmonto_sec  + monto
+		lnmonto_nacional_clas = lnmonto_nacional_clas + monto_nacional
+		lnmonto_nacional_sec  = lnmonto_nacional_sec  + monto_nacional
+		
+		*-- Suma para termómetro
+	ENDSCAN
+	DO actualiza_gasto
+
+ENDPROC 
+
+PROCEDURE PROCESO_4
+	PARAMETERS xExpediente
+
+	*--
+	*-- Regrabamos ingresos
+	*--
+	SELECT e_meta
+	SET RELATION OFF INTO e_fase
+	SET RELATION OFF INTO e_secuencia
+	SELECT expediente_meta
+	SET RELATION OFF INTO expediente
+	SET RELATION OFF INTO expediente_fase
+	SET RELATION OFF INTO expediente_secuencia
+	SELECT expediente_ingreso
+	SET RELATION OFF INTO expediente
+	SET RELATION OFF INTO expediente_fase
+	SET RELATION OFF INTO expediente_secuencia
+	*--
+	SELECT e_ingreso
+	SET RELATION TO ano_eje+sec_ejec+expediente+ciclo+fase+secuencia INTO e_fase
+	SELECT expediente_ingreso
+	SET RELATION TO ano_eje+sec_ejec+expediente INTO expediente
+	SET RELATION TO ano_eje+sec_ejec+expediente+ciclo+fase+secuencia INTO expediente_fase ADDITIVE
+	SET RELATION TO ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo INTO expediente_secuencia ADDITIVE
+	*--
+
+	STORE 0 TO lnmonto_sec, lnmonto_clas, lnmonto_nacional_sec, lnmonto_nacional_clas, lnmonto_saldo
+	STORE 'Nada' TO lcfaseclave, lcclave, lcclasif
+	STORE 0 TO lncount, lnmonto_nacional_sec, lnmonto_saldo
+
+
+	=SEEK(gcano_eje + gcsec_ejec + xExpediente)
+	*--
+	SCAN REST WHILE ano_eje = gcano_eje AND sec_ejec = gcsec_ejec AND expediente=xExpediente
+		IF INLIST(estado_envio, 'P', 'R', 'N') AND ;
+				( EOF('expediente_secuencia') OR EOF('expediente_fase') )
+			DELETE
+			LOOP
+		ENDIF
+		gcmes_ejec = IIF(THISFORM.les2010, PADL(MONTH(expediente_secuencia.fecha_doc),2,'0'), expediente.mes_eje)
+		lnmonto_nacional=IIF(expediente_secuencia.moneda = 'S/.  ',monto, ;
+			ROUND(VAL(STR(monto*expediente_secuencia.tipo_cambio,31,15)), 2))
+		IF EMPTY(monto_nacional)
+			REPLACE monto_nacional WITH lnmonto_nacional IN expediente_ingreso
+		ENDIF
+		lncount=lncount+1
+		IF ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo <> lcclave
+			IF lncount > 1
+				THISFORM.actualiza_ingreso
+			ENDIF
+			SELECT expediente_ingreso
+			lcclave=ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo
+			lcfaseclave=ano_eje+sec_ejec+expediente+ciclo+fase+secuencia
+		ENDIF
+		lnmonto_sec = lnmonto_sec + monto
+		lnmonto_nacional_sec = lnmonto_nacional_sec + monto_nacional
+	ENDSCAN
+	DO ACTUALIZA_INGRESO
+
+ENDPROC 
+
+PROCEDURE REFRESCAR_SALDO
+	ZAP IN cur_ca 
+	ZAP IN cur_certi
+
+
+	*====================================================================================================================================================
+	*  Coloca los Montos en Cero de la Certificacion
+	*----------------------------------------------------------------------------------------------------------------------------------------------------
+
+	SELECT curCertificado
+	SCAN ALL FOR seleccionado = 1
+		lcCertificado = curCertificado.certificado
+		lcSecuencia   = curCertificado.secuencia
+		*
+		SELECT c_secuencia 
+		SEEK gcano_eje+gcsec_ejec+lcCertificado+lcsecuencia
+		SCAN WHILE ano_eje+sec_ejec+certificado+secuencia=gcano_eje+gcsec_ejec+lcCertificado+lcSecuencia
+		     SCATTER MEMVAR 
+		     *	     
+		     REPLACE monto WITH 0, monto_nacional WITH 0 IN c_secuencia
+		     *
+		     IF c_secuencia.correlativo<>'0001'
+		        LOOP 
+		     Endif
+		
+			 SELECT c_fase
+			 SEEK gcano_eje+gcsec_ejec+m.Certificado+m.Secuencia
+			 SCAN WHILE ano_eje+sec_ejec+certificado+secuencia = gcano_eje+gcsec_ejec+m.Certificado+m.Secuencia
+			 	 REPLACE monto WITH 0, monto_nacional WITH 0, saldo_nacional WITH 0, monto_comprometido WITH 0
+	 		 ENDSCAN 
+	 		 *
+			 SELECT c_clasif
+			 SEEK gcano_eje+gcsec_ejec+m.Certificado+m.Secuencia
+			 SCAN WHILE ano_eje+sec_ejec+certificado+Secuencia = gcano_eje+gcsec_ejec+m.Certificado+m.Secuencia
+			 	  REPLACE monto WITH 0, monto_nacional WITH 0
+			 ENDSCAN 
+			 
+			INSERT INTO cur_certi (ano_eje, sec_ejec, certificado, secuencia) VALUES (m.ano_eje, m.sec_ejec, m.Certificado, m.secuencia)
+						
+			STORE 0 TO wmonto_nacional, wmonto
+		ENDSCAN 		
+	ENDSCAN 
+
+	*====================================================================================================================================================
+	* Inserta Compromisos Anuales de la Certificacion
+	*----------------------------------------------------------------------------------------------------------------------------------------------------
+	SELECT curCertificado
+	SCAN ALL
+		SELECT c_fase
+		SEEK curCertificado.ano_eje+curCertificado.sec_ejec+curCertificado.certificado
+		SCAN WHILE ano_eje+sec_ejec+certificado = curCertificado.ano_eje+curCertificado.sec_ejec+curCertificado.certificado
+			SCATTER MEMVAR 
+			IF m.secuencia_padre <> cur_reg.secuencia THEN 
+				LOOP 
+			ENDIF 
+			INSERT INTO cur_ca (ano_eje, sec_ejec, certificado, secuencia) VALUES (m.ano_eje, m.sec_ejec, m.Certificado, m.secuencia)
+		ENDSCAN 
+	ENDSCAN 
+
+
+	*======================================================================================================================================================
+	* Actualiza Saldos de la Certificacion
+	*------------------------------------------------------------------------------------------------------------------------------------------------------
+	SELECT cur_certi
+	SCAN ALL 
+		lcCertificado = cur_certi.certificado
+		lcSecuencia   = cur_certi.secuencia
+		SELECT c_meta
+		=SEEK(gcano_eje + gcsec_ejec + lcCertificado + lcSecuencia)
+		SCAN REST WHILE ano_eje = gcano_eje AND sec_ejec = gcsec_ejec AND certificado = lcCertificado AND secuencia = lcSecuencia
+			wmonto				= c_meta.monto
+			wmonto_nacional 	= c_meta.monto_nacional + c_meta.monto_nacional_ajuste
+			wmonto_comprometido = c_meta.monto_comprometido
+			*-tabla certificado_clasif
+			SELECT c_clasif
+			IF SEEK(c_meta.ano_eje+c_meta.sec_ejec+c_meta.certificado+c_meta.secuencia+;
+					c_meta.correlativo+c_meta.id_clasificador,'c_clasif','certi_clas') THEN
+				REPLACE c_clasif.monto			WITH c_clasif.monto + wmonto ,;
+						c_clasif.monto_nacional	WITH c_clasif.monto_nacional + wmonto_nacional IN c_clasif
+			ENDIF
+			
+			*-tabla certificado_fase
+			IF SEEK(c_meta.ano_eje+c_meta.sec_ejec+c_meta.certificado+c_meta.secuencia,'c_fase') AND ;
+					SEEK(c_meta.ano_eje+c_meta.sec_ejec+c_meta.certificado+c_meta.secuencia+c_meta.correlativo,'c_secuencia') THEN
+					
+				IF INLIST(c_secuencia.tipo_registro, 'N', 'T',' ') THEN
+					REPLACE monto			WITH monto 			+ wmonto,;
+							monto_nacional	WITH monto_nacional + wmonto_nacional,;
+							saldo_nacional	WITH saldo_nacional + wmonto_nacional - wmonto_comprometido IN c_fase
+				ELSE
+					REPLACE saldo_nacional WITH saldo_nacional + wmonto_nacional IN c_fase
+				ENDIF
+
+				IF c_fase.etapa ='2' THEN
+					lcSecuenciaPadre = c_fase.secuencia_padre
+					IF SEEK(c_meta.ano_eje+c_meta.sec_ejec+c_meta.certificado+lcSecuenciaPadre,'c_fase')
+						REPLACE saldo_nacional WITH saldo_nacional - wmonto_nacional IN c_fase
+					ENDIF
+				ENDIF
+			ENDIF
+			*-tabla certificado_secuencia
+			SELECT c_secuencia
+			IF SEEK(c_meta.ano_eje+c_meta.sec_ejec+c_meta.certificado+c_meta.secuencia+;
+					c_meta.correlativo,'c_secuencia') THEN
+				REPLACE c_secuencia.monto			WITH  c_secuencia.monto + wmonto,;
+						c_secuencia.monto_nacional	WITH  c_secuencia.monto_nacional + wmonto_nacional IN c_secuencia
+			ENDIF
+		ENDSCAN
+	ENDSCAN 
+
+
+	*======================================================================================================================================================
+	* INICIALIZA MONTO COMPROMETIDO ***
+	*------------------------------------------------------------------------------------------------------------------------------------------------------
+	SELECT cur_ca
+	SCAN ALL 
+		lcCertificado = cur_ca.certificado
+		lcSecuencia   = cur_ca.secuencia
+
+		SELECT c_fase
+		SEEK gcano_eje+gcsec_ejec+lcCertificado+lcSecuencia
+		SCAN WHILE ano_eje+sec_ejec+certificado+secuencia = gcano_eje+gcsec_ejec+lcCertificado+lcSecuencia
+			REPLACE monto_comprometido WITH 0
+		ENDSCAN 
+		SELECT c_secuencia
+		SEEK gcano_eje+gcsec_ejec+lcCertificado+lcSecuencia
+		SCAN WHILE ano_eje+sec_ejec+certificado+Secuencia = gcano_eje+gcsec_ejec+lcCertificado+lcSecuencia
+			REPLACE monto_comprometido WITH 0
+		ENDSCAN 
+		SELECT c_clasif
+		SEEK gcano_eje+gcsec_ejec+lcCertificado+lcSecuencia
+		SCAN WHILE ano_eje+sec_ejec+certificado+lcSecuencia = gcano_eje+gcsec_ejec+lcCertificado+lcSecuencia
+			REPLACE monto_comprometido WITH 0
+		ENDSCAN 
+		SELECT c_meta
+		SEEK gcano_eje+gcsec_ejec+lcCertificado+lcSecuencia
+		SCAN WHILE ano_eje+sec_ejec+certificado+lcSecuencia = gcano_eje+gcsec_ejec+lcCertificado+lcSecuencia
+			REPLACE monto_comprometido WITH 0
+		ENDSCAN 
+
+	ENDSCAN 
+
+
+	*======================================================================================================================================================
+	* ACTUALIZA MONTO COMPROMETIDO
+	*------------------------------------------------------------------------------------------------------------------------------------------------------
+	SELECT cur_ca
+	SCAN ALL 
+		SELECT expediente_fase
+		SEEK gcano_eje+gcsec_ejec+cur_ca.Certificado+cur_ca.secuencia
+		SCAN WHILE ano_eje+sec_ejec+certificado+certificado_secuencia = gcano_eje+gcsec_ejec+cur_ca.Certificado+cur_ca.secuencia 
+			SELECT expediente_meta
+			lcClave_sec = gcano_eje+gcsec_ejec+expediente_fase.expediente+expediente_fase.ciclo+expediente_fase.fase+expediente_fase.secuencia
+			SEEK lcClave_sec
+			SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia = lcClave_sec
+				IF expediente_meta.ciclo + expediente_meta.fase <> 'GC' THEN 
+					LOOP 
+				ENDIF 
+				lnMonto_nacional = expediente_meta.monto_nacional
+				IF SEEK(gcano_eje + gcsec_ejec + expediente_fase.certificado + expediente_fase.certificado_secuencia, ;
+						'c_fase')
+					REPLACE c_fase.monto_comprometido WITH c_fase.monto_comprometido + lnmonto_nacional IN c_fase
+				ENDIF
+				IF SEEK(gcano_eje + gcsec_ejec + expediente_fase.certificado + expediente_fase.certificado_secuencia ;
+						+ '0001', 'c_secuencia')
+					REPLACE c_secuencia.monto_comprometido WITH c_secuencia.monto_comprometido + lnmonto_nacional IN c_secuencia
+				ENDIF
+				lcCorrelativoCert="0001"
+				IF SEEK(gcano_eje + gcsec_ejec + expediente_fase.certificado + expediente_fase.certificado_secuencia + lcCorrelativoCert + ;
+						expediente_meta.id_clasificador + expediente_meta.sec_func, 'c_meta')
+					REPLACE c_meta.monto_comprometido WITH c_meta.monto_comprometido + lnmonto_nacional IN c_meta
+				ELSE
+					IF SEEK(gcano_eje + gcsec_ejec + expediente_fase.certificado + expediente_fase.certificado_secuencia +  ;
+							expediente_meta.id_clasificador + expediente_meta.sec_func, 'c_meta','CERTI_CLF')
+						REPLACE c_meta.monto_comprometido WITH c_meta.monto_comprometido + lnmonto_nacional IN c_meta
+						lcCorrelativoCert=c_meta.correlativo
+					ENDIF
+				ENDIF
+				IF SEEK(gcano_eje + gcsec_ejec + expediente_fase.certificado + expediente_fase.certificado_secuencia + lcCorrelativoCert + ;
+						expediente_meta.id_clasificador, 'c_clasif')
+					REPLACE c_clasif.monto_comprometido WITH c_clasif.monto_comprometido + lnmonto_nacional IN c_clasif
+				ENDIF
+			ENDSCAN 
+		ENDSCAN 
+		
+	ENDSCAN 
+
+
+ENDPROC 
+
+PROCEDURE CERRAR_TABLAS
+ DIMENSION aTablas(1)
+   nTablas = AUSED(aTablas)
+
+   IF nTablas > 0 
+  FOR EACH oTabla IN aTablas
+     SELECT (oTabla)
+     USE 
+  ENDFOR 
+   ENDIF
+
+ENDPROC 
+
+PROCEDURE ACTUALIZA_GASTO
+	IF SEEK(lcclave+lcclasif, 'e_clasif','expclasifp')
+		DO CASE
+		CASE e_clasif.monto <> lnMonto_clas OR e_clasif.monto_nacional <> lnMonto_nacional_clas
+			REPLACE monto WITH lnMonto_clas, monto_nacional WITH lnMonto_nacional_clas IN e_clasif
+		CASE EMPTY(e_clasif.monto_nacional)
+			REPLACE e_clasif.monto_nacional WITH lnMonto_nacional_clas IN e_clasif
+		ENDCASE
+	ENDIF
+	STORE 0.00 TO lnMonto_clas, lnMonto_nacional_clas
+	IF ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo <> lcclave
+		IF SEEK(lcclave,'e_secuencia','exp_sec')
+			DO CASE
+				CASE e_secuencia.monto <> lnMonto_sec OR e_secuencia.monto_nacional <> lnMonto_nacional_sec
+					REPLACE e_secuencia.monto WITH lnMonto_sec, monto_nacional WITH lnMonto_nacional_sec IN e_secuencia
+				CASE EMPTY(e_secuencia.monto_nacional)
+					REPLACE e_secuencia.monto_nacional WITH lnMonto_nacional_sec IN e_secuencia
+			ENDCASE
+		ENDIF
+		STORE 0 TO lnMonto_sec, lnMonto_nacional_sec
+	ENDIF
+	IF ano_eje+sec_ejec+expediente+ciclo+fase+secuencia <> lcfaseclave
+		=SEEK(lcfaseclave,'e_fase')
+		lcAno_eje=e_fase.ano_eje
+		lcSec_ejec=e_fase.sec_ejec
+		lcExpediente=e_fase.expediente
+		lcCiclo=e_fase.ciclo
+		lcFase=e_fase.fase
+		lcSecuencia=e_fase.secuencia
+		DO CASE
+		CASE lcCiclo+lcFase='GC'
+			lcFaseSiguiente='D'
+		CASE lcCiclo+lcFase='GD'
+			lcFaseSiguiente='G'
+		CASE lcCiclo+lcFase='GG'
+			lcFaseSiguiente='R'
+		OTHER
+			lcFaseSiguiente='#'
+		ENDCASE
+		lnSaldo=0.00
+		SELECT e_meta
+		IF SEEK(lcAno_eje+lcSec_ejec+lcExpediente+lcCiclo+lcFase+lcSecuencia)
+			SCAN REST WHILE ;
+					(ano_eje+sec_ejec+expediente+ciclo+fase+secuencia=lcAno_eje+lcSec_ejec+lcExpediente+lcCiclo+lcFase+lcSecuencia)
+				lnSaldo=lnSaldo + e_meta.monto_nacional
+			ENDSCAN
+		ENDIF
+		IF SEEK(lcAno_eje+lcSec_ejec+lcExpediente+lcCiclo+lcFaseSiguiente)
+			SCAN REST WHILE ;
+					(ano_eje+sec_ejec+expediente+ciclo+fase=lcAno_eje+lcSec_ejec+lcExpediente+lcCiclo+lcFaseSiguiente) FOR ;
+					e_fase.secuencia_anterior=lcSecuencia
+				lnSaldo=lnSaldo - e_meta.monto_nacional
+			ENDSCAN
+		ENDIF
+		=SEEK(lcfaseclave,'e_fase')
+		IF e_fase.monto_saldo <> lnSaldo
+			REPLACE e_fase.monto_saldo WITH lnSaldo IN e_fase
+		ENDIF
+	ENDIF
+ENDPROC 
+
+PROCEDURE ACTUALIZA_INGRESO
+	IF ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo <> lcclave
+		IF SEEK(lcclave,'e_secuencia','exp_sec')
+			DO CASE
+				CASE e_secuencia.monto <> lnMonto_sec OR e_secuencia.monto_nacional <> lnMonto_nacional_sec
+					REPLACE monto WITH lnMonto_sec, monto_nacional WITH lnMonto_nacional_sec IN e_secuencia
+				CASE EMPTY(e_secuencia.monto_nacional)
+					REPLACE monto_nacional WITH lnMonto_nacional_sec IN e_secuencia
+			ENDCASE
+		ENDIF
+		STORE 0 TO lnMonto_sec, lnMonto_nacional_sec
+	ENDIF
+	IF ano_eje+sec_ejec+expediente+ciclo+fase+secuencia <> lcfaseclave
+		=SEEK(lcfaseclave,'e_fase')
+		lcAno_eje=e_fase.ano_eje
+		lcSec_ejec=e_fase.sec_ejec
+		lcExpediente=e_fase.expediente
+		lcCiclo=e_fase.ciclo
+		lcFase=e_fase.fase
+		lcSecuencia=e_fase.secuencia
+		IF lcCiclo+lcFase='ID'
+			lcFaseSiguiente='R'
+		ELSE
+			lcFaseSiguiente='#'
+		ENDIF
+		lnSaldo=0
+		SELECT e_ingreso
+		IF SEEK(lcAno_eje+lcSec_ejec+lcexpediente+lcciclo)
+			SCAN REST WHILE ;
+					(ano_eje+sec_ejec+expediente+ciclo=lcAno_eje+lcSec_ejec+lcexpediente+lcciclo) FOR ;
+					INLIST(fase,lcFase,lcFaseSiguiente)
+				IF secuencia=lcSecuencia
+					lnSaldo=lnSaldo + monto_nacional
+				ELSE
+					IF e_fase.secuencia_anterior=lcSecuencia
+						lnSaldo=lnSaldo - monto_nacional
+					ENDIF
+				ENDIF
+			ENDSCAN
+		ENDIF
+		=SEEK(lcfaseclave,'e_fase')
+		IF e_fase.monto_saldo <> lnSaldo
+			REPLACE monto_saldo WITH lnSaldo IN e_fase
+		ENDIF
+	ENDIF
+ENDPROC 

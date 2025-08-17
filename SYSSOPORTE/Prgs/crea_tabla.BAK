@@ -1,0 +1,370 @@
+SET DEFAULT TO &gcRutaCert
+WAIT WINDOW gcRutaCert
+gcArchivo = gcRutaCert+'CERT.dbc'
+IF !FILE(gcArchivo) THEN 
+	CREATE DATABASE &gcArchivo
+ENDIF 
+OPEN DATABASE CERT SHARED 
+
+WAIT 'Creando Tabla : USERS' WINDOW NOWAIT
+IF !INDBC('USERS', 'TABLE') THEN
+	CREATE TABLE USERS (;
+		cuser_id			c(8) 	NOT NULL, ;
+		cpassword			c(250)			, ;
+		nombre				c(250)   	NULL, ;
+		estado				N(1)			, ;
+		es_supervisor		N(1))
+ENDIF
+ALTER table USERS ADD PRIMARY KEY cuser_id TAG cuser_id
+
+WAIT 'Creando Tabla : USERS_MENU' WINDOW NOWAIT
+IF !INDBC('USERS_MENU', 'TABLE') THEN
+	CREATE TABLE USERS_MENU (;
+		cuser_id			c(8) 	NOT NULL, ;
+		cmenu_id			c(2)  	NOT NULL, ;
+		titulo				c(2) 	NOT NULL, ;
+		titulo_sec			c(2)  	NOT NULL, ;	
+		tipo				c(10)  	NULL, ;
+		orden				c(2)	NULL, ;
+		nombre				c(30)   NULL, ;
+		estado				N(1))
+ENDIF
+ALTER table USERS_MENU ADD PRIMARY KEY cuser_id+cmenu_id+titulo+titulo_sec TAG usuario
+SELECT USERS_MENU
+INDEX ON cuser_id+cmenu_id+orden TAG ORDEN 
+WAIT 'Creando Tabla : USERS_OPCION' WINDOW NOWAIT
+IF !INDBC('USERS_OPCION', 'TABLE') THEN
+	CREATE TABLE USERS_OPCION (;
+		cuser_id			c(8) 	NOT NULL, ;
+		cmenu_id			c(2)  	NOT NULL, ;
+		titulo				c(2) 	NOT NULL, ;
+		titulo_sec			c(2)  	NOT NULL, ;	
+		opcion				c(2)	NOT NULL, ;	
+		tipo				c(10)  	NULL, ;
+		orden				c(10)	NULL, ;
+		nombre				c(80)   NULL, ;
+		comando				c(200)	null, ;
+		condicion			c(200)  NULL, ;
+		titulo1				c(2)	NULL, ;
+		titulo_sec1			c(2)	NULL, ;
+		salto_tabla			c(100)	NULL, ;
+		salto_campo			c(100)	NULL, ;
+		estado				N(1))
+ENDIF
+ALTER table USERS_OPCION ADD PRIMARY KEY cuser_id+cmenu_id+titulo+titulo_sec+opcion TAG opcion
+SELECT users_opcion
+INDEX on cuser_id+cmenu_id+titulo+titulo_sec+orden TAG orden
+
+WAIT 'Creando Tabla : CENTRO_COSTO' WINDOW NOWAIT
+IF !INDBC('CENTRO_COSTO', 'TABLE') THEN
+	CREATE TABLE CENTRO_COSTO (;
+		ano_eje				c(4) 	NOT NULL, ;
+		id_centro_costo		c(6) 	NOT NULL, ;
+		abreviatura			c(30)	NULL  	, ;
+		nombre				c(200)	NULL    , ;
+		estado				c(1)	NULL 	)
+ENDIF
+ALTER table CENTRO_COSTO ADD PRIMARY KEY ano_eje+id_centro_costo TAG cc
+
+WAIT 'Creando Tabla : GPR' WINDOW NOWAIT
+IF !INDBC('GPR', 'TABLE') THEN
+	CREATE TABLE GPR (;
+		ano_eje				c(4) 	NOT NULL, ;
+		id_gpr				c(6) 	NOT NULL, ;
+		abreviatura			c(30)	NULL  	, ;
+		nombre				c(200)	NULL    , ;
+		estado				c(1)	NULL 	)
+ENDIF
+ALTER table GPR ADD PRIMARY KEY ano_eje+id_gpr TAG gpr
+
+WAIT 'Creando Tabla : CERTIFICADO_DETALLE' WINDOW NOWAIT
+IF !INDBC('CERTIFICADO_DETALLE', 'TABLE') THEN
+	CREATE TABLE CERTIFICADO_DETALLE (;
+		ano_eje				c(4) 	NOT NULL, ;
+		sec_ejec			c(6)	NOT NULL, ;
+		certificado			c(10)	NOT NULL, ;
+		secuencia			c(4)	NOT NULL, ;
+		correlativo			c(4)	NOT NULL, ;
+		id_clasificador		c(7)	NOT NULL, ;
+		sec_func			c(4)	NOT NULL, ;
+		id_centro_costo		c(6)	NOT NULL, ;
+		id_gpr				c(6)	NOT NULL, ;
+		monto_nacional		N(19,2)			)
+ENDIF
+ALTER table CERTIFICADO_DETALLE ADD PRIMARY KEY ano_eje+sec_ejec+certificado+secuencia+correlativo+id_clasificador+sec_func+id_centro_costo+id_gpr TAG CERT_DET
+
+WAIT 'Creando Tabla : CERTIFICADOS' WINDOW NOWAIT
+IF !INDBC('CERTIFICADOS', 'TABLE') THEN
+	CREATE TABLE CERTIFICADOS (;
+		ano_eje				c(4) 	NOT NULL, ;
+		sec_ejec			c(6)	NOT NULL, ;
+		certificado			c(10)	NOT NULL, ;
+		secuencia			c(4)	NOT NULL, ;
+		correlativo			c(4)	NOT NULL, ;
+		id_clasificador		c(7)	NOT NULL, ;
+		sec_func			c(4)	NOT NULL, ;
+		id_centro_costo		c(6)	NOT NULL, ;
+		id_gpr				c(6)	NOT NULL, ;
+		glosa				c(250)	NULL	, ;
+		cod_doc				c(3)	NULL	, ;
+		num_doc				c(30)	NULL	, ;
+		fecha_doc			d				, ;
+		ind_certificacion	c(1)	NULL	, ;
+		monto				N(19,2) 		, ;
+		monto_nacional		N(19,2)			, ;
+		tipo_registro		c(1)	NULL	, ;
+		origen				c(1)	NULL	, ;
+		fuente_financ		c(2)	NULL	, ;
+		cadfuncional		c(50)	NULL	, ;
+		especifica			c(20)	NULL	, ;
+		saldo_pim			N(19,2)			, ;
+		impsol				N(19,2)			, ;
+		impaprob			N(19,2)			, ;
+		descarea			c(100)			, ;
+		imptaprobxcert		N(19,2)			, ;
+		fech_ingsi			datetime		, ;
+		caducidad			c(2)			, ;
+		fecha_bd_oracle		d				)
+ENDIF
+ALTER table CERTIFICADOS ADD PRIMARY KEY ano_eje+sec_ejec+certificado+secuencia+correlativo+id_clasificador+sec_func+id_centro_costo+id_gpr TAG CERT_DET
+
+
+WAIT 'Creando Tabla : ENTIDAD' WINDOW NOWAIT
+IF !INDBC('ENTIDAD', 'TABLE') THEN
+	CREATE TABLE ENTIDAD (;
+		ano_eje				c(4) 	NOT NULL, ;
+		sec_ejec			c(6)	NOT NULL, ;
+		oficio				c(10))			
+ENDIF
+ALTER table ENTIDAD ADD PRIMARY KEY ano_eje+sec_ejec TAG SEC_EJEC
+
+
+WAIT 'Creando Tabla : EXPEDIENTE_META_DETALLE' WINDOW NOWAIT
+IF !INDBC('EXPEDIENTE_META_DETALLE', 'TABLE') THEN
+	CREATE TABLE EXPEDIENTE_META_DETALLE (;
+		ano_eje				c(4) 	NOT NULL, ;
+		sec_ejec			c(6)	NOT NULL, ;
+		expediente			c(10)	NOT NULL, ;
+		ciclo				c(1)	NOT NULL, ;
+		fase				c(1) 	NOT NULL, ;
+		secuencia			c(4)	NOT NULL, ;
+		correlativo			c(4)	NOT NULL, ;
+		id_clasificador		c(7)	NOT NULL, ;
+		sec_func			c(4)	NOT NULL, ;
+		id_centro_costo		c(6)	NOT NULL, ;
+		id_gpr				c(6)	NOT NULL, ;
+		monto_nacional		N(19,2)			, ;
+		estado				c(1)	NULL	)
+ENDIF
+ALTER table EXPEDIENTE_META_DETALLE ADD PRIMARY KEY ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo+id_clasificador+sec_func+id_centro_costo+id_gpr TAG expmetadet
+SELECT expediente_meta_detalle
+INDEX on sec_ejec+ano_eje+sec_func+id_centro_costo+id_gpr TAG METAGPR ADDITIVE 
+
+WAIT 'Creando Tabla : META_CC' WINDOW NOWAIT
+IF !INDBC('META_CC', 'TABLE') THEN
+	CREATE TABLE META_CC (;
+		ano_eje				c(4) 	NOT NULL, ;
+		sec_ejec			c(6) 	NOT NULL, ;
+		sec_func			c(4) 	NOT NULL, ;
+		id_centro_costo		c(6) 	NOT NULL, ;
+		monto_asignado		N(19,2))
+ENDIF
+ALTER table META_CC ADD PRIMARY KEY sec_ejec+ano_eje+sec_func+id_centro_costo TAG metacc
+SELECT meta_cc
+INDEX on sec_ejec+ano_eje+sec_func TAG meta ADDITIVE 
+INDEX on id_centro_costo TAG id ADDITIVE 
+
+
+WAIT 'Creando Tabla : META_GPR' WINDOW NOWAIT
+IF !INDBC('META_GPR', 'TABLE') THEN
+	CREATE TABLE META_GPR (;
+		ano_eje				c(4) 	NOT NULL, ;
+		sec_ejec			c(6) 	NOT NULL, ;
+		sec_func			c(4) 	NOT NULL, ;
+		id_centro_costo		c(6) 	NOT NULL, ;
+		id_gpr				c(6) 	NOT NULL, ;
+		monto_asignado		N(19,2)			, ;
+		porcentaje			N(5,2))
+ENDIF
+ALTER table META_GPR ADD PRIMARY KEY sec_ejec+ano_eje+sec_func+id_centro_costo+id_gpr TAG metagpr
+SELECT meta_gpr
+INDEX on sec_ejec+ano_eje+sec_func TAG meta ADDITIVE 
+INDEX on id_gpr TAG id ADDITIVE 
+
+
+WAIT 'Creando Tabla : OFICIO_CAB' WINDOW NOWAIT
+IF !INDBC('OFICIO_CAB', 'TABLE') THEN
+	CREATE TABLE OFICIO_CAB (;
+		ano_eje				c(4) 	NOT NULL, ;
+		sec_ejec			c(6) 	NOT NULL, ;
+		oficio				c(10)	NOT NULL, ;
+		fecha				d				, ;
+		remitente			c(250)	NULL 	, ;
+		destinatario		c(250)	NULL 	, ;
+		cargo				c(100)	NULL 	, ;
+		contenido			M				, ;
+		num_oficio			c(20)	NULL	, ;
+		nota_pie_1			c(30)	NULL 	, ;
+		nota_pie_2			c(30)	NULL 	, ;
+		referencia			c(150)	NULL	, ;
+		nro_solicitud		c(4)	NULL	, ;
+		asunto				c(150)	NULL	, ;
+		siglas				c(20)	NULL	, ;
+		estado				c(1)	)
+ENDIF
+ALTER table OFICIO_CAB ADD PRIMARY KEY ano_eje+sec_ejec+oficio TAG oficio
+
+WAIT 'Creando Tabla : OFICIO_DET' WINDOW NOWAIT
+IF !INDBC('OFICIO_DET', 'TABLE') THEN
+	CREATE TABLE OFICIO_DET (;
+		ano_eje					c(4) 	NOT NULL, ;
+		sec_ejec				c(6) 	NOT NULL, ;
+		oficio					c(10)	NOT NULL, ;
+		secuencia				c(3)	NOT NULL, ;
+		fuente_financ			c(2)	NULL 	, ;
+		sec_func				c(4) 	NULL	, ;
+		tipo					c(1)    NULL	, ;
+		clasificador_origen		c(10)	NULL	, ;
+		clasificador_destino 	c(10)	NULL 	, ;
+		certificado				c(10)	NULL    , ;
+		centro_costo			c(100)	NULL    , ;
+		glosa					c(150)	NULL 	, ;
+		monto_nacional			N(19,2) 		, ;
+		estado					c(1))
+ENDIF
+ALTER table OFICIO_DET ADD PRIMARY KEY ano_eje+sec_ejec+oficio+secuencia TAG secuencia
+
+*IF !USED('USERS') THEN 
+	SELECT USERS
+	INSERT INTO USERS (CUSER_ID, CPASSWORD, ESTADO) ;
+	VALUES ('ADMINIST','53523913BBE8803F',1)
+	INSERT INTO USERS (CUSER_ID, CPASSWORD, ESTADO) ;
+	VALUES ('USUARIO','52A2926CABEDA3E38DC22F5660896FA98DC22F5660896FA98DC22F5660896FA98DC22F5660896FA98DC22F5660896FA98DC22F5660896FA98DC22F5660896FA98DC22F5660896FA98DC22F5660896FA98DC22F5660896FA98DC22F5660896FA9BED000B233AB5A8F',1)
+	
+*	USE IN USERS	
+*ENDIF 
+*!*	WAIT 'Creando Tabla : CUENTA_CORRIENTE' WINDOW NOWAIT
+*!*	IF !INDBC('CUENTA_CORRIENTE', 'TABLE') THEN
+*!*		CREATE TABLE DATA\CUENTA_CORRIENTE (;
+*!*			sec_ejec			c(6) NOT NULL, ;
+*!*			banco				c(3) NOT NULL, ;
+*!*			cta_cte				c(3) NOT NULL, ;
+*!*			nombre				c(30)    NULL, ;
+*!*			origen				c(1)	 NULL, ;
+*!*			fuente_financ		c(2)	 NULL, ;
+*!*			descripcion			c(100)	 NULL, ;	
+*!*			estado				c(1) )
+*!*	ENDIF
+*!*	ALTER TABLE CUENTA_CORRIENTE ADD PRIMARY KEY sec_ejec+banco+cta_cte TAG cta_cte
+
+*!*	WAIT 'Creando Tabla : FINANCIAMIENTO' WINDOW NOWAIT
+*!*	IF !INDBC('FINANCIAMIENTO', 'TABLE') THEN
+*!*		CREATE TABLE DATA\FINANCIAMIENTO (;
+*!*			ano_eje				c(4) NOT NULL, ;
+*!*			sec_ejec			c(6) NOT NULL, ;
+*!*			origen				c(1)	 NULL, ;
+*!*			fuente_financ		c(2)	 NULL, ;
+*!*			nombre				c(150)   NULL, ;
+*!*			abreviatura			c(10)    NULL, ;
+*!*			estado				c(1) )
+*!*	ENDIF
+*!*	ALTER TABLE FINANCIAMIENTO ADD PRIMARY KEY ano_eje+sec_ejec+origen+fuente_financ TAG fte_financ
+
+
+*!*	* Configuración de tabla Concepto
+*!*	*----------------------------------------------------------
+*!*	WAIT 'Creando Tabla : CONCEPTO' WINDOW NOWAIT
+*!*	IF !INDBC('CONCEPTO', 'TABLE') THEN
+*!*		CREATE TABLE DATA\concepto (;
+*!*			concepto			c(4) NOT NULL, ;
+*!*			nombre				c(150)   NULL, ;
+*!*			estado				c(1) DEFAULT 'A' )
+*!*	ENDIF
+*!*	ALTER TABLE Concepto ADD PRIMARY KEY CONCEPTO TAG concepto
+
+*!*	WAIT 'Creando Tabla : LISTA_DETALLE' WINDOW NOWAIT
+*!*	IF !INDBC('LISTA_DETALLE', 'TABLE') THEN
+*!*		CREATE TABLE DATA\lista_detalle (;
+*!*			sec_detalle			c(4) NOT NULL, ;
+*!*			nombre				c(150)   NULL, ;
+*!*			estado				c(1) DEFAULT 'A')
+*!*	ENDIF
+*!*	ALTER TABLE lista_detalle ADD PRIMARY KEY sec_detalle TAG lista_det
+
+
+*!*	WAIT 'Creando Tabla : CONCEPTO_DETALLE' WINDOW NOWAIT
+*!*	IF !INDBC('CONCEPTO_DETALLE', 'TABLE') THEN
+*!*		CREATE TABLE DATA\concepto_detalle (;
+*!*			concepto			c(4) NOT NULL, ;
+*!*			sec_detalle			c(2) NOT NULL, ;
+*!*			nombre				c(150)   NULL, ;
+*!*			estado				c(1) DEFAULT 'A')
+*!*	ENDIF
+*!*	ALTER TABLE Concepto_detalle ADD PRIMARY KEY concepto+sec_detalle TAG detalle
+
+
+*!*	WAIT 'Creando Tabla : CONCEPTO_CLASIFICADOR' WINDOW NOWAIT
+*!*	IF !INDBC('CONCEPTO_CLASIFICADOR', 'TABLE') THEN
+*!*		CREATE TABLE DATA\concepto_clasificador (;
+*!*			ano_eje				c(4) NOT NULL, ;
+*!*			sec_ejec			c(6) NOT NULL, ;
+*!*			concepto			c(4) NOT NULL, ;
+*!*			id_clasificador		c(7) NOT NULL, ;
+*!*			clasificador		c(15) 	 NULL, ;
+*!*			descripcion			c(150)   NULL, ;
+*!*			estado				c(1) DEFAULT 'A' )
+*!*	ENDIF
+*!*	ALTER TABLE Concepto_clasificador ADD PRIMARY KEY ano_eje+sec_ejec+concepto+id_clasificador TAG clasif
+
+*!*	WAIT 'Creando Tabla : CONCEPTO_CUENTA' WINDOW NOWAIT
+*!*	IF !INDBC('CONCEPTO_CUENTA', 'TABLE') THEN
+*!*		CREATE TABLE DATA\CONCEPTO_CUENTA(;
+*!*			ano_eje				c(4) NOT NULL, ;
+*!*			sec_ejec			c(6) NOT NULL, ;
+*!*			concepto			c(4) NOT NULL, ;
+*!*			mayor				c(4) NOT NULL, ;
+*!*			sub_cta				c(8) NOT NULL, ;
+*!*			nombre				c(150)   NULL, ;
+*!*			naturaleza			c(1)   	 NULL, ;
+*!*			tipo_ctb			c(1)   	 NULL, ;
+*!*			estado				c(1) DEFAULT 'A')
+*!*	ENDIF
+*!*	ALTER TABLE CONCEPTO_CUENTA ADD PRIMARY KEY ano_eje+sec_ejec+concepto+mayor+sub_cta TAG  cuenta
+
+*!*	WAIT 'Creando Tabla : RECIBO_INGRESO' WINDOW NOWAIT
+*!*	IF !INDBC('RECIBO_INGRESO', 'TABLE') THEN
+*!*		CREATE TABLE DATA\RECIBO_INGRESO(;
+*!*			ano_eje				c(4)  NOT NULL, ;
+*!*			sec_ejec			c(6)  NOT NULL, ;
+*!*			recibo				c(10) NOT NULL, ;
+*!*			fecha				d		  NULL, ;
+*!*			nombre				c(150)    NULL, ;
+*!*			concepto			c(4)  NOT NULL, ;
+*!*			glosa				c(250)    NULL, ;
+*!*			monto_nacional		n(19,2)	  NULL, ;
+*!*				banco				c(3)	  NULL, ;
+*!*				cta_cte				c(3)	  NULL, ;
+*!*			estado				c(1)  DEFAULT 'A')
+*!*	ENDIF
+*!*	ALTER TABLE RECIBO_INGRESO ADD PRIMARY KEY ano_eje+sec_ejec+recibo TAG  recibo
+
+
+*!*	WAIT 'Creando Tabla : RECIBO_INGRESO_DET' WINDOW NOWAIT
+*!*	IF !INDBC('RECIBO_INGRESO_DET', 'TABLE') THEN
+*!*		CREATE TABLE DATA\RECIBO_INGRESO_DET (;
+*!*			ano_eje				c(4)  NOT NULL, ;
+*!*			sec_ejec			c(6)  NOT NULL, ;
+*!*			recibo				c(10) NOT NULL, ;
+*!*			tipo_detalle		c(1)  NOT NULL, ;	
+*!*			sec_detalle			c(4)  NOT NULL, ;
+*!*			desc_detalle		c(150)    NULL, ;
+*!*			id_clasificador		c(7)	  NULL, ;
+*!*			clasificador		c(15)	  NULL, ;
+*!*			mayor				c(4)	  NULL, ;
+*!*			sub_cta				c(8)	  NULL, ;
+*!*			naturaleza			c(1)	  NULL, ;
+*!*			monto_nacional		N(19,2)	 )
+*!*	ENDIF
+*!*	ALTER TABLE RECIBO_INGRESO_DET ADD PRIMARY KEY ano_eje+sec_ejec+recibo+tipo_detalle+sec_detalle TAG  rec_det
+
+

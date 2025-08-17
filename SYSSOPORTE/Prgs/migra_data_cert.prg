@@ -1,0 +1,137 @@
+PUBLIC gcano_eje, gcsec_ejec
+SET TALK OFF
+SET DATE BRITISH
+SET SAFETY OFF 
+CLOSE ALL
+gcano_eje = '2012'
+gcsec_ejec= '001311'
+SET EXCLUSIVE on
+xRutaOrigen = GETDIR('','','Directorio Origen',1)
+xRutaDestino = GETDIR('','','Directorio Destino',1)
+xBDOrigen = xRutaOrigen + 'cert.dbc'
+xxBDDestino = xRutaDestino +'cert.dbc'
+OPEN DATABASE &xBdOrigen
+
+
+
+select * ;
+   from &xBdOrigen ;
+   where objecttype='Table' AND !DELETED() ;
+   into cursor curTabla READWRITE 
+
+SELECT  curTabla
+SCAN all
+      lcTabla=alltrim(curTabla.objectname)
+      WAIT WINDOW "Procesando Tabla '" + lcTabla + "'" NOWAIT 
+      lcOrigen = xRutaOrigen  + alltrim(curTabla.objectname) +'.dbf'
+      lcDestino = xRutaDestino + alltrim(curTabla.objectname)+'.dbf'
+      
+      IF FILE(lcDestino) THEN 
+		    USE  &lcOrigen  IN 0 AGAIN ALIAS tablaorigen EXCLUSIVE 
+		    USE  &lcDestino IN 0 AGAIN ALIAS tablaDestino EXCLUSIVE 	
+		    SELECT tablaOrigen
+		    PACK
+		    SELECT tablaDestino
+		    ZAP 	    
+      		SELECT tablaOrigen
+      		SCAN ALL 
+      			SCATTER memvar
+      			IF TYPE('meta') <> 'U' AND ALLTRIM(UPPER(lcTabla)) = 'CERTIFICADOS' THEN 
+      				lcsec_func = m.meta
+      				m.sec_func = lcsec_func
+      				m.saldo_pim= m.saldopim
+	      		ENDIF 
+*!*		      		IF TYPE('ano_eje') <> 'U' THEN 
+*!*		      			IF m.ano_eje <> gcano_eje THEN 
+*!*		      				LOOP 
+*!*		      			ENDIF 
+*!*		      		ENDIF 
+	      		IF TYPE('sec_ejec') <> 'U' THEN 
+	      			IF m.sec_ejec <> gcsec_ejec THEN 
+	      				LOOP 
+	      			ENDIF 
+	      		ENDIF 
+				IF TYPE('contenido') <> 'U' AND ALLTRIM(UPPER(lcTabla)) = 'OFICIO_CAB' THEN 
+					m.contenido = ALLTRIM(SUBSTR(tablaOrigen.contenido,1) )
+				ENDIF 
+				
+	      		
+      			INSERT INTO TablaDestino FROM memvar
+      		ENDSCAN 
+*	      	INSERT INTO &lcDestino SELECT * FROM &lcOrigen
+*!*	    		IF TYPE('ano_eje') <> 'U' THEN 
+*!*	      			m.ano_eje = gcano_eje
+*!*	      			REPLACE ALL ano_eje WITH gcano_eje IN &lcDestino
+*!*	      		ENDIF 
+      		USE IN tablaDestino
+      		USE IN tablaOrigen
+      ENDIF 
+ENDSCAN 
+
+CLOSE ALL 
+
+
+*----------------------
+procedure sf_reindexa
+*----------------------
+ 
+ select * ;
+   from cert.dbc ;
+   where objecttype='Table' AND !DELETED() ;
+   into cursor cursiaf_tablas READWRITE 
+    
+   index on objectid tag ind02  
+   
+USE IN cert
+   select cursiaf_tablas 
+ 
+   scan all        
+     SCATTER MEMVAR 
+      lcTabla=alltrim(m.objectname)
+      WAIT WINDOW "Reindexando Tabla '" + lcTabla + "'" NOWAIT 
+      lcArchivo=gcrutacert+alltrim(m.objectname)+'.dbf'
+      IF FILE(lcArchivo) THEN 
+	      USE  &LcArchivo IN 0 AGAIN ALIAS &LcTabla EXCLUSIVE 
+	      SELECT &LcTabla
+	      Reindex        
+	      USE IN &LcTabla
+	    ENDIF 
+      select cursiaf_tablas       
+   endscan 
+   WAIT WINDOW 'Proceso de reindexado finalizado exitosamente...'
+  CLOSE DATABASES ALL  
+RETURN  
+
+*---------------------- 
+procedure sf_Packea
+*----------------------
+ 
+
+ select * ;
+   from cert.dbc ;
+   where objecttype='Table' AND !DELETED();
+   into cursor cursiaf_tablas READWRITE 
+    
+   index on objectid tag ind02  
+   
+USE IN cert
+   SELECT cursiaf_tablas 
+ 
+   SCAN ALL          
+     SCATTER MEMVAR 
+	  lcTabla=alltrim(m.objectname)
+      lcArchivo=gcrutacert+alltrim(m.objectname)+'.dbf'
+      IF FILE(lcArchivo) THEN 
+	      WAIT WINDOW "Pack en Tabla '" + lcTabla + "'" NOWAIT 
+	      USE  &lcArchivo IN 0 AGAIN ALIAS &LcTabla EXCLUSIVE 
+	      SELECT &LcTabla
+	      Pack
+	      USE IN &LcTabla
+      ENDIF 
+      SELECT cursiaf_tablas       
+   endscan 
+   WAIT WINDOW 'Proceso de eliminación finalizado exitosamente...'
+  CLOSE DATABASES ALL  
+RETURN  
+
+

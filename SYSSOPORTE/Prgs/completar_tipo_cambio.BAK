@@ -1,0 +1,120 @@
+USE siaf!certificado 					IN 0 AGAIN ORDER TAG certi
+USE siaf!certificado_fase 				IN 0 AGAIN ORDER TAG certi_fase
+USE siaf!certificado_secuencia 			IN 0 AGAIN ORDER TAG certi_sec
+USE siaf!certificado_clasif				IN 0 AGAIN ORDER TAG certi_clas
+USE siaf!certificado_meta				IN 0 AGAIN ORDER TAG certi_clas
+USE siaf!expediente						IN 0 AGAIN ORDER tag expediente 
+USE siaf!expediente_fase				IN 0 AGAIN ORDER tag cer_fase		ALIAS exp_fase
+USE siaf!expediente_secuencia			IN 0 AGAIN ORDER tag exp_sec		ALIAS exp_sec 
+USE siaf!expediente_secuencia			IN 0 AGAIN ORDER tag exp_sec		
+USE siaf!expediente_fase				IN 0 AGAIN ORDER tag exp_fase
+USE siaf!expediente_clasif				IN 0 AGAIN ORDER tag exp_clasif
+USE siaf!expediente_meta				IN 0 AGAIN ORDER TAG exp_metap
+USE cert!expediente_meta_detalle_sad	IN 0 AGAIN ORDER tag expmetadet ALIAS expediente_meta_detalle
+USE cert!meta_sub_actividad_det			IN 0 AGAIN ORDER tag metasad
+USE cert!certificado_detalle_sad		IN 0 AGAIN ORDER tag cert_det	ALIAS certificado_detalle
+USE cert!sub_actividad_det				IN 0 AGAIN 
+USE siaf!tipo_cambio_mep				IN 0 AGAIN ORDER tag fecha
+
+lcOrganismo = '001'
+
+lSuccess=CURSORSETPROP("Buffering", 1, "certificado_detalle")
+lSuccess=CURSORSETPROP("Buffering", 1, "expediente_meta_detalle")
+
+xalias = ALIAS()
+WAIT WINDOW 'Iniciando Proceso .....' NOWAIT 
+
+WAIT WINDOW 'Cargando Certificados y Compromisos Anuales' NOWAIT 
+i = 0
+
+
+SELECT Certificado_Fase
+SEEK gcAno_eje+gcSec_ejec
+SCAN WHILE ano_eje+sec_ejec==gcAno_eje+gcSec_ejec ;
+	FOR !DELETED()
+	SCATTER MEMVAR
+	*
+	WAIT WINDOW 'Leyendo Certificado ====> '+m.ano_eje+'-'+m.Certificado NOWAIT 
+	SELECT Certificado_Secuencia
+	SEEK m.ano_eje+m.sec_ejec+m.certificado+m.secuencia 
+	SCAN WHILE ano_eje+sec_ejec+certificado+secuencia==m.ano_eje+m.sec_ejec+m.certificado+m.secuencia ;
+		FOR certificado_secuencia.estado_registro='A' AND !DELETED() ;
+
+		SCATTER MEMVAR
+		SELECT certificado_clasif
+		SEEK m.ano_eje+m.sec_ejec+m.certificado+m.secuencia+m.correlativo
+		SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo =	m.ano_eje+m.sec_ejec+m.certificado+m.secuencia+m.correlativo
+			SCATTER MEMVAR 
+			IF DELETED() THEN 
+				LOOP 
+			ENDIF 
+			SELECT certificado_meta
+			SEEK m.ano_eje+m.sec_ejec+m.certificado+m.secuencia+m.correlativo+m.id_clasificador
+			SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo+id_clasificador = m.ano_eje+m.sec_ejec+m.certificado+m.secuencia+m.correlativo+m.id_clasificador
+				SCATTER MEMVAR 
+				IF DELETED() THEN 
+					LOOP 
+				ENDIF 
+				IF certificado_meta.estado_registro <> 'A' THEN 
+					LOOP 
+				ENDIF 
+				
+				lnTipo_cambio = IIF(SEEK(lcOrganismo+DTOS(certificado_secuencia.fecha_doc),'tipo_cambio_mep','fecha'),tipo_cambio_mep.valor,0)
+				lnMonto_extranjero = IIF(lnTipo_cambio=0,0,(certificado_meta.monto_nacional+certificado_meta.monto_nacional_ajuste)/lnTipo_cambio)
+				
+				SELECT certificado_detalle
+				SEEK m.ano_eje+m.sec_ejec+m.certificado+m.secuencia+m.correlativo+m.id_clasificador+m.sec_func
+				SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo+id_clasificador+sec_func =  m.ano_eje+m.sec_ejec+m.certificado+m.secuencia+m.correlativo+m.id_clasificador+m.sec_func
+					i = i + 1				
+					REPLACE certificado_detalle.tipo_cambio			WITH lnTipo_cambio
+					REPLACE certificado_detalle.monto_extranjero	WITH lnMonto_extranjero			
+				ENDSCAN 
+			ENDSCAN
+
+		ENDSCAN 		
+	ENDSCAN
+ENDSCAN
+*	
+WAIT WINDOW 'Cargando Registros Administrativos' NOWAIT 
+SELECT Expediente_fase
+SEEK gcAno_eje+gcSec_ejec
+SCAN WHILE ano_eje+sec_ejec==gcAno_eje+gcSec_ejec ;
+	FOR !DELETED()
+	SCATTER MEMVAR
+	*
+
+	WAIT WINDOW 'Leyendo Expediente ====> '+m.ano_eje+'-'+m.expediente  NOWAIT 
+	SELECT Expediente_Secuencia
+	SEEK m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia
+	SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia==m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia ;
+		FOR expediente_secuencia.estado_envio =='A' AND !DELETED() 
+
+		SCATTER MEMVAR
+		SELECT expediente_clasif
+		SEEK m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo
+		SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo =	m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo
+			SCATTER MEMVAR 
+			SELECT expediente_meta
+			SEEK m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo+m.id_clasificador
+			SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo+id_clasificador = m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo+m.id_clasificador
+				SCATTER MEMVAR 
+			 	IF m.estado_envio <> 'A' THEN 
+			 		LOOP 
+			 	ENDIF 
+				i = i + 1
+				lntipo_cambio 		= IIF(SEEK(lcOrganismo+DTOS(expediente_secuencia.fecha_doc),'tipo_cambio_mep','fecha'),tipo_cambio_mep.valor,0)
+				lnmonto_extranjero 	= IIF(lntipo_cambio=0,0,expediente_meta.monto_nacional/lntipo_cambio)
+				SELECT expediente_meta_detalle 
+				SEEK m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo+m.id_clasificador+m.sec_func
+				SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo+id_clasificador+sec_func = ;
+					m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo+m.id_clasificador+m.sec_func
+					REPLACE expediente_meta_detalle.tipo_cambio			WITH lntipo_cambio 
+					REPLACE expediente_meta_detalle.monto_extranjero	WITH IIF(lntipo_cambio = 0,0,expediente_meta_detalle.monto_nacional/lntipo_cambio)								   
+				ENDSCAN 				 	
+				 	
+		 	ENDSCAN 
+		ENDSCAN 				
+	ENDSCAN 		
+ENDSCAN
+
+WAIT WINDOW 'Proceso Terminado !!!' NOWAIT 

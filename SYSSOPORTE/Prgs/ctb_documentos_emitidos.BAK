@@ -1,0 +1,625 @@
+PARAMETERS Psec_ejec
+
+Select CTA_CTE
+Set Relation To banco Into BANCO
+*
+Do Case
+	CASE gcano_eje<='2008'
+		DO CASE 
+			Case lcateg = 'T'
+				wcateg = 'Todas'
+			Case lcateg = '0'
+				wcateg = 'Control'
+			Case lcateg = '3'
+				wcateg = 'Subsidios'
+			Case lcateg = '5'
+				wcateg = 'Gastos Corrientes'
+			Case lcateg = '6'
+				wcateg = 'Gastos de Capital'
+			Case lcateg = '7'
+				wcateg = 'Servicio de la Deduda'
+		ENDCASE
+	CASE gcano_eje>='2009'
+		DO CASE 
+			Case lcateg = 'T'
+				wcateg = 'Todas'
+			Case lcateg = '1'
+				wcateg = 'Ingresos Presupuestarios'
+			Case lcateg = '2'
+				wcateg = 'Gastos Presupuestarios'
+		ENDCASE
+ENDCASE 
+*
+Do Case
+	Case (ldelal == 01 and lempty == 01) OR ; && Del mes y ( Em, En ca, En Tr )
+		 (ldelal == 01 and lempty == 02) OR ;
+		 (ldelal == 01 and lempty == 04) OR ;
+		 (ldelal == 03 and lempty == 01) OR ; && Del Dia y ...
+		 (ldelal == 03 and lempty == 02) OR ;
+		 (ldelal == 03 and lempty == 04)
+		wcompara = "sec_ejec+LEFT(DTOS(exp_doc.fecha_doc),6) == Psec_ejec+lano_eje+lmes_eje"
+	Case (ldelal == 01 and lempty == 03) OR ; && Del mes y Solo Entr
+		 (ldelal == 03 and lempty == 03)      && Del dia y Solo Entr
+		wcompara = "sec_ejec+LEFT(DTOS(exp_doc.fecha_entrega),6) == Psec_ejec+lano_eje+lmes_eje"
+	Case (ldelal == 01 and lempty == 05) OR ; && Del mes y Solo Pa
+		 (ldelal == 03 and lempty == 05) OR ; && Del dia y Solo Pa
+		 (ldelal == 01 and lempty == 06) OR ; && Del mes y Solo Pa S/Fecha.Entr
+		 (ldelal == 03 and lempty == 06)      && Del dia y Solo Pa S/Fecha.Entr
+		 wcompara = "sec_ejec+LEFT(DTOS(exp_doc.fecha_pago),6) == Psec_ejec+lano_eje+lmes_eje"
+	Case (ldelal == 02 and lempty == 01) OR ; && Al mes y Solo Em
+		 (ldelal == 02 and lempty == 02) 	  && Al mes y Solo En Ca
+		wcompara = "sec_ejec+LEFT(DTOS(exp_doc.fecha_doc),4) == Psec_ejec+lano_eje"
+	Case (ldelal == 02 and lempty == 03) OR ; && Al mes y Solo Entr
+		 (ldelal == 02 and lempty == 04)	  && Al mes y Solo En tr
+		wcompara = "sec_ejec+LEFT(DTOS(exp_doc.fecha_entrega),4) == Psec_ejec+lano_eje"
+	Case (ldelal == 02 and lempty == 05) OR ; && Al mes y Solo Pa
+		 (ldelal == 02 and lempty == 06) 	  && Al mes y Solo Pa sin Fecha de Entrega
+		wcompara = "sec_ejec +LEFT(DTOS(exp_doc.fecha_pago),4) == Psec_ejec+lano_eje"
+EndCase
+wcompara_bak = wcompara
+*
+Select Exp_Sec
+Seek Psec_ejec+lano_cta+lbanco+lcuenta
+Scan While sec_ejec+ano_cta_cte+banco+cta_cte == Psec_ejec+lano_cta+lbanco+lcuenta
+	IF lcateg = 'T' THEN
+		* solo fase "G", "R" *
+		If !inlist(ciclo+fase,'GG','IR')
+			Loop
+		Endif
+	ELSE
+		* solo fase "G" *
+		If !inlist(ciclo+fase,'GG')
+			Loop
+		Endif
+	ENDIF
+	* consistencia de estado Cambiado el 22/10/2007 C.TAPIA, M.YUSA
+	If inlist(ciclo+fase,'GG')
+		IF correlativo!='0001'
+			IF !Inlist(estado,"A")
+				LOOP
+			ENDIF
+		ELSE
+			IF !Inlist(estado," ","N")
+				LOOP
+			ENDIF			
+		EndIf
+	ELSE
+		IF correlativo!='0001'	
+			IF !Inlist(estado,"A","Y","D")
+				loop
+			ENDIF
+		ELSE
+			IF !Inlist(estado," ","N")
+				loop
+			ENDIF
+		ENDIF
+	EndIf
+	* consistencia de reasinaciones
+	IF Inlist(estado,"A")
+		IF Inlist(edicion,"R")
+			loop
+		Endif
+	EndIf
+	* consistencia de fuente *
+	If lfuente <> "Todas" Then
+		If exp_fase.origen+exp_fase.fuente_financ <> Left(lfuente, 01)+SubStr(lfuente,03,02) Then
+			Loop
+		EndIf
+	ENDIF
+	*
+	*-- Comentado el 31/01/2006 C.Tapia, M.Yusa
+	* Valida la Categoria del Gasto * 
+	*If lcateg <> 'T' Then
+	*	If lcateg <> exp_clasif.categ_gasto Then
+	*		Loop
+	*	Endif
+	*Endif
+	*
+	* consitencia para anulaciones de ingresos diferentes de YV, YT ( lcaso = '1' )
+	If !Inlist(EXP.tipo_operacion,'YT','YV') and ciclo+fase == 'IR' and estado == 'A' Then
+		Loop
+	Endif
+	* consistencia de estado *
+	If lestado <> "TO" Then
+		If lestado == "X" Then && Solo anulados
+			If !Inlist(exp_sec.estado,'A','Y') Then
+				Loop
+			EndIf
+		Else
+			If exp_sec.estado_envio <> lestado Then
+				Loop
+			EndIf
+		EndIf
+	EndIf
+	Scatter Memvar
+	
+	m.glosa=''
+	Select exp_nota
+	Seek m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia
+	Scan While  ano_eje+sec_ejec+expediente+ciclo+fase+secuencia == ;
+				m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia
+		m.glosa = m.glosa+TRIM(strtran(exp_nota.notas,chr(10),''))
+	EndScan
+	Select Exp_Doc
+	Seek m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo
+	If Found()
+		Scan While  ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo == ;
+					m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo
+			=carga()
+		EndScan
+	ELSE
+		***** 	Made for Wolf
+			SELECT expediente_enlace
+			Seek m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo
+			IF FOUND() THEN 
+				Scan While  ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo == ;
+							m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+m.correlativo
+					=carga_Y()
+				ENDSCAN
+			ELSE 
+				*****
+				Select Exp_Doc
+				Seek m.ano_eje+m.sec_ejec+m.expediente+m.ciclo+m.fase+m.secuencia+'0001'
+				If Found() 
+					If exp_sec.estado = "A" Then
+						=carga()
+					EndIf
+				ENDIF
+			ENDIF 
+	ENDIF 
+ENDSCAN
+*
+Select CUR_DOCX
+Set Order To Tag ORD0X1
+If Inlist(lempty,02,04) Then
+	Go Top
+	Scan All
+		Scatter Memvar
+		If CUR_DOCX.estado='A' Then
+			Replace CUR_DOCX.estado with 'Z'
+			=Seek(m.origen+m.fuente_financ+m.banco+m.cta_cte+DtoS(m.fecha_doc)+m.cod_doc+m.num_doc+;
+				  m.expediente+Str(m.monto*-1),'CUR_DOCX','ORD0X2')
+			Replace CUR_DOCX.estado with 'Z'
+			=Seek(m.origen+m.fuente_financ+m.banco+m.cta_cte+Dtos(m.fecha_quiebre)+;
+				  DtoS(m.fecha_doc)+m.cod_doc+m.num_doc+m.expediente+Dtos(m.fecha_anulacion)+;
+				  'Z','CUR_DOCX','ORD0X1')
+		EndIf
+	Endscan
+Endif	
+
+*----------------
+FUNCTION carga()
+*----------------
+* solo 26, 65, 68, 81, 84 y 89 *
+If InList(exp_doc.cod_doc, "026", "065", "068", "081", "084", "089") Then
+	* asigna fechas
+	wfemitidos	 = Iif(exp_doc.fecha_doc=CtoD("01/01/1901"), CtoD("  /  /    "), exp_doc.fecha_doc)
+	wfentregados = Iif(exp_doc.fecha_entrega=CtoD("01/01/1901"), CtoD("  /  /    "), exp_doc.fecha_entrega)
+	wfepago		 = Iif(exp_doc.fecha_pago=CtoD("01/01/1901"), CtoD("  /  /    "), exp_doc.fecha_pago)
+	wfechanula   = Iif(exp_sec.estado $ "A,Y",Iif(exp_sec.fecha_doc=CtoD("01/01/1901"),CtoD("  /  /    "),exp_sec.fecha_doc),CTOD("  /  /    "))
+	*If Inlist(exp_doc.cod_doc, "081", "084")
+	*	wfentregados = Iif(exp_sec.fecha_autorizacion=CtoD("01/01/1901"), CtoD("  /  /    "), exp_sec.fecha_autorizacion)
+	*	wfepago		 = Iif(exp_sec_pag.fecha_doc=CtoD("01/01/1901"), CtoD("  /  /    "), exp_sec_pag.fecha_doc)
+	*EndIf
+	* comparacion por combinacion ldelal, lempty
+	wcompara = wcompara_bak
+	If Inlist(exp_sec.estado,'A','Y') and ( ldelal = 01 or ldelal = 03 ) Then
+		wcompara = "sec_ejec+LEFT(DTOS(exp_doc.fecha_doc),6) <= Psec_ejec+lano_eje+lmes_eje"
+	EndIf
+	If &wcompara. Then
+		flag_pasa = f_evalua('1') && Evalua flag_pasa
+		If flag_pasa = 'S' Then
+			wfequiebre = f_evalua('2') && Evalua fecha de quiebre
+			* asignar valores *
+			wexp   = exp_sec.expediente
+			wcic   = exp_sec.ciclo
+			wfas   = exp_sec.fase
+			wsec   = exp_sec.secuencia
+			wcor   = exp_sec.correlativo
+			wori   = exp_fase.origen
+			wfte   = exp_fase.fuente_financ
+			wmon   = exp_sec.moneda
+			wtdc   = exp_sec.tipo_cambio
+			wcdocA = exp_sec.cod_doc
+			wndocA = exp_sec.num_doc
+			wfdocA = Iif(exp_sec.fecha_autorizacion=CtoD("01/01/1901"),CtoD("  /  /    "),exp_sec.fecha_autorizacion)
+			west   = Iif(exp_sec.estado $ "A,Y", "A", " ")
+			wese   = exp_sec.estado_envio
+			wmto   = Iif(west="A",exp_doc.monto*-1,exp_doc.monto)
+			wbco   = exp_sec.banco
+			wcta   = exp_sec.cta_cte
+			wcdo   = exp_doc.cod_doc
+			wndo   = exp_doc.num_doc
+			wnom   = exp_doc.nombre
+			wtgiro = exp_fase.tipo_giro
+			wglosa = m.glosa
+			*
+			*-- Agregado el 31/01/2006 C.Tapia, M.Yusa
+			wgener = ""	
+			wcngener = "x"
+			SELECT exp_clasif
+			SEEK exp_sec.ano_eje+exp_sec.sec_ejec+exp_sec.expediente+exp_sec.ciclo+exp_sec.fase+exp_sec.secuencia+exp_sec.correlativo
+			SCAN WHILE 	ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo == ;
+						exp_sec.ano_eje+exp_sec.sec_ejec+exp_sec.expediente+exp_sec.ciclo+exp_sec.fase+exp_sec.secuencia+exp_sec.correlativo
+				*-agregado para el cambio de clasificador*-------**
+*!*					SELECT maestro_clasificador
+*!*					pnNivel =IIF(SEEK(exp_sec.ano_eje+exp_clasif.id_clasificador,"maestro_clasificador","idclasif") AND ;
+*!*								maestro_clasificador.Origen_clasificador='3',6,4)
+*!*					*-
+*!*					Wclasificador	= oSiafRutina.clasificador_codigo(exp_sec.ano_eje,exp_clasif.id_clasificador,pnNivel,"T")
+*!*					*-------------------------------------------
+*!*					wtra	= SUBSTR(Wclasificador,1,1)
+*!*					wgen	= SUBSTR(Wclasificador,2,1)
+*!*					wsubg	= SUBSTR(Wclasificador,3,2)
+*!*					wsubgd	= SUBSTR(Wclasificador,5,2)
+*!*					wesp	= SUBSTR(Wclasificador,7,2)
+*!*					wespd	= SUBSTR(Wclasificador,9,2)
+				IF gcano_eje>='2009'
+					SELECT maestro_clasificador
+					pnNivel =IIF(SEEK(exp_sec.ano_eje+exp_clasif.id_clasificador,"maestro_clasificador","idclasif") AND ;
+								maestro_clasificador.Origen_clasificador='3',6,4)
+					*-
+					Wclasificador	= clasificador_codigo(exp_sec.ano_eje,exp_clasif.id_clasificador,pnNivel,"T")
+					*-------------------------------------------
+					wtra	= SUBSTR(Wclasificador,1,1)
+					wgen	= SUBSTR(Wclasificador,2,1)
+					wsubg	= SUBSTR(Wclasificador,3,2)
+					wsubgd	= SUBSTR(Wclasificador,5,2)
+					wesp	= SUBSTR(Wclasificador,7,2)
+					wespd	= SUBSTR(Wclasificador,9,2)
+				ELSE 
+					wtra = exp_clasif.categ_gasto
+					wgen = exp_clasif.grupo_gasto
+				ENDIF 
+				* Valida la Categoria del Gasto *
+				If lcateg <> 'T' Then
+*!*						If lcateg <> exp_clasif.categ_gasto Then
+*!*							Loop
+*!*						EndIf
+					If lcateg <> wtra Then
+						Loop
+					EndIf
+				ENDIF
+				*IF wcngener != exp_clasif.categ_gasto+exp_clasif.grupo_gasto
+					*wcngener = exp_clasif.categ_gasto+exp_clasif.grupo_gasto
+				IF wcngener != wtra+wgen
+					wcngener = wtra+wgen
+					IF EMPTY(wgener)
+						*wgener = exp_clasif.categ_gasto+exp_clasif.grupo_gasto
+						wgener = wtra+wgen
+					ELSE
+						*wgener = wgener + ', ' + exp_clasif.categ_gasto+exp_clasif.grupo_gasto
+						wgener = wgener + ', ' + wtra+wgen
+					ENDIF
+				ELSE
+					LOOP
+				ENDIF
+			ENDSCAN
+			IF !EMPTY(wgener) .OR. wcic = 'I' THEN
+				DO CASE
+					CASE wcdo = '026'
+						wnombre_doc = 'Nota de Cargo'
+					CASE wcdo = '065'
+						wnombre_doc = 'Cheque Girado'
+					CASE wcdo = '068'
+						wnombre_doc = 'Carta Orden'
+					CASE wcdo = '081'
+						wnombre_doc = 'Transferencias Interbancarias'
+					CASE wcdo = '084'
+						wnombre_doc = 'Carta Orden Electrónica'
+					CASE wcdo = '089'
+						wnombre_doc = 'Transferencias a otras Cuentas'
+				ENDCASE
+				Insert Into CUR_DOCX Values ( wori,       wfte,        wbco,          wcta,        ;
+											  wexp,       wcic,        wfas,          wsec, 	   ;
+											  wcor,       wcdo,        wndo,          wfemitidos,  ;
+											  wnom,       wmon,        wtdc,          wmto,        ;
+											  west,       wese,        wfentregados,  wfepago,     ;
+											  wfechanula, wfequiebre,  wcdocA,        wndocA,      ;
+											  wfdocA,     wnombre_doc, wcateg,  	  wgener,	   ;
+											  wtgiro,     wglosa 	)
+			ENDIF
+			
+		EndIf
+	EndIf
+EndIf
+*
+Return
+
+*----------------
+FUNCTION carga_Y()
+*----------------
+SELECT exp_doc
+lcClave = expediente_enlace.ano_eje+expediente_enlace.sec_ejec+expediente_enlace.expediente+expediente_enlace.ciclo_gen+expediente_enlace.fase_gen+;
+		  expediente_enlace.secuencia_gen+expediente_enlace.correlativo_gen
+IF SEEK(lcClave,'exp_doc') THEN  
+	* solo 26, 65, 68, 81, 84 y 89 *
+	If InList(exp_doc.cod_doc, "026", "065", "068", "081", "084", "089") Then
+
+		* asigna fechas
+		wfemitidos	 = Iif(exp_doc.fecha_doc=CtoD("01/01/1901"), CtoD("  /  /    "), exp_doc.fecha_doc)
+		wfentregados = Iif(exp_doc.fecha_entrega=CtoD("01/01/1901"), CtoD("  /  /    "), exp_doc.fecha_entrega)
+		wfepago		 = Iif(exp_doc.fecha_pago=CtoD("01/01/1901"), CtoD("  /  /    "), exp_doc.fecha_pago)
+*		wfechanula   = Iif(exp_doc.estado $ "A,Y",Iif(exp_sec.fecha_doc=CtoD("01/01/1901"),CtoD("  /  /    "),exp_sec.fecha_doc),CTOD("  /  /    "))
+		wfechanula   = Iif(exp_sec.estado $ "A,Y",Iif(exp_sec.fecha_doc=CtoD("01/01/1901"),CtoD("  /  /    "),exp_sec.fecha_doc),CTOD("  /  /    "))
+		*If Inlist(exp_doc.cod_doc, "081", "084")
+		*	wfentregados = Iif(exp_sec.fecha_autorizacion=CtoD("01/01/1901"), CtoD("  /  /    "), exp_sec.fecha_autorizacion)
+		*	wfepago		 = Iif(exp_sec_pag.fecha_doc=CtoD("01/01/1901"), CtoD("  /  /    "), exp_sec_pag.fecha_doc)
+		*EndIf
+		* comparacion por combinacion ldelal, lempty
+		wcompara = wcompara_bak
+		If Inlist(exp_sec.estado,'A','Y') and ( ldelal = 01 or ldelal = 03 ) Then
+			wcompara = "sec_ejec+LEFT(DTOS(exp_doc.fecha_doc),6) <= Psec_ejec+lano_eje+lmes_eje"
+		EndIf
+		If &wcompara. Then
+			flag_pasa = f_evalua('1') && Evalua flag_pasa
+			If flag_pasa = 'S' Then
+				wfequiebre = f_evalua('2') && Evalua fecha de quiebre
+				* asignar valores *
+				wexp   = exp_sec.expediente
+				wcic   = exp_sec.ciclo
+				wfas   = exp_sec.fase
+				wsec   = exp_sec.secuencia
+				wcor   = exp_sec.correlativo
+				wori   = exp_fase.origen
+				wfte   = exp_fase.fuente_financ
+				wmon   = exp_sec.moneda
+				wtdc   = exp_sec.tipo_cambio
+				wcdocA = exp_sec.cod_doc
+				wndocA = exp_sec.num_doc
+				wfdocA = Iif(exp_sec.fecha_autorizacion=CtoD("01/01/1901"),CtoD("  /  /    "),exp_sec.fecha_autorizacion)
+				west   = Iif(exp_sec.estado $ "A,Y", "A", " ")
+				wese   = exp_sec.estado_envio
+				wmto   = Iif(west="A",exp_doc.monto*-1,exp_doc.monto)
+				wbco   = exp_sec.banco
+				wcta   = exp_sec.cta_cte
+				wcdo   = exp_doc.cod_doc
+				wndo   = exp_doc.num_doc
+				wnom   = exp_doc.nombre
+				wtgiro = exp_fase.tipo_giro
+				wglosa = m.glosa
+				*
+				*-- Agregado el 31/01/2006 C.Tapia, M.Yusa
+				wgener = ""	
+				wcngener = "x"
+				SELECT exp_clasif
+				SEEK exp_sec.ano_eje+exp_sec.sec_ejec+exp_sec.expediente+exp_sec.ciclo+exp_sec.fase+exp_sec.secuencia+exp_sec.correlativo
+				SCAN WHILE 	ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo == ;
+							exp_sec.ano_eje+exp_sec.sec_ejec+exp_sec.expediente+exp_sec.ciclo+exp_sec.fase+exp_sec.secuencia+exp_sec.correlativo
+					*-agregado para el cambio de clasificador*-------**
+	*!*					SELECT maestro_clasificador
+	*!*					pnNivel =IIF(SEEK(exp_sec.ano_eje+exp_clasif.id_clasificador,"maestro_clasificador","idclasif") AND ;
+	*!*								maestro_clasificador.Origen_clasificador='3',6,4)
+	*!*					*-
+	*!*					Wclasificador	= oSiafRutina.clasificador_codigo(exp_sec.ano_eje,exp_clasif.id_clasificador,pnNivel,"T")
+	*!*					*-------------------------------------------
+	*!*					wtra	= SUBSTR(Wclasificador,1,1)
+	*!*					wgen	= SUBSTR(Wclasificador,2,1)
+	*!*					wsubg	= SUBSTR(Wclasificador,3,2)
+	*!*					wsubgd	= SUBSTR(Wclasificador,5,2)
+	*!*					wesp	= SUBSTR(Wclasificador,7,2)
+	*!*					wespd	= SUBSTR(Wclasificador,9,2)
+					IF gcano_eje>='2009'
+						SELECT maestro_clasificador
+						pnNivel =IIF(SEEK(exp_sec.ano_eje+exp_clasif.id_clasificador,"maestro_clasificador","idclasif") AND ;
+									maestro_clasificador.Origen_clasificador='3',6,4)
+						*-
+						Wclasificador	= clasificador_codigo(exp_sec.ano_eje,exp_clasif.id_clasificador,pnNivel,"T")
+						*-------------------------------------------
+						wtra	= SUBSTR(Wclasificador,1,1)
+						wgen	= SUBSTR(Wclasificador,2,1)
+						wsubg	= SUBSTR(Wclasificador,3,2)
+						wsubgd	= SUBSTR(Wclasificador,5,2)
+						wesp	= SUBSTR(Wclasificador,7,2)
+						wespd	= SUBSTR(Wclasificador,9,2)
+					ELSE 
+						wtra = exp_clasif.categ_gasto
+						wgen = exp_clasif.grupo_gasto
+					ENDIF 
+					* Valida la Categoria del Gasto *
+					If lcateg <> 'T' Then
+	*!*						If lcateg <> exp_clasif.categ_gasto Then
+	*!*							Loop
+	*!*						EndIf
+						If lcateg <> wtra Then
+							Loop
+						EndIf
+					ENDIF
+					*IF wcngener != exp_clasif.categ_gasto+exp_clasif.grupo_gasto
+						*wcngener = exp_clasif.categ_gasto+exp_clasif.grupo_gasto
+					IF wcngener != wtra+wgen
+						wcngener = wtra+wgen
+						IF EMPTY(wgener)
+							*wgener = exp_clasif.categ_gasto+exp_clasif.grupo_gasto
+							wgener = wtra+wgen
+						ELSE
+							*wgener = wgener + ', ' + exp_clasif.categ_gasto+exp_clasif.grupo_gasto
+							wgener = wgener + ', ' + wtra+wgen
+						ENDIF
+					ELSE
+						LOOP
+					ENDIF
+				ENDSCAN
+				IF !EMPTY(wgener) .OR. wcic = 'I' THEN
+					DO CASE
+						CASE wcdo = '026'
+							wnombre_doc = 'Nota de Cargo'
+						CASE wcdo = '065'
+							wnombre_doc = 'Cheque Girado'
+						CASE wcdo = '068'
+							wnombre_doc = 'Carta Orden'
+						CASE wcdo = '081'
+							wnombre_doc = 'Transferencias Interbancarias'
+						CASE wcdo = '084'
+							wnombre_doc = 'Carta Orden Electrónica'
+						CASE wcdo = '089'
+							wnombre_doc = 'Transferencias a otras Cuentas'
+					ENDCASE
+					Insert Into CUR_DOCX Values ( wori,       wfte,        wbco,          wcta,        ;
+												  wexp,       wcic,        wfas,          wsec, 	   ;
+												  wcor,       wcdo,        wndo,          wfemitidos,  ;
+												  wnom,       wmon,        wtdc,          wmto,        ;
+												  west,       wese,        wfentregados,  wfepago,     ;
+												  wfechanula, wfequiebre,  wcdocA,        wndocA,      ;
+												  wfdocA,     wnombre_doc, wcateg,  	  wgener,	   ;
+												  wtgiro,     wglosa 	)
+				ENDIF
+				
+			EndIf
+		EndIf
+	ENDIF 
+ENDIF 
+*
+Return
+
+
+*------------------
+FUNCTION f_evalua()
+*------------------
+LPARAMETERS LPreturn
+*
+* consistencia de mes para Todo criterio *
+flag_pasa = 'S'
+Do Case
+	Case Inlist(ldelal,01,03) && Del mes ó Del Día ( Em, En ca, Entr, En Tr, Pa, Pa sin Fecha de Entrega )
+		If !Empty(wfemitidos)
+			Do Case
+				Case lempty == 02  						&& Encartera
+					If !Empty(wfentregados) .and. Left(Dtos(wfentregados),6) <= Left(Dtos(lfecha),6)
+						flag_pasa = 'N'
+					EndIf
+				Case lempty == 03  						&& Entregados
+					If Empty(wfentregados)
+						flag_pasa = 'N'
+					EndIf
+				Case lempty == 04  						&& Entransito
+					If Empty(wfentregados) .or. Left(Dtos(wfentregados),6) > LEFT(DTOS(lfecha),6) Then
+						flag_pasa = 'N'
+					Else
+						if !Empty(wfepago) .and. Left(Dtos(wfepago),6) <= LEFT(DTOS(lfecha),6) Then
+							flag_pasa = 'N'
+						Endif
+					Endif
+				Case lempty == 05						&& Pagado
+					If Empty(wfepago)
+						flag_pasa = 'N'
+					Endif
+				Case lempty == 06						&& Pagado Sin Fecha de Entrega
+					If !Empty(wfepago)
+						If !Empty(wfentregados)
+							flag_pasa = 'N'
+						Endif
+					Else
+						flag_pasa = 'N'
+					Endif
+			EndCase
+		Else
+			flag_pasa = 'N'
+		Endif
+		*
+		wfequiebre = wfemitidos && fecha de quiebre del reporte
+		*
+		If exp_sec.estado $ 'A,Y' Then
+			wfequiebre = exp_sec.fecha_doc && fecha de quiebre del reporte
+*!*				If Left(Dtos(wfechanula),6) <> Left(Dtos(lfecha),6) Then && chequeando LG
+*!*					flag_pasa = 'N'
+*!*				EndIf
+			If (Left(Dtos(wfechanula),8) > Left(Dtos(lfecha),8)) OR ((left(Dtos(wfechanula),8) < Left(Dtos(lfecha),6)+'01')) Then && chequeando LG
+				flag_pasa = 'N'
+			ENDIF
+			IF ldelal = 03
+				If Left(Dtos(wfechanula),8) <> Left(Dtos(lfecha),8) Then && chequeando LG
+					flag_pasa = 'N'
+				EndIf
+			ENDIF
+		ELSE
+			If Inlist(lempty,01,02,04)
+				If ldelal = 01
+*!*						If left(Dtos(wfemitidos),6) <> Left(Dtos(lfecha),6) Then
+*!*							flag_pasa = 'N'
+*!*						EndIf
+					If (left(Dtos(wfemitidos),8) > Left(Dtos(lfecha),8)) THEN
+						flag_pasa = 'N'
+					EndIf
+				Else
+					If left(Dtos(wfemitidos),8) <> Left(Dtos(lfecha),8) Then
+						flag_pasa = 'N'
+					EndIf
+				EndIf
+			EndIf
+		EndIf
+	Case ldelal == 02 and lempty == 01 && Al mes y Solo Em
+		If Left(Dtos(wfemitidos),8) > Left(Dtos(lfecha),8) Then
+			flag_pasa = 'N'
+		EndIf
+		wfequiebre = wfemitidos && fecha de quiebre del reporte
+		If exp_sec.estado $ 'A,Y' Then
+			If Left(Dtos(wfechanula),6) > Left(Dtos(wfemitidos),6) Then
+				wfequiebre = wfechanula && fecha de quiebre del reporte
+				If Left(Dtos(wfechanula),6) > Left(Dtos(lfecha),6) Then
+					flag_pasa = 'N'
+				EndIf
+			EndIf
+		Endif
+	Case ldelal == 02 and lempty == 02 && Al mes y Solo En Ca
+		If Left(Dtos(wfemitidos),8) > Left(Dtos(lfecha),8) Then
+			flag_pasa = 'N'
+		Else
+			If !Empty(wfentregados) .and. Left(Dtos(wfentregados),6) <= Left(Dtos(lfecha),6) Then
+				flag_pasa = 'N'
+			Endif
+		Endif
+		If exp_sec.estado $ 'A,Y' Then
+			If Left(Dtos(wfechanula),6) > Left(Dtos(lfecha),6) Then
+				flag_pasa = 'N'
+			EndIf
+		Endif
+		wfequiebre = wfemitidos && fecha de quiebre del reporte
+	Case ldelal == 02 and lempty == 03 && Al mes y Solo Entr
+		If Left(Dtos(wfentregados),8) > Left(Dtos(lfecha),8) or Empty(wfentregados) Then
+			flag_pasa = 'N'		
+		Endif
+		wfequiebre = wfentregados && fecha de quiebre del reporte
+		If exp_sec.estado $ 'A,Y' Then
+			If Left(Dtos(wfechanula),6) > Left(Dtos(wfentregados),6) Then
+				wfequiebre = wfechanula && fecha de quiebre del reporte
+				If Left(Dtos(wfechanula),6) > Left(Dtos(lfecha),6) Then
+					flag_pasa = 'N'
+				EndIf
+			EndIf
+		Endif
+	Case ldelal == 02 and lempty == 04 && Al mes y Solo En tr
+		If Empty(wfentregados) .or. Left(Dtos(wfentregados),8) > Left(Dtos(lfecha),8)
+			flag_pasa = 'N'
+		Else
+			If !Empty(wfepago) .and. Left(Dtos(wfepago),6) <= Left(Dtos(lfecha),6)
+				flag_pasa = 'N'
+			EndIf
+		EndIf
+		If exp_sec.estado $ 'A,Y' Then
+			If Left(Dtos(wfechanula),6) > Left(Dtos(lfecha),6) Then
+				flag_pasa = 'N'
+			EndIf
+		Endif
+		wfequiebre = wfentregados && fecha de quiebre del reporte
+	Case ldelal == 02 and lempty == 05 && Al mes y Solo Pa
+		If Left(Dtos(wfepago),8) > Left(Dtos(lfecha),8) Then
+			flag_pasa = 'N'
+		Endif
+		wfequiebre = wfepago && fecha de quiebre del reporte
+	Case ldelal == 02 and lempty == 06 && Al mes y Solo Pa sin Fecha de Entrega
+		If Left(Dtos(wfepago),8) > Left(Dtos(lfecha),8) Then
+			flag_pasa = 'N'
+		Endif
+		If !Empty(wfepago) Then
+			If !Empty(wfentregados)
+				flag_pasa = 'N'
+			Endif
+		Else
+			flag_pasa = 'N'
+		Endif
+		wfequiebre = wfepago && fecha de quiebre del reporte
+EndCase
+LPreturn = Iif(LPreturn='1',flag_pasa,wfequiebre)
+*
+Return LPreturn							

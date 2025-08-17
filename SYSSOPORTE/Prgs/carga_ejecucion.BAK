@@ -1,0 +1,611 @@
+lano_eje  = gcano_eje
+lsec_ejec = gcsec_ejec
+
+USE siaf!certificado_fase			IN 0 SHARED AGAIN ORDER tag certi_fase 	ALIAS certi_fase
+USE siaf!certificado_secuencia		IN 0 SHARED AGAIN ORDER tag certi_sec	ALIAS certi_sec
+USE siaf!Ejecucion_Mpp 				IN 0 SHARED AGAIN ORDER TAG ejec_mppp
+
+IF !USED('Cur_Ejecucion_Mpp')
+	CREATE CURSOR Cur_Ejecucion_Mpp	(;
+		ano_eje				C(4)	,;
+		sec_ejec			C(6)	,;
+		mes_eje				C(2)	,;
+		ciclo				C(1)	,;
+		origen				C(1)	,;
+		fuente_financ		C(2)	,;
+		tipo_recurso		C(2)	,;
+		id_clasificador		C(7)	,;
+		sec_func			C(4)	,;
+		certificado			N(19,2)	,;
+		estado				C(1)	)
+	INDEX ON ano_eje+sec_ejec+mes_eje+ciclo+origen+fuente_financ+tipo_recurso+id_clasificador+sec_func TAG cur_inx
+	INDEX ON ano_eje+sec_ejec+mes_eje+fuente_financ+id_clasificador+sec_func TAG cur_certi
+ENDIF
+
+
+SELECT Cur_Ejecucion_Mpp
+ZAP
+
+* SELECION DEL AÑO
+DO CASE
+	CASE VAL(lano_eje) > 1999
+		nano_fin	= INT(val(lano_eje))
+		nano_ini	= nano_fin-1
+	CASE VAL(lano_eje) <= 1999
+		nano_fin	= INT(VAL(lano_eje))
+		nano_ini	= INT(VAL(lano_eje))
+ENDCASE
+
+* PROCESA SELECCION
+sano_eje = PADL(nano_fin,4,"0")
+DO Compromiso_Anual
+DO Certificado
+DO ano_2011
+IF nano_ini <> nano_fin THEN
+	sano_eje = PADL(nano_ini,4,"0")
+ENDIF
+nano_ini=PADL(nano_ini,4,'0')
+nano_fin=PADL(nano_fin,4,'0')
+
+DO Ano_2011_ingreso WITH nano_fin,nano_fin
+DO Ano_2011_ingreso WITH nano_ini,nano_ini
+
+
+* INICIA CARGA EN "ejecucion_mpp"
+IF RECCOUNT('Cur_Ejecucion_Mpp') > 0 THEN
+	*
+	lDeleted = SET('DELETED')
+	SET DELETE OFF
+	*
+	* LIMPIA "ejecucion_mpp"
+	SELECT Ejecucion_Mpp
+	SEEK lano_eje+lsec_ejec
+	SCAN WHILE ano_eje+sec_ejec == lano_eje+lsec_ejec
+		REPLACE ;
+			certificado WITH 0
+		DELETE
+	ENDSCAN
+	
+	*
+	* CARGA "ejecucion_mpp"
+	SELECT cur_ejecucion_mpp
+	SCAN ALL
+		lckey	=	Cur_Ejecucion_Mpp.ano_eje			+;
+					Cur_Ejecucion_Mpp.sec_ejec			+;
+					Cur_Ejecucion_Mpp.mes_eje			+;
+					Cur_Ejecucion_Mpp.ciclo				+;
+					Cur_Ejecucion_Mpp.origen			+;
+					Cur_Ejecucion_Mpp.fuente_financ		+;
+					Cur_Ejecucion_Mpp.tipo_recurso		+;
+					Cur_Ejecucion_Mpp.id_clasificador	+;
+					Cur_Ejecucion_Mpp.sec_func			
+		IF SEEK(lckey,'Ejecucion_Mpp','ejec_mppp') THEN
+			IF DELETED('Ejecucion_Mpp') THEN
+				RECALL IN Ejecucion_Mpp
+			ENDIF
+			REPLACE ;
+				Ejecucion_Mpp.certificado WITH Ejecucion_Mpp.certificado + Cur_Ejecucion_Mpp.certificado, ;
+		ELSE
+			INSERT INTO Ejecucion_Mpp	(;
+				ano_eje					,;
+				sec_ejec				,;
+				mes_eje					,;
+				ciclo					,;
+				origen					,;
+				fuente_financ			,;
+				tipo_recurso			,;
+				id_clasificador			,;
+				sec_func				,;
+				ejecucion				,;
+				certificado				,;
+				estado 					);
+				VALUES					(;
+				Cur_Ejecucion_Mpp.ano_eje			,;
+				Cur_Ejecucion_Mpp.sec_ejec			,;
+				Cur_Ejecucion_Mpp.mes_eje			,;
+				Cur_Ejecucion_Mpp.ciclo				,;
+				Cur_Ejecucion_Mpp.origen			,;
+				Cur_Ejecucion_Mpp.fuente_financ		,;
+				Cur_Ejecucion_Mpp.tipo_recurso		,;
+				Cur_Ejecucion_Mpp.id_clasificador	,;
+				Cur_Ejecucion_Mpp.sec_func			,;
+				Cur_Ejecucion_Mpp.ejecucion			,;
+				Cur_Ejecucion_Mpp.certificado		,;
+				Cur_Ejecucion_Mpp.estado 			)
+		ENDIF
+	ENDSCAN
+	*
+	SET DELETE &lDeleted.
+	*
+ENDIF
+*
+USE IN Cur_Ejecucion_Mpp
+*
+IF USED('Ejecucion_Mpp')
+	USE IN Ejecucion_Mpp
+ENDIF
+
+
+PROCEDURE Certificado
+SELE certi_sec
+SET ORDER TO certi_sec
+SEEK sano_eje+lsec_ejec
+SCAN WHILE  ano_eje+sec_ejec = sano_eje+lsec_ejec
+
+	*
+	=SEEK(certi_sec.ano_eje+certi_sec.sec_ejec+certi_sec.certificado,'certi','certi')
+	=SEEK(certi_sec.ano_eje+certi_sec.sec_ejec+certi_sec.certificado+certi_sec.secuencia,'certi_fase','certi_fase')
+	
+	IF !(certi_sec.estado_registro == 'A' AND certi_fase.es_compromiso == 'N') THEN && Filtro de pedidos de certificados
+		LOOP
+	ELSE
+		IF !INLIST(tipo_registro,'R','A','H')
+			IF certi_sec.ind_certificacion = 'N'
+				LOOP
+			ENDIF
+		ENDIF
+	ENDIF
+	
+
+	wmes_pro = PADL(MONTH(certi_sec.fecha_bd_oracle),2,'0')
+	
+	* CONSISTENCIA DE MES
+	IF wmes_pro <> lmes_eje THEN
+		LOOP
+	ENDIF
+	
+	* GASTOS
+	wfte	= certi_fase.fuente_financ
+	wexp	= certi_fase.certificado
+	wsec	= certi_sec.secuencia
+	wcor	= certi_sec.correlativo
+
+	* CLASIFICADOR GASTOS
+	SELE certi_clasif
+	SEEK sano_eje+lsec_ejec+certi.certificado+wsec+wcor
+	SCAN WHILE  ano_eje+sec_ejec+certificado+secuencia+correlativo = sano_eje+lsec_ejec+certi.certificado+wsec+wcor
+		wexp    = certi_clasif.certificado
+		widc	= certi_clasif.id_clasificador
+
+		SELECT certi_meta
+		SEEK Sano_eje+lsec_ejec+wexp+wsec+wcor+widc
+		SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo+id_clasificador = ;
+				   sano_eje+lsec_ejec+wexp+wsec+wcor+widc  &&FOR exp_meta.estado_envio='A'
+			wmet  = certi_meta.sec_func
+			wmto  = certi_meta.monto_nacional + certi_meta.monto_nacional_ajuste
+			
+			IF SEEK(lano_eje+lsec_ejec+wmes_pro+wfte+widc+wmet,'cur_ejecucion_mpp','cur_certi')
+				REPLACE cur_ejecucion_mpp.certificado WITH cur_ejecucion_mpp.certificado+wmto
+			ELSE
+				INSERT INTO CUR_EJECUCION_MPP	(;
+					ano_eje						,;
+					sec_ejec					,;
+					mes_eje						,;
+					ciclo						,;
+					origen						,;
+					fuente_financ				,;
+					tipo_recurso				,;
+					id_clasificador				,;
+					sec_func					,;
+					ejecucion					,;
+					certificado 				,;
+					comprometido_anual			,;
+					Compromiso					,;
+					Devengado					,;
+					Girado						,;
+					Pagado						,;
+					anulacion					,;
+					estado						);
+					VALUES 						(;
+					lano_eje					,;
+					lsec_ejec					,;
+					wmes_pro					,;
+					'G'							,;
+					'1'							,;
+					wfte						,;
+					'0 '						,;
+					widc						,;
+					wmet						,;
+					0							,;
+					wmto						,;
+					0							,;
+					0							,;
+					0							,;
+					0							,;
+					0							,;
+					0							,;
+					'P'							)
+			ENDIF
+		ENDSCAN
+	ENDSCAN
+ENDSCAN
+RETURN
+
+
+
+PROCEDURE Compromiso_Anual
+SELE certi_sec
+SET ORDER TO certi_sec
+SEEK sano_eje+lsec_ejec
+SCAN WHILE  ano_eje+sec_ejec = sano_eje+lsec_ejec
+
+	*
+	=SEEK(certi_sec.ano_eje+certi_sec.sec_ejec+certi_sec.certificado,'certi','certi')
+	=SEEK(certi_sec.ano_eje+certi_sec.sec_ejec+certi_sec.certificado+certi_sec.secuencia,'certi_fase','certi_fase')
+
+	IF !(certi_sec.estado_registro == 'A' AND certi_sec.ind_certificacion == 'N') THEN && Filtro de pedidos de certificados
+		LOOP
+	ELSE
+		IF certi_fase.es_compromiso = 'N'
+			LOOP
+		ENDIF
+	ENDIF
+	
+	wmes_pro = PADL(MONTH(certi_sec.fecha_bd_oracle),2,'0')
+	
+	* CONSISTENCIA DE MES
+	IF wmes_pro <> lmes_eje THEN
+		LOOP
+	ENDIF
+	
+	* GASTOS
+	wfte	= certi_fase.fuente_financ
+	wexp	= certi_fase.certificado
+	wsec	= certi_sec.secuencia
+	wcor	= certi_sec.correlativo
+
+	* CLASIFICADOR GASTOS
+	SELE certi_clasif
+	SEEK sano_eje+lsec_ejec+certi.certificado+wsec+wcor
+	SCAN WHILE  ano_eje+sec_ejec+certificado+secuencia+correlativo = sano_eje+lsec_ejec+certi.certificado+wsec+wcor
+		wexp    = certi_clasif.certificado
+		widc	= certi_clasif.id_clasificador
+
+		SELECT certi_meta
+		SEEK Sano_eje+lsec_ejec+wexp+wsec+wcor+widc
+		SCAN WHILE ano_eje+sec_ejec+certificado+secuencia+correlativo+id_clasificador = ;
+				   sano_eje+lsec_ejec+wexp+wsec+wcor+widc  &&FOR exp_meta.estado_envio='A'
+			wmet  = certi_meta.sec_func
+			wmto  = certi_meta.monto_nacional + certi_meta.monto_nacional_ajuste
+			
+			IF SEEK(lano_eje+lsec_ejec+wmes_pro+wfte+widc+wmet,'cur_ejecucion_mpp','cur_certi')
+				REPLACE cur_ejecucion_mpp.comprometido_anual WITH cur_ejecucion_mpp.comprometido_anual+wmto
+			ELSE
+				INSERT INTO CUR_EJECUCION_MPP	(;
+					ano_eje						,;
+					sec_ejec					,;
+					mes_eje						,;
+					ciclo						,;
+					origen						,;
+					fuente_financ				,;
+					tipo_recurso				,;
+					id_clasificador				,;
+					sec_func					,;
+					ejecucion					,;
+					certificado					,;
+					comprometido_anual			,;
+					Compromiso					,;
+					Devengado					,;
+					Girado						,;
+					Pagado						,;
+					anulacion					,;
+					estado						);
+					VALUES 						(;
+					lano_eje					,;
+					lsec_ejec					,;
+					wmes_pro					,;
+					'G'							,;
+					'1'							,;
+					wfte						,;
+					'0 '						,;
+					widc						,;
+					wmet						,;
+					0							,;
+					0							,;
+					wmto						,;
+					0							,;
+					0							,;
+					0							,;
+					0							,;
+					0							,;
+					'P'							)
+			ENDIF
+		ENDSCAN
+	ENDSCAN
+ENDSCAN
+RETURN
+
+
+
+PROCEDURE Ano_2011
+SELE exp_sec
+SET ORDER TO exp_sec
+SEEK sano_eje+lsec_ejec
+SCAN WHILE  ano_eje+sec_ejec = sano_eje+lsec_ejec FOR exp_sec.estado_envio == 'A' 
+	IF !( exp_sec.edicion $ " /E/I/R" or EMPTY(exp_sec.edicion) ) THEN
+		LOOP
+	ENDIF
+	IF INLIST(exp_sec.estado,"X") THEN 	&& NO ANULADOS POR ERROR
+		LOOP
+	ENDIF
+	*
+	=SEEK(exp_sec.ano_eje+exp_sec.sec_ejec+exp_sec.expediente,'exp','expediente')
+	=SEEK(exp_sec.ano_eje+exp_sec.sec_ejec+exp_sec.expediente+exp_sec.ciclo+exp_sec.fase+exp_sec.secuencia,'exp_fase','exp_fase')
+	=SEEK(exp_sec.ano_eje+exp_sec.sec_ejec+exp_sec.expediente+exp_sec.ciclo+exp_sec.fase+exp_sec.secuencia+exp_sec.correlativo,'exp_doc','exp_doc')
+	*
+	IF exp_fase.tipo_compromiso != "11" THEN  && SOLO TC '11'
+		LOOP
+	ENDIF
+	*
+	IF EXP.tipo_operacion <> "EO" .and. !EMPTY(EXP.expediente_encargante) .and. ;
+	   !INLIST(EXP.sec_ejec2,'005000') THEN && No Muestra Encargos Recibidos
+		LOOP
+	ENDIF
+	*
+	IF EXP_FASE.fuente_financ = '88' THEN && NO FUENTE '88'
+		LOOP
+	ENDIF
+	**
+	wmes='XX'
+	wano='XXXX'
+	DO CASE
+		CASE exp_sec.ciclo+exp_sec.fase == "GC" 
+			IF INLIST(exp_sec.estado+exp_sec.edicion+exp_sec.cod_doc,"TR034","TR099","DR034","DR099")
+				wmes = 'XX'
+			ELSE
+				wmes = PADL(MONTH(exp_sec.fecha_bd_oracle),2,'0')
+				wano = PADL(YEAR(exp_sec.fecha_bd_oracle),4,'0')
+			ENDIF
+		CASE exp_sec.ciclo+exp_sec.fase == "GD" OR ;
+			exp_sec.ciclo+exp_sec.fase == "GG" OR ;
+			exp_sec.ciclo+exp_sec.fase == "GP" 			
+			wmes = PADL(MONTH(exp_sec.fecha_bd_oracle),2,'0')
+			wano = PADL(YEAR(exp_sec.fecha_bd_oracle),4,'0')
+
+	ENDCASE
+	
+	* CONSISTENCIA DE AÑO
+	IF PADL(gcano_eje,4,'0') <> wano
+		LOOP
+	ENDIF
+	
+	* CONSISTENCIA DE MES
+	IF INLIST(wmes,'XX','NN') THEN
+		LOOP
+	ENDIF
+	IF wmes <> lmes_eje THEN
+		LOOP
+	ENDIF
+
+	* GASTOS
+	IF exp_sec.ciclo+exp_sec.fase<>"IR" THEN
+		wori	= exp_fase.origen
+		wfte	= exp_fase.fuente_financ
+		wtre	= exp_fase.tipo_recurso
+		wexp	= exp_fase.expediente
+		wcic	= exp_fase.ciclo
+		wfas	= exp_fase.fase
+		wsec	= exp_sec.secuencia
+		wcor	= exp_sec.correlativo
+
+		* CLAISIFICADOR GASTOS
+		SELE exp_clasif
+		SEEK sano_eje+lsec_ejec+exp.expediente+wcic+wfas+wsec+wcor
+		SCAN WHILE  ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo = ;
+					sano_eje+lsec_ejec+exp.expediente+wcic+wfas+wsec+wcor
+			wexp    = exp_clasif.Expediente
+			=SEEK(exp_clasif.ano_eje+exp_clasif.id_clasificador,'maestro_clasificador','IDCLASIF')
+			wcla	= maestro_clasificador.clasificador
+			widc	= exp_clasif.id_clasificador
+			
+			IF LEFT(wcla,02) $ '31/00' THEN && NO SUB, CLASIF '00/31'  Validacion anterior a la v 8.7.0 (Ejecucion 2009)
+				LOOP
+			ENDIF
+			SELECT exp_meta
+			SEEK Sano_eje+lsec_ejec+wexp+wcic+wfas+wsec+wcor+widc
+			SCAN WHILE ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo+id_clasificador = ;
+					   sano_eje+lsec_ejec+wexp+wcic+wfas+wsec+wcor+widc  &&FOR exp_meta.estado_envio='A'
+				wmet  = exp_meta.sec_func
+				wmto  = 0
+				wanu  = 0
+				
+				IF exp_sec.estado $ 'D/R/A'
+					wanu  = exp_meta.monto_nacional*-1
+				ELSE
+					wmto  = exp_meta.monto_nacional
+				ENDIF
+				IF SEEK(lano_eje+lsec_ejec+wmes+wcic+wori+wfte+wtre+widc+wmet,'cur_ejecucion_mpp','cur_inx')
+					REPLACE ;
+						cur_ejecucion_mpp.ejecucion  	WITH 0,;
+						cur_ejecucion_mpp.Compromiso 	WITH cur_ejecucion_mpp.Compromiso+IIF(exp_sec.ciclo+exp_sec.fase=="GC",wmto-wanu,0),;
+						cur_ejecucion_mpp.Devengado		WITH cur_ejecucion_mpp.Devengado+IIF(exp_sec.ciclo+exp_sec.fase=="GD",wmto-wanu,0),;
+						cur_ejecucion_mpp.Girado		WITH cur_ejecucion_mpp.Girado+IIF(exp_sec.ciclo+exp_sec.fase=="GG",wmto-wanu,0),;
+						cur_ejecucion_mpp.Pagado		WITH cur_ejecucion_mpp.Pagado+IIF(exp_sec.ciclo+exp_sec.fase=="GP",wmto-wanu,0),;
+						cur_ejecucion_mpp.anulacion 	WITH cur_ejecucion_mpp.anulacion + wanu							
+				ELSE
+					INSERT INTO CUR_EJECUCION_MPP	(;
+						ano_eje						,;
+						sec_ejec					,;
+						mes_eje						,;
+						ciclo						,;
+						origen						,;
+						fuente_financ				,;
+						tipo_recurso				,;
+						id_clasificador				,;
+						sec_func					,;
+						ejecucion					,;
+						Compromiso					,;
+						Devengado					,;
+						Girado						,;
+						Pagado						,;
+						anulacion					,;
+						estado						);
+						VALUES 						(;
+						lano_eje					,;
+						lsec_ejec					,;
+						wmes						,;
+						wcic						,;
+						wori						,;
+						wfte						,;
+						wtre						,;
+						widc						,;
+						wmet						,;
+						0							,;
+						IIF(exp_sec.ciclo+exp_sec.fase=="GC",wmto-wanu,0),;
+						IIF(exp_sec.ciclo+exp_sec.fase=="GD",wmto-wanu,0),;
+						IIF(exp_sec.ciclo+exp_sec.fase=="GG",wmto-wanu,0),;
+						IIF(exp_sec.ciclo+exp_sec.fase=="GP",wmto-wanu,0),;
+						wanu						,;
+						'P'							)
+				ENDIF
+			ENDSCAN
+		ENDSCAN
+	ENDIF
+
+ENDSCAN
+RETURN
+
+
+PROCEDURE Ano_2011_ingreso
+PARAMETERS nano_ini,nano_fin
+SELE exp_sec
+SET ORDER TO exp_sec
+SEEK nano_ini+lsec_ejec
+SCAN WHILE ano_eje+sec_ejec >= nano_ini+lsec_ejec and ano_eje+sec_ejec <= nano_fin+lsec_ejec FOR exp_sec.estado_envio == 'A'
+	
+	IF exp_sec.ciclo+exp_sec.fase <> "IR"
+		LOOP
+	ENDIF
+
+	IF !( exp_sec.edicion $ " /E/I/R" or EMPTY(exp_sec.edicion) ) THEN
+		LOOP
+	ENDIF
+	IF INLIST(exp_sec.estado,"X") THEN 	&& NO ANULADOS POR ERROR
+		LOOP
+	ENDIF
+	*
+	=SEEK(exp_sec.ano_eje+exp_sec.sec_ejec+exp_sec.expediente,'exp','expediente')
+	=SEEK(exp_sec.ano_eje+exp_sec.sec_ejec+exp_sec.expediente+exp_sec.ciclo+exp_sec.fase+exp_sec.secuencia,'exp_fase','exp_fase')
+	=SEEK(exp_sec.ano_eje+exp_sec.sec_ejec+exp_sec.expediente+exp_sec.ciclo+exp_sec.fase+exp_sec.secuencia+exp_sec.correlativo,'exp_doc','exp_doc')
+	*
+	IF exp_fase.tipo_compromiso!= "11" THEN  && SOLO TC '11'
+		LOOP
+	ENDIF
+	*
+	IF EXP_FASE.fuente_financ = '88'
+		LOOP
+	ENDIF
+	
+	wano_a = PADL(YEAR(exp_sec.fecha_doc),4,'0')
+*!*		wano_a = PADL(YEAR(exp_sec.fecha_bd_oracle),4,'0')
+	wano = PADL(YEAR(exp_doc.fecha_doc),4,'0')
+	
+	IF wano = '0000' THEN
+		wano = wano_a
+	ENDIF
+	
+	wmes_a = PADL(MONTH(exp_sec.fecha_doc),2,'0')
+*!*		wmes_a = PADL(MONTH(exp_sec.fecha_bd_oracle),2,'0')
+	wmes = PADL(MONTH(exp_doc.fecha_doc),2,'0')
+	
+	IF exp_sec.estado == 'Y' THEN
+		wmes = wmes_a
+		wano = wano_a
+	ENDIF
+	
+	IF val(gcano_eje) - VAL(nano_ini) == 1 AND VAL(exp_sec.correlativo)>1 AND PADL(gcano_eje,4,'0') == wano  THEN
+		=SEEK(exp_sec.ano_eje+exp_sec.sec_ejec+exp_sec.expediente+exp_sec.ciclo+exp_sec.fase+exp_sec.secuencia+'0001','exp_doc','exp_doc')
+		IF PADL(YEAR(exp_doc.fecha_doc),4,'0') == nano_ini
+			LOOP
+		ELSE
+			IF PADL(YEAR(exp_doc.fecha_doc),4,'0') = '0000'
+				=SEEK(exp_sec.ano_eje+exp_sec.sec_ejec+exp_sec.expediente+exp_sec.ciclo+exp_sec.fase+exp_sec.secuencia+'0001','exp_sec1','exp_sec')
+				IF PADL(YEAR(exp_sec1.fecha_doc),4,'0') == nano_ini
+*!*					IF PADL(YEAR(exp_sec1.fecha_bd_oracle),4,'0') == nano_ini
+					LOOP
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+	
+	IF PADL(gcano_eje,4,'0') <> wano
+		LOOP
+	ENDIF
+
+	IF wmes = '00' THEN
+		wmes = wmes_a
+	ENDIF
+		
+	IF INLIST(wmes,'XX','NN') THEN
+		LOOP
+	ENDIF
+	IF wmes <> lmes_eje THEN
+		LOOP
+	ENDIF
+
+	
+	* INGRESOS
+	IF exp_sec.ciclo+exp_sec.fase=="IR" THEN
+		wano = exp_fase.ano_eje
+		wori = exp_fase.origen
+		wfte = exp_fase.fuente_financ
+		wtre = exp_fase.tipo_recurso
+		wexp = exp_fase.expediente
+		wcic = exp_fase.ciclo
+		wfas = exp_fase.fase
+		wsec = exp_fase.secuencia
+		wcor = exp_sec.correlativo
+
+		* CLASIFICADOR INGRESOS
+		SELE exp_ing
+		SET ORDER TO  EXP_INGP   && ANO_EJE+SEC_EJEC+EXPEDIENTE+CICLO+FASE+SECUENCIA+CORRELATIVO+ID_CLASIFICADOR
+		SEEK wano+lsec_ejec+wexp+wcic+wfas+wsec+wcor
+		SCAN WHILE 	ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo = ; 
+					wano+lsec_ejec+wexp+wcic+wfas+wsec+wcor
+			wcla  = "00"
+			widc	= exp_ing.id_clasificador
+			wmto	= exp_ing.monto_nacional
+			wanu	= 0
+*!*				
+			IF SEEK(Gcano_eje+Widc,"maestro_clasificador","IDCLASIF")
+				wcla = maestro_clasificador.Clasificador
+			ENDIF
+					
+			IF LEFT(wcla,02) == "00" THEN && No Clasificador 00 && Validacion anterior a la v. 8.7.0 (Ejecucion 2009)
+				LOOP
+			ENDIF
+
+			IF SEEK(lano_eje+lsec_ejec+wmes+wcic+wori+wfte+wtre+widc+'0000','CUR_EJECUCION_MPP','CUR_INX')
+				REPLACE cur_ejecucion_mpp.ejecucion WITH cur_ejecucion_mpp.ejecucion + wmto
+			ELSE
+				INSERT INTO CUR_EJECUCION_MPP	(;
+					ano_eje						,;
+					sec_ejec					,;
+					mes_eje						,;
+					ciclo						,;
+					origen						,;
+					fuente_financ				,;
+					tipo_recurso				,;
+					id_clasificador				,;
+					sec_func					,;
+					ejecucion					,;
+					anulacion					,;
+					estado						);
+					VALUES						(;
+					lano_eje					,;
+					lsec_ejec					,;
+					wmes						,;
+					wcic						,;
+					wori						,;
+					wfte						,;
+					wtre						,;
+					widc						,;
+					'0000'						,;
+					wmto+wanu 					,;
+					wanu						,;
+					'P'							)
+			ENDIF
+		ENDSCAN
+	ENDIF
+ENDSCAN
+RETURN

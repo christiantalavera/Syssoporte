@@ -1,0 +1,264 @@
+PARAMETERS pPeriodo, pSec_ejec
+
+lcsec_ejec= psec_ejec
+USE siaf!ejecutora 					IN 0 SHARED AGAIN ORDER TAG sec_ejec 	ALIAS r_ejecutora
+USE siaf!meta 						IN 0 SHARED AGAIN ORDER TAG meta 		ALIAS r_meta
+USE siaf!act_proy_nombre			IN 0 SHARED AGAIN ORDER TAG act_proy 	ALIAS r_act_proy 
+USE siaf!programa_ppto_nombre		IN 0 SHARED AGAIN ORDER TAG progppto_n 	ALIAS programa_ppto_nombre1 
+USE siaf!nota_modificatoria_cab		IN 0 SHARED AGAIN ORDER TAG mp_notacab	ALIAS nota_cab
+USE siaf!nota_modificatoria_sec		IN 0 SHARED AGAIN ORDER TAG mp_notasec 	ALIAS nota_sec
+USE siaf!nota_modificatoria_det		IN 0 SHARED AGAIN ORDER TAG mp_notadet 	ALIAS nota_det
+USE siaf!nota_modificatoria_doc 	IN 0 SHARED AGAIN ORDER tag mp_notadoc  ALIAS nota_doc
+USE siaf!nota_modificatoria_doc_sec IN 0 SHARED AGAIN ORDER tag mp_notados  ALIAS nota_doc_sec
+
+
+CREATE CURSOR curModificacion (	ano_eje			c(0004), ;
+								sec_ejec		c(0006), ;
+								origen			c(0001), ;
+								fuente_financ	c(0002), ;
+								tipo_recurso	c(0002), ;
+								sec_func		c(0004), ;
+								id_clasificador c(0007), ;
+								modificacion	N(19))
+								
+INDEX ON ano_eje + sec_ejec + fuente_financ + tipo_recurso  + sec_func  TAG SecFunc 	
+INDEX ON ano_eje + sec_ejec + origen + fuente_financ + tipo_recurso + sec_func + id_clasificador TAG gto ADDITIVE  
+INDEX ON ANO_EJE+ID_CLASIFICADOR TAG IDCLASIF   ADDITIVE
+*MP_GASTOP   && ANO_EJE+SEC_EJEC+ORIGEN+FUENTE_FINANC+TIPO_RECURSO+SEC_FUNC+ID_CLASIFICADOR
+
+SELECT curModificacion 
+SET ORDER TO gto
+
+CREATE CURSOR curModificacion_det (	ano_eje				c(0004), ;
+									sec_ejec			c(0006), ;
+									origen				c(0001), ;
+									fuente_financ		c(0002), ;
+									tipo_modificacion	c(003) , ;
+									tipo_recurso		c(0002), ;
+									sec_func			c(0004), ;
+									id_clasificador		c(0007), ;
+									modificacion		N(19))
+
+INDEX ON ano_eje + sec_ejec + origen + fuente_financ + tipo_modificacion + tipo_recurso + sec_func + id_clasificador TAG gto ADDITIVE  
+SELECT curModificacion_det 
+SET ORDER TO GTO   && ANO_EJE+SEC_EJEC+ORIGEN+FUENTE_FINANC+TIPO_RECURSO+SEC_FUNC+ID_CLASIFICADOR 
+&&
+CREATE CURSOR curcab ;
+	(	ano_eje           c(0004) 	NULL, ;
+		ejecutora		  c(007) 		, ;
+		sec_ejec		  c(0006) 	NULL, ;
+		sec_ejec2		  c(0006) 	NULL, ;
+		sec_nota		  c(0010) 	NULL, ;
+		secuencia		  c(0004)   NULL, ;
+		mes_eje			  c(0002)	NULL, ;
+		ind_habilita	  c(0001)	NULL, ;
+		tipo_modificacion c(0003)	NULL, ;
+		cod_doc			  c(0003)	NULL, ;
+		num_doc			  c(0020)	NULL, ;
+		fecha_doc		  d			NULL, ;
+		cod_doc2		  c(0003)	NULL, ;
+		num_doc2		  c(0020)	NULL, ;
+		fecha_doc2		  d			NULL, ;
+		monto			  N(0019)	NULL, ;
+		notas			  c(0150)	NULL, ;
+		estado			  c(0001)	NULL, ;
+		estado2			  c(0001)	NULL, ;
+		estado_envio	  c(0001)	NULL, ;
+		estado_envio2	  c(0001)	NULL, ;
+		estado_envio3	  c(0001)	NULL, ;
+		seleccionar 	  N(0001)		, ;
+		detalle			  N(0001)	NULL, ;
+		fecha			  d		  	,;
+		observacion		  c(0150)	,;
+		unico			  c(0001)	)
+	
+SELECT curcab
+INDEX ON  ano_eje+sec_ejec+sec_ejec2+sec_nota+secuencia TAG NOTA
+INDEX ON ALLTRIM(STR(seleccionar)) TAG seleccion
+SET ORDER TO NOTA
+*!*	*!* Cargando el cursor con las notas modificatorias
+*!*	SELEC nota_cab
+*!*	SEEK gcano_eje
+*!*	SCAN WHILE ano_eje = gcano_eje
+*!*		SCATTER MEMVAR
+*!*	*	IF m.mes_eje > IIF(pPeriodo='06','06','12') THEN
+*!*		IF m.mes_eje > pPeriodo THEN
+*!*			LOOP
+*!*		ENDIF
+*!*		lckey=m.ano_eje+m.sec_ejec+m.sec_ejec2+m.sec_nota
+*!*		**&& ANO_EJE+SEC_EJEC+SEC_EJEC2+SEC_NOTA+SECUENCIA
+*!*		IF SEEK(lckey,'NOTA_SEC','mp_notasec')
+*!*			SELECT NOTA_SEC
+*!*			SCAN WHILE ano_eje+sec_ejec+sec_ejec2+sec_nota=lckey FOR !DELETED()
+*!*				** VERIFICANDO SI SE ENCUENTRA APROBADA Y EXISTE DOCUMENTO
+*!*				SCATTER NAME oNSec	
+*!*				**lckeyNSec= 	oNSec.ANO_EJE+oNSec.SEC_EJEC+oNSec.SEC_DOC+oNSec.SEC_EJEC2+oNSec.SEC_NOTA+oNSec.SECUENCIA
+*!*				lckeyNSec =	oNSec.ANO_EJE+oNSec.SEC_EJEC+oNSec.SEC_NOTA+oNSec.SECUENCIA
+*!*				lcCodDoc  = oNSec.Sec_Doc
+*!*				*** LLAVE DEL DOC_SEC MP_NOTADOS   && ANO_EJE+SEC_EJEC+SEC_DOC+SEC_EJEC2+SEC_NOTA+SECUENCIA
+*!*				IF EMPTY(alltrim(lcCodDoc)) THEN 
+*!*					LOOP
+*!*				ENDIF	
+*!*				** VERIFICANDO ESTADO DE APROBACION
+*!*				IF oNSec.ESTADO <>'A'
+*!*					LOOP
+*!*				ENDIF
+*!*				
+*!*				IF SEEK(lckeyNSec,"NOTA_DOC_SEC","SECUENCIA")
+*!*					SELECT NOTA_DOC_SEC
+*!*					SCAN WHILE ano_eje+sec_ejec2+sec_nota+secuencia = lckeyNSec FOR !DELETED()
+*!*						IF NOTA_DOC_SEC.sec_doc = lcCodDoc
+*!*					
+*!*							SELECT NOTA_DOC_SEC
+*!*							SCATTER NAME oNDSec
+*!*							lckeyNDoc= oNDSec.ANO_EJE+oNDSec.SEC_EJEC+oNDSec.SEC_DOC
+*!*							IF SEEK(lckeyNDoc,"NOTA_DOC","MP_NOTADOC") 
+*!*								IF NOTA_DOC.ESTADO = 'A' THEN
+*!*									m.estado 	= 'A'
+*!*									m.secuencia = oNSec.secuencia
+*!*									SELECT curcab
+*!*									APPEND BLANK
+*!*									GATHER MEMVAR
+*!*									exit 
+*!*								ELSE
+*!*									LOOP
+*!*								ENDIF
+*!*							ENDIF
+*!*						ELSE
+*!*							LOOP
+*!*						ENDIF
+*!*							
+*!*					ENDSCAN
+*!*				ELSE
+*!*					LOOP
+*!*				ENDIF	
+*!*				SELECT NOTA_SEC			
+*!*			ENDSCAN
+*!*		ELSE
+*!*			LOOP
+*!*		ENDIF	
+*!*		
+*!*		
+*!*		
+
+*!*	ENDSCAN
+*!*	*-
+*!*	SELECT * FROM curcab WHERE secuencia='0002' INTO CURSOR caux
+*!*	SELECT caux
+*!*	SCAN ALL
+*!*		SCATTER MEMVAR
+*!*		IF m.estado='A'
+*!*			lckey=M.ano_eje+M.sec_ejec+M.sec_ejec2+m.sec_nota
+*!*			=SEEK (lckey,'curcab','nota')
+*!*			SELECT curcab
+*!*			DELE WHILE ano_eje+sec_ejec+sec_ejec2+sec_nota=lckey
+*!*		ENDIF
+*!*		SELECT caux
+*!*	ENDSCAN
+
+SELEC nota_cab
+SEEK gcano_eje
+SCAN WHILE ano_eje = gcano_eje
+	SCATTER MEMVAR
+	lckey=M.ano_eje+M.sec_ejec+M.sec_ejec2+m.sec_nota
+	IF SEEK(lckey,'NOTA_SEC','mp_notasec')
+		SELECT nota_sec
+		SCAN WHILE ano_eje+sec_ejec+sec_ejec2+sec_nota=lckey
+			xkey = gcANO_EJE+gcSEC_EJEC_pliego+nota_sec.SEC_DOC
+			IF nota_sec.estado = 'A' then
+				* Reporte modificado por BB y LG el 05/09/2005
+				m.estado 	= nota_sec.estado
+				m.secuencia = nota_sec.secuencia
+				SELECT curcab
+				APPEND BLANK
+				GATHER MEMVAR
+			ENDIF
+		ENDSCAN
+	ELSE
+		LOOP
+	ENDIF
+ENDSCAN
+
+SELECT * FROM curcab WHERE secuencia='0002' INTO CURSOR caux
+SELECT caux
+SCAN ALL
+	SCATTER MEMVAR
+	IF m.estado='A'
+		lckey=M.ano_eje+M.sec_ejec+M.sec_ejec2+m.sec_nota
+		=SEEK (lckey,'curcab','nota')
+		SELECT curcab
+		DELE WHILE ano_eje+sec_ejec+sec_ejec2+sec_nota=lckey
+	ENDIF
+	SELECT caux
+ENDSCAN
+
+IF gcfuncion_entidad ='01'
+	lcambito='gcano_eje+psec_ejec'
+	lccond_ambito='ano_eje+sec_ejec = gcano_eje+psec_ejec'
+ELSE
+	lcambito='gcano_eje'
+	lccond_ambito='ano_eje = gcano_eje'
+ENDIF
+
+*-cargando las modificaciones
+SELECT nota_det
+SET RELATION TO ano_eje+sec_ejec+sec_func 			INTO r_meta			ADDITIVE
+SET RELATION TO ano_eje+sec_ejec 					INTO r_ejecutora 	ADDITIVE
+SET RELATION TO ano_eje+sec_ejec+sec_ejec2+sec_nota	INTO nota_cab 		ADDITIVE 
+SEEK &lcambito
+SCAN WHILE &lccond_ambito
+	SCATTER MEMVAR
+
+	IF LEFT(lcsec_ejec,1) <> '*' 	AND m.sec_ejec<> lcsec_ejec
+		IF m.sec_ejec<> lcsec_ejec THEN 
+			LOOP
+		ENDIF
+    ENDIF 	
+	lckey=m.ano_eje+m.sec_ejec+m.sec_ejec2+m.sec_nota
+	IF !SEEK(lckey,'curcab','NOTA') THEN
+		LOOP
+	ENDIF
+	m.tipo_modificacion = nota_cab.tipo_modificacion
+	lckey=m.ano_eje+m.sec_ejec+m.origen+m.fuente_financ+m.tipo_recurso+m.sec_func+m.id_clasificador
+	*-
+	IF !SEEK(lckey,'curModificacion','gto')
+		INSERT INTO curModificacion  ( ano_eje, sec_ejec, origen, fuente_financ, tipo_recurso,sec_func, id_clasificador, modificacion) ;
+			VALUES(	m.ano_eje, m.sec_ejec,	;
+			m.origen, m.fuente_financ, m.tipo_recurso,m.sec_func, m.id_clasificador, (m.monto_a - m.monto_de))
+	ELSE
+		REPLACE curModificacion.modificacion		WITH curModificacion.modificacion + (m.monto_a - m.monto_de)
+	ENDIF
+	lcKey_det = m.ano_eje+m.sec_ejec+m.origen+m.fuente_financ+m.tipo_modificacion+m.tipo_recurso+m.sec_func+m.id_clasificador
+	IF !SEEK(lckey,'curModificacion_det','gto')
+		INSERT INTO curModificacion_det  ( ano_eje, sec_ejec, origen, fuente_financ, tipo_modificacion, tipo_recurso,sec_func, id_clasificador, modificacion) ;
+			VALUES(	m.ano_eje, m.sec_ejec,	;
+			m.origen, m.fuente_financ, m.tipo_modificacion, m.tipo_recurso,m.sec_func, m.id_clasificador, (m.monto_a - m.monto_de))
+	ELSE
+		REPLACE curModificacion_det.modificacion		WITH curModificacion_det.modificacion + (m.monto_a - m.monto_de)
+	ENDIF
+	
+	SELECT nota_det	
+ENDSCAN
+SET RELATION TO
+
+
+USE IN r_ejecutora
+USE IN r_meta
+USE IN r_act_proy
+USE IN programa_ppto_nombre1
+USE IN nota_cab
+USE IN nota_sec
+USE IN nota_det
+USE IN nota_doc_sec
+USE in nota_doc
+IF USED('curcab') THEN 
+	USE IN curcab
+ENDIF 
+IF USED('caux') THEN 
+	USE IN caux
+ENDIF 
+IF USED('cejecutoraaux') THEN 
+	USE IN cejecutoraaux
+ENDIF 
+ 
+
