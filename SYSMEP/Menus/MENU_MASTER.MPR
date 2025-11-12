@@ -1,6 +1,6 @@
 *       *********************************************************
 *       *                                                         
-*       * 09/04/2025          MENU_MASTER.MPR           16:28:31  
+*       * 11/12/25           MENU_MASTER.MPR            08:00:21  
 *       *                                                         
 *       *********************************************************
 *       *                                                         
@@ -27,22 +27,31 @@
 SET SYSMENU TO
 SET SYSMENU AUTOMATIC
 
-DEFINE PAD _75m0zb98e OF _MSYSMENU PROMPT "Sistema" COLOR SCHEME 3 ;
+DEFINE PAD _7bn0h5qhm OF _MSYSMENU PROMPT "Sistema" COLOR SCHEME 3 ;
 	KEY ALT+S, ""
-DEFINE PAD _75m0zb98f OF _MSYSMENU PROMPT "Utilitarios" COLOR SCHEME 3 ;
+DEFINE PAD _7bn0h5qhn OF _MSYSMENU PROMPT "Aplicaciones" COLOR SCHEME 3 ;
+	KEY ALT+A, ""
+DEFINE PAD _7bn0h5qho OF _MSYSMENU PROMPT "Utilitarios" COLOR SCHEME 3 ;
 	KEY ALT+U, ""
-ON PAD _75m0zb98e OF _MSYSMENU ACTIVATE POPUP sistema
-ON PAD _75m0zb98f OF _MSYSMENU ACTIVATE POPUP utilitario
+ON PAD _7bn0h5qhm OF _MSYSMENU ACTIVATE POPUP sistema
+ON PAD _7bn0h5qhn OF _MSYSMENU ACTIVATE POPUP aplicacion
+ON PAD _7bn0h5qho OF _MSYSMENU ACTIVATE POPUP utilitario
 
 DEFINE POPUP sistema MARGIN RELATIVE SHADOW COLOR SCHEME 4
 DEFINE BAR 1 OF sistema PROMPT "Cambia Año"
 DEFINE BAR 2 OF sistema PROMPT "Salir"
 ON SELECTION BAR 1 OF sistema ;
-	DO _75m0zb98g ;
+	DO _7bn0h5qhp ;
 	IN LOCFILE("SYSMEP\MENUS\MENU_MASTER" ,"MPX;MPR|FXP;PRG" ,"WHERE is MENU_MASTER?")
 ON SELECTION BAR 2 OF sistema ;
-	DO _75m0zb98h ;
+	DO _7bn0h5qhq ;
 	IN LOCFILE("SYSMEP\MENUS\MENU_MASTER" ,"MPX;MPR|FXP;PRG" ,"WHERE is MENU_MASTER?")
+
+DEFINE POPUP aplicacion MARGIN RELATIVE SHADOW COLOR SCHEME 4
+DEFINE BAR 1 OF aplicacion PROMPT "Modificar Código del Convenio Masivo V1"
+DEFINE BAR 2 OF aplicacion PROMPT "Modificar Código del Convenio Masivo V1Modificar Código del Convenio Masivo V2"
+ON SELECTION BAR 1 OF aplicacion do form frmmodifica_convenio_masivo
+ON SELECTION BAR 2 OF aplicacion do form frmmodifica_convenio_meta_masivo
 
 DEFINE POPUP utilitario MARGIN RELATIVE SHADOW COLOR SCHEME 4
 DEFINE BAR 1 OF utilitario PROMPT "Reindexar Archivos"
@@ -50,10 +59,10 @@ DEFINE BAR 2 OF utilitario PROMPT "Eliminación Física de Registros"
 DEFINE BAR 3 OF utilitario PROMPT "Actualizar Tipo de Aporte"
 DEFINE BAR 4 OF utilitario PROMPT "Actualizar Descripcion del Pago"
 ON SELECTION BAR 1 OF utilitario ;
-	DO _75m0zb98i ;
+	DO _7bn0h5qhr ;
 	IN LOCFILE("SYSMEP\MENUS\MENU_MASTER" ,"MPX;MPR|FXP;PRG" ,"WHERE is MENU_MASTER?")
 ON SELECTION BAR 2 OF utilitario ;
-	DO _75m0zb98j ;
+	DO _7bn0h5qhs ;
 	IN LOCFILE("SYSMEP\MENUS\MENU_MASTER" ,"MPX;MPR|FXP;PRG" ,"WHERE is MENU_MASTER?")
 ON SELECTION BAR 3 OF utilitario do actualiza_tipo_aporte
 ON SELECTION BAR 4 OF utilitario DO actualizar_descripcion_pago
@@ -61,7 +70,7 @@ ON SELECTION BAR 4 OF utilitario DO actualizar_descripcion_pago
 
 *       *********************************************************
 *       *                                                         
-*       * _75M0ZB98G  ON SELECTION BAR 1 OF POPUP sistema         
+*       * _7BN0H5QHP  ON SELECTION BAR 1 OF POPUP sistema         
 *       *                                                         
 *       * Procedure Origin:                                       
 *       *                                                         
@@ -72,13 +81,13 @@ ON SELECTION BAR 4 OF utilitario DO actualizar_descripcion_pago
 *       *                                                         
 *       *********************************************************
 *
-PROCEDURE _75m0zb98g
+PROCEDURE _7bn0h5qhp
 DO FORM frmCambia_ano
 
 
 *       *********************************************************
 *       *                                                         
-*       * _75M0ZB98H  ON SELECTION BAR 2 OF POPUP sistema         
+*       * _7BN0H5QHQ  ON SELECTION BAR 2 OF POPUP sistema         
 *       *                                                         
 *       * Procedure Origin:                                       
 *       *                                                         
@@ -89,25 +98,25 @@ DO FORM frmCambia_ano
 *       *                                                         
 *       *********************************************************
 *
-PROCEDURE _75m0zb98h
+PROCEDURE _7bn0h5qhq
 SET SYSMENU TO defa
 CLEAR EVENTS
 
 
 *       *********************************************************
 *       *                                                         
-*       * _75M0ZB98I  ON SELECTION BAR 1 OF POPUP utilitario      
+*       * _7BN0H5QHR  ON SELECTION BAR 1 OF POPUP utilitario      
 *       *                                                         
 *       * Procedure Origin:                                       
 *       *                                                         
-*       * From Menu:  MENU_MASTER.MPR,            Record:    9    
+*       * From Menu:  MENU_MASTER.MPR,            Record:   13    
 *       * Called By:  ON SELECTION BAR 1 OF POPUP utilitario      
 *       * Prompt:     Reindexar Archivos                          
 *       * Snippet:    3                                           
 *       *                                                         
 *       *********************************************************
 *
-PROCEDURE _75m0zb98i
+PROCEDURE _7bn0h5qhr
 Do sf_reindexa in utilitarios.prg
 SET SYSMENU TO defa
 CLEAR EVENTS
@@ -115,18 +124,18 @@ CLEAR EVENTS
 
 *       *********************************************************
 *       *                                                         
-*       * _75M0ZB98J  ON SELECTION BAR 2 OF POPUP utilitario      
+*       * _7BN0H5QHS  ON SELECTION BAR 2 OF POPUP utilitario      
 *       *                                                         
 *       * Procedure Origin:                                       
 *       *                                                         
-*       * From Menu:  MENU_MASTER.MPR,            Record:   10    
+*       * From Menu:  MENU_MASTER.MPR,            Record:   14    
 *       * Called By:  ON SELECTION BAR 2 OF POPUP utilitario      
 *       * Prompt:     Eliminación Física de Registros             
 *       * Snippet:    4                                           
 *       *                                                         
 *       *********************************************************
 *
-PROCEDURE _75m0zb98j
+PROCEDURE _7bn0h5qhs
 Do sf_packea in utilitarios.prg
 SET SYSMENU TO defa
 CLEAR EVENTS

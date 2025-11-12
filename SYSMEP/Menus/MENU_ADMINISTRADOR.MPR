@@ -1,6 +1,6 @@
 *       *********************************************************
 *       *                                                         
-*       * 09/04/2025      MENU_ADMINISTRADOR.MPR        16:28:31  
+*       * 11/12/25       MENU_ADMINISTRADOR.MPR         08:00:21  
 *       *                                                         
 *       *********************************************************
 *       *                                                         
@@ -27,25 +27,34 @@
 SET SYSMENU TO
 SET SYSMENU AUTOMATIC
 
-DEFINE PAD _75m0zb97c OF _MSYSMENU PROMPT "Sistema" COLOR SCHEME 3 ;
+DEFINE PAD _7bn0h5qgo OF _MSYSMENU PROMPT "Sistema" COLOR SCHEME 3 ;
 	KEY ALT+S, ""
-DEFINE PAD _75m0zb97d OF _MSYSMENU PROMPT "Mantenimiento" COLOR SCHEME 3 ;
+DEFINE PAD _7bn0h5qgp OF _MSYSMENU PROMPT "Aplicaciones" COLOR SCHEME 3 ;
+	KEY ALT+A, ""
+DEFINE PAD _7bn0h5qgq OF _MSYSMENU PROMPT "Mantenimiento" COLOR SCHEME 3 ;
 	KEY ALT+M, ""
-DEFINE PAD _75m0zb97e OF _MSYSMENU PROMPT "Utilitarios" COLOR SCHEME 3 ;
+DEFINE PAD _7bn0h5qgr OF _MSYSMENU PROMPT "Utilitarios" COLOR SCHEME 3 ;
 	KEY ALT+U, ""
-ON PAD _75m0zb97c OF _MSYSMENU ACTIVATE POPUP sistema
-ON PAD _75m0zb97d OF _MSYSMENU ACTIVATE POPUP mantenimie
-ON PAD _75m0zb97e OF _MSYSMENU ACTIVATE POPUP utilitario
+ON PAD _7bn0h5qgo OF _MSYSMENU ACTIVATE POPUP sistema
+ON PAD _7bn0h5qgp OF _MSYSMENU ACTIVATE POPUP aplicacion
+ON PAD _7bn0h5qgq OF _MSYSMENU ACTIVATE POPUP mantenimie
+ON PAD _7bn0h5qgr OF _MSYSMENU ACTIVATE POPUP utilitario
 
 DEFINE POPUP sistema MARGIN RELATIVE SHADOW COLOR SCHEME 4
 DEFINE BAR 1 OF sistema PROMPT "Cambia Año"
 DEFINE BAR 2 OF sistema PROMPT "Salir"
 ON SELECTION BAR 1 OF sistema ;
-	DO _75m0zb97f ;
+	DO _7bn0h5qgs ;
 	IN LOCFILE("SYSMEP\MENUS\MENU_ADMINISTRADOR" ,"MPX;MPR|FXP;PRG" ,"WHERE is MENU_ADMINISTRADOR?")
 ON SELECTION BAR 2 OF sistema ;
-	DO _75m0zb97g ;
+	DO _7bn0h5qgt ;
 	IN LOCFILE("SYSMEP\MENUS\MENU_ADMINISTRADOR" ,"MPX;MPR|FXP;PRG" ,"WHERE is MENU_ADMINISTRADOR?")
+
+DEFINE POPUP aplicacion MARGIN RELATIVE SHADOW COLOR SCHEME 4
+DEFINE BAR 1 OF aplicacion PROMPT "Modificar Código del Convenio Masivo V1"
+DEFINE BAR 2 OF aplicacion PROMPT "Modificar Código del Convenio Masivo V1Modificar Código del Convenio Masivo V2"
+ON SELECTION BAR 1 OF aplicacion do form frmmodifica_convenio_masivo
+ON SELECTION BAR 2 OF aplicacion do form frmmodifica_convenio_meta_masivo
 
 DEFINE POPUP mantenimie MARGIN RELATIVE SHADOW COLOR SCHEME 4
 DEFINE BAR 1 OF mantenimie PROMPT "Mantenimiento de Usuarios"
@@ -74,7 +83,7 @@ ON SELECTION BAR 8 OF utilitario do actualizar_descripcion_pago
 
 *       *********************************************************
 *       *                                                         
-*       * _75M0ZB97F  ON SELECTION BAR 1 OF POPUP sistema         
+*       * _7BN0H5QGS  ON SELECTION BAR 1 OF POPUP sistema         
 *       *                                                         
 *       * Procedure Origin:                                       
 *       *                                                         
@@ -85,13 +94,13 @@ ON SELECTION BAR 8 OF utilitario do actualizar_descripcion_pago
 *       *                                                         
 *       *********************************************************
 *
-PROCEDURE _75m0zb97f
+PROCEDURE _7bn0h5qgs
 DO FORM frmCambia_ano
 
 
 *       *********************************************************
 *       *                                                         
-*       * _75M0ZB97G  ON SELECTION BAR 2 OF POPUP sistema         
+*       * _7BN0H5QGT  ON SELECTION BAR 2 OF POPUP sistema         
 *       *                                                         
 *       * Procedure Origin:                                       
 *       *                                                         
@@ -102,6 +111,6 @@ DO FORM frmCambia_ano
 *       *                                                         
 *       *********************************************************
 *
-PROCEDURE _75m0zb97g
+PROCEDURE _7bn0h5qgt
 SET SYSMENU TO defa
 CLEAR EVENTS
