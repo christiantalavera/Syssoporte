@@ -1,12 +1,12 @@
 *       *********************************************************
 *       *                                                         
-*       * 10/29/24       MENU_ADMINISTRADOR.MPR         10:44:55  
+*       * 11/11/25       MENU_ADMINISTRADOR.MPR         22:26:06  
 *       *                                                         
 *       *********************************************************
 *       *                                                         
 *       * Author's Name                                           
 *       *                                                         
-*       * Copyright (C) 2024 Company Name                         
+*       * Copyright (C) 2025 Company Name                         
 *       * Address                                                 
 *       * City,     Zip                                           
 *       *                                                         
@@ -26,24 +26,24 @@
 SET SYSMENU TO
 SET SYSMENU AUTOMATIC
 
-DEFINE PAD _7130n1dus OF _MSYSMENU PROMPT "Sistema" COLOR SCHEME 3 ;
+DEFINE PAD _7bm1c32sq OF _MSYSMENU PROMPT "Sistema" COLOR SCHEME 3 ;
 	KEY ALT+S, ""
-DEFINE PAD _7130n1dut OF _MSYSMENU PROMPT "Mantenimiento" COLOR SCHEME 3 ;
+DEFINE PAD _7bm1c32sr OF _MSYSMENU PROMPT "Mantenimiento" COLOR SCHEME 3 ;
 	KEY ALT+M, ""
-DEFINE PAD _7130n1duu OF _MSYSMENU PROMPT "Utilitarios" COLOR SCHEME 3 ;
+DEFINE PAD _7bm1c32ss OF _MSYSMENU PROMPT "Utilitarios" COLOR SCHEME 3 ;
 	KEY ALT+U, ""
-ON PAD _7130n1dus OF _MSYSMENU ACTIVATE POPUP sistema
-ON PAD _7130n1dut OF _MSYSMENU ACTIVATE POPUP mantenimie
-ON PAD _7130n1duu OF _MSYSMENU ACTIVATE POPUP utilitario
+ON PAD _7bm1c32sq OF _MSYSMENU ACTIVATE POPUP sistema
+ON PAD _7bm1c32sr OF _MSYSMENU ACTIVATE POPUP mantenimie
+ON PAD _7bm1c32ss OF _MSYSMENU ACTIVATE POPUP utilitario
 
 DEFINE POPUP sistema MARGIN RELATIVE SHADOW COLOR SCHEME 4
 DEFINE BAR 1 OF sistema PROMPT "Cambia Año"
 DEFINE BAR 2 OF sistema PROMPT "Salir"
 ON SELECTION BAR 1 OF sistema ;
-	DO _7130n1duv ;
+	DO _7bm1c32st ;
 	IN LOCFILE("SYSSOPORTE\MENUS\MENU_ADMINISTRADOR" ,"MPX;MPR|FXP;PRG" ,"WHERE is MENU_ADMINISTRADOR?")
 ON SELECTION BAR 2 OF sistema ;
-	DO _7130n1duw ;
+	DO _7bm1c32su ;
 	IN LOCFILE("SYSSOPORTE\MENUS\MENU_ADMINISTRADOR" ,"MPX;MPR|FXP;PRG" ,"WHERE is MENU_ADMINISTRADOR?")
 
 DEFINE POPUP mantenimie MARGIN RELATIVE SHADOW COLOR SCHEME 4
@@ -65,7 +65,7 @@ ON SELECTION BAR 5 OF utilitario DO FORM frmcopiamenu_x_ano
 
 *       *********************************************************
 *       *                                                         
-*       * _7130N1DUV  ON SELECTION BAR 1 OF POPUP sistema         
+*       * _7BM1C32ST  ON SELECTION BAR 1 OF POPUP sistema         
 *       *                                                         
 *       * Procedure Origin:                                       
 *       *                                                         
@@ -76,13 +76,13 @@ ON SELECTION BAR 5 OF utilitario DO FORM frmcopiamenu_x_ano
 *       *                                                         
 *       *********************************************************
 *
-PROCEDURE _7130n1duv
+PROCEDURE _7bm1c32st
 DO FORM frmCambia_ano_administrador
 
 
 *       *********************************************************
 *       *                                                         
-*       * _7130N1DUW  ON SELECTION BAR 2 OF POPUP sistema         
+*       * _7BM1C32SU  ON SELECTION BAR 2 OF POPUP sistema         
 *       *                                                         
 *       * Procedure Origin:                                       
 *       *                                                         
@@ -93,6 +93,6 @@ DO FORM frmCambia_ano_administrador
 *       *                                                         
 *       *********************************************************
 *
-PROCEDURE _7130n1duw
+PROCEDURE _7bm1c32su
 SET SYSMENU TO defa
 CLEAR EVENTS

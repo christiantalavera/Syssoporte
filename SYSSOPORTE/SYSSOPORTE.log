@@ -184,6 +184,32 @@
 	</log_app>
 	<log_app>
 		<dfecha>2023-11-26T17:55:39</dfecha>
-		<cerrorinfo>Exception Object 0:  ErrorNo: 3  LineNo: 1  Message: File is in use.  Procedure: beforeopentables  Detalles:   StackLevel: 6  LineContents: USE siaf!ctb_control			order tag precierre  Comments: </cerrorinfo>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 3
+  LineNo: 1
+  Message: File is in use.
+  Procedure: beforeopentables
+  Detalles: 
+  StackLevel: 6
+  LineContents: USE siaf!ctb_control			order tag precierre
+  Comments:</cerrorinfo>
+	</log_app>
+	<log_app>
+		<dfecha>2025-11-10T23:47:11</dfecha>
+		<cerrorinfo>Exception Object 0:
+  ErrorNo: 1
+  LineNo: 0
+  Message: El archivo 'c:\siaf\siaf_1698\data\siaf.dbc' no existe.
+  Procedure: inicio
+  Detalles: c:\siaf\siaf_1698\data\siaf.dbc
+  StackLevel: 1
+  LineContents: DO d:\proyectospropios\vfp\syssoporte\syssoporte\syssoporte.exe
+
+  Comments:</cerrorinfo>
+	</log_app>
+	<log_app>
+		<dfecha>2025-11-11T22:29:12</dfecha>
+		<cerrorinfo>Exception Object 0:  ErrorNo: 1  LineNo: 0  Message: El archivo 'c:\siaf\siaf_1698\data\siaf.dbc' no existe.  Procedure: inicio  Detalles: c:\siaf\siaf_1698\data\siaf.dbc  StackLevel: 1  LineContents: DO d:\proyectospropios\vfp\syssoporte\syssoporte\syssoporte.exe
+  Comments: </cerrorinfo>
 	</log_app>
 </VFPData>

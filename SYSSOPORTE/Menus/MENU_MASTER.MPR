@@ -1,12 +1,12 @@
 *       *********************************************************
 *       *                                                         
-*       * 10/29/24           MENU_MASTER.MPR            10:44:55  
+*       * 11/11/25           MENU_MASTER.MPR            22:26:06  
 *       *                                                         
 *       *********************************************************
 *       *                                                         
 *       * Author's Name                                           
 *       *                                                         
-*       * Copyright (C) 2024 Company Name                         
+*       * Copyright (C) 2025 Company Name                         
 *       * Address                                                 
 *       * City,     Zip                                           
 *       *                                                         
@@ -26,30 +26,30 @@
 SET SYSMENU TO
 SET SYSMENU AUTOMATIC
 
-DEFINE PAD _7130n1dvb OF _MSYSMENU PROMPT "Sistema" COLOR SCHEME 3 ;
+DEFINE PAD _7bm1c32tz OF _MSYSMENU PROMPT "Sistema" COLOR SCHEME 3 ;
 	KEY ALT+S, ""
-DEFINE PAD _7130n1dvc OF _MSYSMENU PROMPT "Aplicaciones" COLOR SCHEME 3 ;
+DEFINE PAD _7bm1c32u0 OF _MSYSMENU PROMPT "Aplicaciones" COLOR SCHEME 3 ;
 	KEY ALT+A, ""
-DEFINE PAD _7130n1dvd OF _MSYSMENU PROMPT "Consulta" COLOR SCHEME 3 ;
+DEFINE PAD _7bm1c32u1 OF _MSYSMENU PROMPT "Consulta" COLOR SCHEME 3 ;
 	KEY ALT+C, ""
-DEFINE PAD _7130n1dve OF _MSYSMENU PROMPT "Procesos" COLOR SCHEME 3 ;
+DEFINE PAD _7bm1c32u2 OF _MSYSMENU PROMPT "Procesos" COLOR SCHEME 3 ;
 	KEY ALT+P, ""
-DEFINE PAD _7130n1dvf OF _MSYSMENU PROMPT "Utilitarios" COLOR SCHEME 3 ;
+DEFINE PAD _7bm1c32u3 OF _MSYSMENU PROMPT "Utilitarios" COLOR SCHEME 3 ;
 	KEY ALT+U, ""
-ON PAD _7130n1dvb OF _MSYSMENU ACTIVATE POPUP sistema
-ON PAD _7130n1dvc OF _MSYSMENU ACTIVATE POPUP aplicacion
-ON PAD _7130n1dvd OF _MSYSMENU ACTIVATE POPUP consulta
-ON PAD _7130n1dve OF _MSYSMENU ACTIVATE POPUP procesos
-ON PAD _7130n1dvf OF _MSYSMENU ACTIVATE POPUP utilitario
+ON PAD _7bm1c32tz OF _MSYSMENU ACTIVATE POPUP sistema
+ON PAD _7bm1c32u0 OF _MSYSMENU ACTIVATE POPUP aplicacion
+ON PAD _7bm1c32u1 OF _MSYSMENU ACTIVATE POPUP consulta
+ON PAD _7bm1c32u2 OF _MSYSMENU ACTIVATE POPUP procesos
+ON PAD _7bm1c32u3 OF _MSYSMENU ACTIVATE POPUP utilitario
 
 DEFINE POPUP sistema MARGIN RELATIVE SHADOW COLOR SCHEME 4
 DEFINE BAR 1 OF sistema PROMPT "Cambia Año"
 DEFINE BAR 2 OF sistema PROMPT "Salir"
 ON SELECTION BAR 1 OF sistema ;
-	DO _7130n1dvg ;
+	DO _7bm1c32u4 ;
 	IN LOCFILE("SYSSOPORTE\MENUS\MENU_MASTER" ,"MPX;MPR|FXP;PRG" ,"WHERE is MENU_MASTER?")
 ON SELECTION BAR 2 OF sistema ;
-	DO _7130n1dvh ;
+	DO _7bm1c32u5 ;
 	IN LOCFILE("SYSSOPORTE\MENUS\MENU_MASTER" ,"MPX;MPR|FXP;PRG" ,"WHERE is MENU_MASTER?")
 
 DEFINE POPUP aplicacion MARGIN RELATIVE SHADOW COLOR SCHEME 4
@@ -92,7 +92,7 @@ ON SELECTION BAR 2 OF certificac DO FORM frmautoriza_certificado_ca
 ON SELECTION BAR 3 OF certificac DO FORM frmcambia_estado_compromiso_anual_devolucion
 ON SELECTION BAR 4 OF certificac DO FORM frmdesbloquea_certificacion
 ON SELECTION BAR 5 OF certificac ;
-	DO _7130n1dvi ;
+	DO _7bm1c32u6 ;
 	IN LOCFILE("SYSSOPORTE\MENUS\MENU_MASTER" ,"MPX;MPR|FXP;PRG" ,"WHERE is MENU_MASTER?")
 ON SELECTION BAR 6 OF certificac do form frmcambia_glosa_certificado
 ON SELECTION BAR 7 OF certificac do form frmelimina_secuencia_certificado_deleteada
@@ -130,9 +130,13 @@ DEFINE POPUP modificaci MARGIN RELATIVE SHADOW COLOR SCHEME 4
 DEFINE BAR 1 OF modificaci PROMPT "Modificar Area del Certificado"
 DEFINE BAR 2 OF modificaci PROMPT "Modificar Area del Expediente"
 DEFINE BAR 3 OF modificaci PROMPT "Modificar Código del Convenio"
+DEFINE BAR 4 OF modificaci PROMPT "Modificar Código del Convenio Masivo V1"
+DEFINE BAR 5 OF modificaci PROMPT "Modificar Código del Convenio Masivo V1Modificar Código del Convenio Masivo V2"
 ON SELECTION BAR 1 OF modificaci do form frmmodifica_area_certificado
 ON SELECTION BAR 2 OF modificaci do form frmmodifica_area_expediente
 ON SELECTION BAR 3 OF modificaci do form frmmodifica_convenio
+ON SELECTION BAR 4 OF modificaci do form frmmodifica_convenio_masivo
+ON SELECTION BAR 5 OF modificaci do form frmmodifica_convenio_meta_masivo
 
 DEFINE POPUP consulta MARGIN RELATIVE SHADOW COLOR SCHEME 4
 DEFINE BAR 1 OF consulta PROMPT "Notas de Priorización"
@@ -147,14 +151,12 @@ ON SELECTION BAR 4 OF consulta DO FORM frmconsulta_usuario_opciones.scx
 DEFINE POPUP procesos MARGIN RELATIVE SHADOW COLOR SCHEME 4
 DEFINE BAR 1 OF procesos PROMPT "Validar Estado de Envio"
 DEFINE BAR 2 OF procesos PROMPT "Refrescar Referencia Certificado / Compromiso Anual"
-DEFINE BAR 3 OF procesos PROMPT "Generar Backup SIAF"
-DEFINE BAR 4 OF procesos PROMPT "Completar Fecha Proceso"
-DEFINE BAR 5 OF procesos PROMPT "Actualizar Expediente"
+DEFINE BAR 3 OF procesos PROMPT "Completar Fecha Proceso"
+DEFINE BAR 4 OF procesos PROMPT "Actualizar Expediente"
 ON SELECTION BAR 1 OF procesos DO FORM frmvalida_estado
 ON SELECTION BAR 2 OF procesos DO FORM frmrefresca_referencia_certificado
-ON SELECTION BAR 3 OF procesos DO GENERA_BACKUP
-ON SELECTION BAR 4 OF procesos DO actualiza_fecha_proceso
-ON SELECTION BAR 5 OF procesos DO actualiza_expediente
+ON SELECTION BAR 3 OF procesos DO actualiza_fecha_proceso
+ON SELECTION BAR 4 OF procesos DO actualiza_expediente
 
 DEFINE POPUP utilitario MARGIN RELATIVE SHADOW COLOR SCHEME 4
 DEFINE BAR 1 OF utilitario PROMPT "Reindexar Archivos"
@@ -164,22 +166,22 @@ DEFINE BAR 4 OF utilitario PROMPT "Eliminar Años"
 DEFINE BAR 5 OF utilitario PROMPT "Inicializar REGEDIT"
 DEFINE BAR 6 OF utilitario PROMPT "Actualizar CCI"
 ON SELECTION BAR 1 OF utilitario ;
-	DO _7130n1dvj ;
+	DO _7bm1c32u7 ;
 	IN LOCFILE("SYSSOPORTE\MENUS\MENU_MASTER" ,"MPX;MPR|FXP;PRG" ,"WHERE is MENU_MASTER?")
 ON SELECTION BAR 2 OF utilitario ;
-	DO _7130n1dvk ;
+	DO _7bm1c32u8 ;
 	IN LOCFILE("SYSSOPORTE\MENUS\MENU_MASTER" ,"MPX;MPR|FXP;PRG" ,"WHERE is MENU_MASTER?")
 ON SELECTION BAR 3 OF utilitario do form frmactualizar_estructuras.scx
 ON SELECTION BAR 4 OF utilitario do form frm_sopminedu_eliminacion_copia
 ON SELECTION BAR 5 OF utilitario ;
-	DO _7130n1dvl ;
+	DO _7bm1c32u9 ;
 	IN LOCFILE("SYSSOPORTE\MENUS\MENU_MASTER" ,"MPX;MPR|FXP;PRG" ,"WHERE is MENU_MASTER?")
 ON SELECTION BAR 6 OF utilitario DO actualiza_cci
 
 
 *       *********************************************************
 *       *                                                         
-*       * _7130N1DVG  ON SELECTION BAR 1 OF POPUP sistema         
+*       * _7BM1C32U4  ON SELECTION BAR 1 OF POPUP sistema         
 *       *                                                         
 *       * Procedure Origin:                                       
 *       *                                                         
@@ -190,13 +192,13 @@ ON SELECTION BAR 6 OF utilitario DO actualiza_cci
 *       *                                                         
 *       *********************************************************
 *
-PROCEDURE _7130n1dvg
+PROCEDURE _7bm1c32u4
 DO FORM frmCambia_ano
 
 
 *       *********************************************************
 *       *                                                         
-*       * _7130N1DVH  ON SELECTION BAR 2 OF POPUP sistema         
+*       * _7BM1C32U5  ON SELECTION BAR 2 OF POPUP sistema         
 *       *                                                         
 *       * Procedure Origin:                                       
 *       *                                                         
@@ -207,14 +209,14 @@ DO FORM frmCambia_ano
 *       *                                                         
 *       *********************************************************
 *
-PROCEDURE _7130n1dvh
+PROCEDURE _7bm1c32u5
 SET SYSMENU TO defa
 CLEAR EVENTS
 
 
 *       *********************************************************
 *       *                                                         
-*       * _7130N1DVI  ON SELECTION BAR 5 OF POPUP certificac      
+*       * _7BM1C32U6  ON SELECTION BAR 5 OF POPUP certificac      
 *       *                                                         
 *       * Procedure Origin:                                       
 *       *                                                         
@@ -225,24 +227,24 @@ CLEAR EVENTS
 *       *                                                         
 *       *********************************************************
 *
-PROCEDURE _7130n1dvi
+PROCEDURE _7bm1c32u6
 DO FORM frmactualiza_certificado_dl
 
 
 *       *********************************************************
 *       *                                                         
-*       * _7130N1DVJ  ON SELECTION BAR 1 OF POPUP utilitario      
+*       * _7BM1C32U7  ON SELECTION BAR 1 OF POPUP utilitario      
 *       *                                                         
 *       * Procedure Origin:                                       
 *       *                                                         
-*       * From Menu:  MENU_MASTER.MPR,            Record:   63    
+*       * From Menu:  MENU_MASTER.MPR,            Record:   64    
 *       * Called By:  ON SELECTION BAR 1 OF POPUP utilitario      
 *       * Prompt:     Reindexar Archivos                          
 *       * Snippet:    4                                           
 *       *                                                         
 *       *********************************************************
 *
-PROCEDURE _7130n1dvj
+PROCEDURE _7bm1c32u7
 Do sf_reindexa in utilitarios.prg
 SET SYSMENU TO defa
 CLEAR EVENTS
@@ -250,18 +252,18 @@ CLEAR EVENTS
 
 *       *********************************************************
 *       *                                                         
-*       * _7130N1DVK  ON SELECTION BAR 2 OF POPUP utilitario      
+*       * _7BM1C32U8  ON SELECTION BAR 2 OF POPUP utilitario      
 *       *                                                         
 *       * Procedure Origin:                                       
 *       *                                                         
-*       * From Menu:  MENU_MASTER.MPR,            Record:   64    
+*       * From Menu:  MENU_MASTER.MPR,            Record:   65    
 *       * Called By:  ON SELECTION BAR 2 OF POPUP utilitario      
 *       * Prompt:     Eliminación Física de Registros             
 *       * Snippet:    5                                           
 *       *                                                         
 *       *********************************************************
 *
-PROCEDURE _7130n1dvk
+PROCEDURE _7bm1c32u8
 Do sf_packea in utilitarios.prg
 SET SYSMENU TO defa
 CLEAR EVENTS
@@ -269,18 +271,18 @@ CLEAR EVENTS
 
 *       *********************************************************
 *       *                                                         
-*       * _7130N1DVL  ON SELECTION BAR 5 OF POPUP utilitario      
+*       * _7BM1C32U9  ON SELECTION BAR 5 OF POPUP utilitario      
 *       *                                                         
 *       * Procedure Origin:                                       
 *       *                                                         
-*       * From Menu:  MENU_MASTER.MPR,            Record:   67    
+*       * From Menu:  MENU_MASTER.MPR,            Record:   68    
 *       * Called By:  ON SELECTION BAR 5 OF POPUP utilitario      
 *       * Prompt:     Inicializar REGEDIT                         
 *       * Snippet:    6                                           
 *       *                                                         
 *       *********************************************************
 *
-PROCEDURE _7130n1dvl
+PROCEDURE _7bm1c32u9
 #DEFINE HKEY_CURRENT_USER           -2147483647  && BITSET(0,31)+1
 cValue = "0"
 oRegistry = CREATEOBJECT("Registry")
