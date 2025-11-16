@@ -1,6 +1,6 @@
 *       *********************************************************
 *       *                                                         
-*       * 11/12/25           MENU_MASTER.MPR            08:00:21  
+*       * 16/11/2025          MENU_MASTER.MPR           13:50:43  
 *       *                                                         
 *       *********************************************************
 *       *                                                         
@@ -27,29 +27,29 @@
 SET SYSMENU TO
 SET SYSMENU AUTOMATIC
 
-DEFINE PAD _7bn0h5qhm OF _MSYSMENU PROMPT "Sistema" COLOR SCHEME 3 ;
+DEFINE PAD _7br0tobca OF _MSYSMENU PROMPT "Sistema" COLOR SCHEME 3 ;
 	KEY ALT+S, ""
-DEFINE PAD _7bn0h5qhn OF _MSYSMENU PROMPT "Aplicaciones" COLOR SCHEME 3 ;
+DEFINE PAD _7br0tobcb OF _MSYSMENU PROMPT "Aplicaciones" COLOR SCHEME 3 ;
 	KEY ALT+A, ""
-DEFINE PAD _7bn0h5qho OF _MSYSMENU PROMPT "Utilitarios" COLOR SCHEME 3 ;
+DEFINE PAD _7br0tobcc OF _MSYSMENU PROMPT "Utilitarios" COLOR SCHEME 3 ;
 	KEY ALT+U, ""
-ON PAD _7bn0h5qhm OF _MSYSMENU ACTIVATE POPUP sistema
-ON PAD _7bn0h5qhn OF _MSYSMENU ACTIVATE POPUP aplicacion
-ON PAD _7bn0h5qho OF _MSYSMENU ACTIVATE POPUP utilitario
+ON PAD _7br0tobca OF _MSYSMENU ACTIVATE POPUP sistema
+ON PAD _7br0tobcb OF _MSYSMENU ACTIVATE POPUP aplicacion
+ON PAD _7br0tobcc OF _MSYSMENU ACTIVATE POPUP utilitario
 
 DEFINE POPUP sistema MARGIN RELATIVE SHADOW COLOR SCHEME 4
 DEFINE BAR 1 OF sistema PROMPT "Cambia Año"
 DEFINE BAR 2 OF sistema PROMPT "Salir"
 ON SELECTION BAR 1 OF sistema ;
-	DO _7bn0h5qhp ;
+	DO _7br0tobcd ;
 	IN LOCFILE("SYSMEP\MENUS\MENU_MASTER" ,"MPX;MPR|FXP;PRG" ,"WHERE is MENU_MASTER?")
 ON SELECTION BAR 2 OF sistema ;
-	DO _7bn0h5qhq ;
+	DO _7br0tobce ;
 	IN LOCFILE("SYSMEP\MENUS\MENU_MASTER" ,"MPX;MPR|FXP;PRG" ,"WHERE is MENU_MASTER?")
 
 DEFINE POPUP aplicacion MARGIN RELATIVE SHADOW COLOR SCHEME 4
 DEFINE BAR 1 OF aplicacion PROMPT "Modificar Código del Convenio Masivo V1"
-DEFINE BAR 2 OF aplicacion PROMPT "Modificar Código del Convenio Masivo V1Modificar Código del Convenio Masivo V2"
+DEFINE BAR 2 OF aplicacion PROMPT "Modificar Código del Convenio Masivo por Meta"
 ON SELECTION BAR 1 OF aplicacion do form frmmodifica_convenio_masivo
 ON SELECTION BAR 2 OF aplicacion do form frmmodifica_convenio_meta_masivo
 
@@ -59,10 +59,10 @@ DEFINE BAR 2 OF utilitario PROMPT "Eliminación Física de Registros"
 DEFINE BAR 3 OF utilitario PROMPT "Actualizar Tipo de Aporte"
 DEFINE BAR 4 OF utilitario PROMPT "Actualizar Descripcion del Pago"
 ON SELECTION BAR 1 OF utilitario ;
-	DO _7bn0h5qhr ;
+	DO _7br0tobcf ;
 	IN LOCFILE("SYSMEP\MENUS\MENU_MASTER" ,"MPX;MPR|FXP;PRG" ,"WHERE is MENU_MASTER?")
 ON SELECTION BAR 2 OF utilitario ;
-	DO _7bn0h5qhs ;
+	DO _7br0tobcg ;
 	IN LOCFILE("SYSMEP\MENUS\MENU_MASTER" ,"MPX;MPR|FXP;PRG" ,"WHERE is MENU_MASTER?")
 ON SELECTION BAR 3 OF utilitario do actualiza_tipo_aporte
 ON SELECTION BAR 4 OF utilitario DO actualizar_descripcion_pago
@@ -70,7 +70,7 @@ ON SELECTION BAR 4 OF utilitario DO actualizar_descripcion_pago
 
 *       *********************************************************
 *       *                                                         
-*       * _7BN0H5QHP  ON SELECTION BAR 1 OF POPUP sistema         
+*       * _7BR0TOBCD  ON SELECTION BAR 1 OF POPUP sistema         
 *       *                                                         
 *       * Procedure Origin:                                       
 *       *                                                         
@@ -81,13 +81,13 @@ ON SELECTION BAR 4 OF utilitario DO actualizar_descripcion_pago
 *       *                                                         
 *       *********************************************************
 *
-PROCEDURE _7bn0h5qhp
+PROCEDURE _7br0tobcd
 DO FORM frmCambia_ano
 
 
 *       *********************************************************
 *       *                                                         
-*       * _7BN0H5QHQ  ON SELECTION BAR 2 OF POPUP sistema         
+*       * _7BR0TOBCE  ON SELECTION BAR 2 OF POPUP sistema         
 *       *                                                         
 *       * Procedure Origin:                                       
 *       *                                                         
@@ -98,14 +98,14 @@ DO FORM frmCambia_ano
 *       *                                                         
 *       *********************************************************
 *
-PROCEDURE _7bn0h5qhq
+PROCEDURE _7br0tobce
 SET SYSMENU TO defa
 CLEAR EVENTS
 
 
 *       *********************************************************
 *       *                                                         
-*       * _7BN0H5QHR  ON SELECTION BAR 1 OF POPUP utilitario      
+*       * _7BR0TOBCF  ON SELECTION BAR 1 OF POPUP utilitario      
 *       *                                                         
 *       * Procedure Origin:                                       
 *       *                                                         
@@ -116,7 +116,7 @@ CLEAR EVENTS
 *       *                                                         
 *       *********************************************************
 *
-PROCEDURE _7bn0h5qhr
+PROCEDURE _7br0tobcf
 Do sf_reindexa in utilitarios.prg
 SET SYSMENU TO defa
 CLEAR EVENTS
@@ -124,7 +124,7 @@ CLEAR EVENTS
 
 *       *********************************************************
 *       *                                                         
-*       * _7BN0H5QHS  ON SELECTION BAR 2 OF POPUP utilitario      
+*       * _7BR0TOBCG  ON SELECTION BAR 2 OF POPUP utilitario      
 *       *                                                         
 *       * Procedure Origin:                                       
 *       *                                                         
@@ -135,7 +135,7 @@ CLEAR EVENTS
 *       *                                                         
 *       *********************************************************
 *
-PROCEDURE _7bn0h5qhs
+PROCEDURE _7br0tobcg
 Do sf_packea in utilitarios.prg
 SET SYSMENU TO defa
 CLEAR EVENTS
