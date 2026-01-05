@@ -36,7 +36,6 @@ SET NOTIFY OFF
 
 
 loJustify = CREATEOBJECT("justify")
-oSiafEditWin = CREATEOBJECT( 'FormManager' )
 
 #INCLUDE include\cert.h
 
@@ -52,6 +51,7 @@ DO system.app
 DO DeclaraTodo
 DO check_ini
 gcSEC_EJEC_pliego = GCSEC_EJEC
+oSiafEditWin = CREATEOBJECT( 'FormManager' )
 
 SET EXCLUSIVE OFF 
 SET DELETED ON 

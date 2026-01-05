@@ -52,7 +52,7 @@ loJustify = CREATEOBJECT("justify")
 pArchivo = lcRutaSystem + '\'+"FoxyPreviewer.App"
 
 SET PROCEDURE TO LOCFILE(pArchivo) ADDITIVE 
-
+SET PROCEDURE TO ImportarXML_Adapter ADDITIVE 
 *!*	pArchivo = lcRutaSystem + '\'+"system.App"
 
 *!*	SET PROCEDURE TO system.app ADDITIVE 
@@ -67,6 +67,10 @@ SET DELETED ON
 
 xRutaActual = FULLPATH(CURDIR())
 SET DEFAULT TO &xRutaActual
+gcruta_app = xRutaActual
+gcRutaExporta	= gcRuta_app +"Exporta\"
+gcRutaImporta	= gcRuta_app +"Importa\"
+
 xRutaCert = gcRutaCert+'SYSMEP'
 OPEN DATABASE &XRutaCert SHARED 
 xRutaSiaf = gcRutaSiaf+'SIAF'
@@ -79,7 +83,7 @@ SCAN ALL
 ENDSCAN
 USE IN TIPO_UNIDAD_X_AMBITO
 gcorganismo = '002'
-GCANO_EJE='2023'
+GCANO_EJE='2025'
 gcsiglas = ''
 SET PATH TO FORMS, PRGS, MENUS, GRAFICOS, INCLUDE, DATA , CLASES, REPORTS, LCRUTASYSTEM, EXPORTA, xml
 ********************
@@ -89,7 +93,7 @@ PUBLIC gcAno_Eje,gcSec_Ejec, gcTipo_Unidad,GCTIPO_UE, gcOldCaption,gcOldClassLib
 gcOldPath,gcOldTalk,gcMonto,gcFileIni  ,gcSession , gcOpcRpt, gcFiltroPca, gcMes, gcRutaSiaf, gcRutaCert, glmuestra_fuente_agregada, gcnom_fuente ,gcnom_fuente_abrev,;
 gcCab_mod, gcId_rep, gcVersion ,gcTipo_reporte, gcclaveusr, gcuserid, gcEncriptaDesencripta, gcLlave, gces_supervisor,;
 gcSubNivel01, gcSubNivel02, gcAbrevSubNivel01, gcAbrevSubNivel02, gcmes_apertura , gcmes_cierre, gcfuncion_entidad, GCES_SUPERVISOR, gcigv, lcmes,;
-gcRutaInterfase, gcSEC_EJEC_pliego, gcversion_office, gccaja, gcversion_office, gctipo_rendicion, gcruta_app, gcorganismo, gcproyecto, GCAMBITO, gccarpetalistado, gcsiglas, gcTipo_excel, gcvalidaMonetizacion
+gcRutaInterfase, gcSEC_EJEC_pliego, gcversion_office, gccaja, gcversion_office, gctipo_rendicion, gcruta_app, gcorganismo, gcproyecto, GCAMBITO, gccarpetalistado, gcsiglas, gcTipo_excel, gcvalidaMonetizacion, gcRutaImporta, gcRutaExporta
 #include include\CERT.h
 
 *-- Instrucciones DECLARE DLL para leer/escribir en archivos INI privados
@@ -123,7 +127,7 @@ gcVersion = 'Versión 1.1'
 gcCab_mod = 'SIGPRES' 
 gcuserid = 'USUARIO'
 gccaja = '01'
-
+STORE '' TO gcRutaImporta, gcRutaExporta
 gcproyecto = '222'
 gcSubNivel01 = 'Centro de Costo'
 gcSubNivel02 = 'Tareas / Objetivos'

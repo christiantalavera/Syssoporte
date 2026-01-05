@@ -1,12 +1,12 @@
 *       *********************************************************
 *       *                                                         
-*       * 12/07/25       MENU_ADMINISTRADOR.MPR         09:34:32  
+*       * 05/01/2026      MENU_ADMINISTRADOR.MPR        08:55:52  
 *       *                                                         
 *       *********************************************************
 *       *                                                         
 *       * Author's Name                                           
 *       *                                                         
-*       * Copyright (C) 2025 Company Name                         
+*       * Copyright (C) 2026 Company Name                         
 *       * Address                                                 
 *       * City,     Zip                                           
 *       *                                                         
@@ -26,29 +26,36 @@
 SET SYSMENU TO
 SET SYSMENU AUTOMATIC
 
-DEFINE PAD _7cc0kiuy8 OF _MSYSMENU PROMPT "Sistema" COLOR SCHEME 3 ;
+DEFINE PAD _7d70j56cl OF _MSYSMENU PROMPT "Sistema" COLOR SCHEME 3 ;
 	KEY ALT+S, ""
-DEFINE PAD _7cc0kiuy9 OF _MSYSMENU PROMPT "Mantenimiento" COLOR SCHEME 3 ;
+DEFINE PAD _7d70j56cm OF _MSYSMENU PROMPT "Mantenimiento" COLOR SCHEME 3 ;
 	KEY ALT+M, ""
-DEFINE PAD _7cc0kiuya OF _MSYSMENU PROMPT "Utilitarios" COLOR SCHEME 3 ;
+DEFINE PAD _7d70j56cn OF _MSYSMENU PROMPT "Aplicaciones" COLOR SCHEME 3 ;
+	KEY ALT+A, ""
+DEFINE PAD _7d70j56co OF _MSYSMENU PROMPT "Utilitarios" COLOR SCHEME 3 ;
 	KEY ALT+U, ""
-ON PAD _7cc0kiuy8 OF _MSYSMENU ACTIVATE POPUP sistema
-ON PAD _7cc0kiuy9 OF _MSYSMENU ACTIVATE POPUP mantenimie
-ON PAD _7cc0kiuya OF _MSYSMENU ACTIVATE POPUP utilitario
+ON PAD _7d70j56cl OF _MSYSMENU ACTIVATE POPUP sistema
+ON PAD _7d70j56cm OF _MSYSMENU ACTIVATE POPUP mantenimie
+ON PAD _7d70j56cn OF _MSYSMENU ACTIVATE POPUP newitem
+ON PAD _7d70j56co OF _MSYSMENU ACTIVATE POPUP utilitario
 
 DEFINE POPUP sistema MARGIN RELATIVE SHADOW COLOR SCHEME 4
 DEFINE BAR 1 OF sistema PROMPT "Cambia Año"
 DEFINE BAR 2 OF sistema PROMPT "Salir"
 ON SELECTION BAR 1 OF sistema ;
-	DO _7cc0kiuyb ;
+	DO _7d70j56cp ;
 	IN LOCFILE("SYSSOPORTE\MENUS\MENU_ADMINISTRADOR" ,"MPX;MPR|FXP;PRG" ,"WHERE is MENU_ADMINISTRADOR?")
 ON SELECTION BAR 2 OF sistema ;
-	DO _7cc0kiuyc ;
+	DO _7d70j56cq ;
 	IN LOCFILE("SYSSOPORTE\MENUS\MENU_ADMINISTRADOR" ,"MPX;MPR|FXP;PRG" ,"WHERE is MENU_ADMINISTRADOR?")
 
 DEFINE POPUP mantenimie MARGIN RELATIVE SHADOW COLOR SCHEME 4
 DEFINE BAR 1 OF mantenimie PROMPT "Mantenimiento de Usuarios"
 ON SELECTION BAR 1 OF mantenimie do form frmmenutree
+
+DEFINE POPUP newitem MARGIN RELATIVE SHADOW COLOR SCHEME 4
+DEFINE BAR 1 OF newitem PROMPT "Procesar XML SIAF"
+ON SELECTION BAR 1 OF newitem do form frmprocesardataxml
 
 DEFINE POPUP utilitario MARGIN RELATIVE SHADOW COLOR SCHEME 4
 DEFINE BAR 1 OF utilitario PROMPT "Reindexa Archivos"
@@ -65,7 +72,7 @@ ON SELECTION BAR 5 OF utilitario DO FORM frmcopiamenu_x_ano
 
 *       *********************************************************
 *       *                                                         
-*       * _7CC0KIUYB  ON SELECTION BAR 1 OF POPUP sistema         
+*       * _7D70J56CP  ON SELECTION BAR 1 OF POPUP sistema         
 *       *                                                         
 *       * Procedure Origin:                                       
 *       *                                                         
@@ -76,13 +83,13 @@ ON SELECTION BAR 5 OF utilitario DO FORM frmcopiamenu_x_ano
 *       *                                                         
 *       *********************************************************
 *
-PROCEDURE _7cc0kiuyb
+PROCEDURE _7d70j56cp
 DO FORM frmCambia_ano_administrador
 
 
 *       *********************************************************
 *       *                                                         
-*       * _7CC0KIUYC  ON SELECTION BAR 2 OF POPUP sistema         
+*       * _7D70J56CQ  ON SELECTION BAR 2 OF POPUP sistema         
 *       *                                                         
 *       * Procedure Origin:                                       
 *       *                                                         
@@ -93,6 +100,6 @@ DO FORM frmCambia_ano_administrador
 *       *                                                         
 *       *********************************************************
 *
-PROCEDURE _7cc0kiuyc
+PROCEDURE _7d70j56cq
 SET SYSMENU TO defa
 CLEAR EVENTS

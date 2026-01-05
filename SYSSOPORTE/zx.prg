@@ -1,0 +1,12 @@
+SET PROCEDURE TO prgs\libreria
+*	oApp = CREATEOBJECT( "main" )
+	Pc_Conexion_TipoBD = 'ORACLE'
+	pc_user_Codigo= 'U62597'
+	pc_user_Clave = 'XX'
+	lValido = .T.
+	pn_Conexion = ""
+	Pc_User_Siga		= 'MCP00'
+	Pc_Password_Siga	= 'mcpb005prod' 
+	Pc_Server_Siga 	= 'CGRSUN'
+	Conexion_TipoBD = 'ORACLE'
+	lOkey = Conecta(Pc_User_Siga, Pc_Password_Siga, Pc_Server_Siga , Pc_Conexion_TipoBD )

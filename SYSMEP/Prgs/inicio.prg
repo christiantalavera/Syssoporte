@@ -33,6 +33,7 @@ SET PROCEDURE TO rutinas ADDITIVE
 SET PROCEDURE TO pdflistener ADDITIVE 
 SET PROCEDURE TO foxypreviewercaller ADDITIVE 
 SET PROCEDURE TO appendxlsx ADDITIVE 
+SET PROCEDURE TO ImportarXML_Adapter ADDITIVE 
 SET MULTILOCKS ON
 SET HELP OFF
 SET ECHO OFF 
@@ -118,6 +119,9 @@ ENDTRY
 
 
 gcRuta_app 				= xRutaActual
+gcRutaExporta			= gcRuta_app +"Exporta\"
+gcRutaImporta			= gcRuta_app +"Importa\"
+
 gcEncriptaDesencripta 	= CREATEOBJECT("blowfish")
 
 gcSubNivel01 			= ''
@@ -380,7 +384,7 @@ PROCEDURE DeclaraTodo
 	gcCab_mod, gcId_rep, gcVersion ,gcTipo_reporte, gcclaveusr, gcuserid, gcEncriptaDesencripta, gcLlave, gces_supervisor, gcClave, gcActivo,;
 	gcSubNivel01, gcSubNivel02, gcAbrevSubNivel01, gcAbrevSubNivel02, gchoja_calculo,P_USER, gcRutaOk, gcRutaSystem, gcfuncion_entidad, gcmes_apertura, gcmes_cierre, gcIgv,;
 	gcRutaInterfase, gcNombre_ejecutora, gcSector, gcPliego, gcSec_ejec_pliego,lcArchivoFrame, gcVersion_office, gcCaja, glParamNET, glSystemApp, glFoxy, gcTipo_rendicion, gcProyecto,;
-	gcOrganismo, gcRuta_app, gcCarpetaListado, gcClaveMenu, gcLlaveMenu, gcLlave,gcFondoPantalla, gcAmbito,gcFondoPantalla, gcSiglas, gcModulo, gcValidaMonetizacion, gcTipo_Excel
+	gcOrganismo, gcRuta_app, gcCarpetaListado, gcClaveMenu, gcLlaveMenu, gcLlave,gcFondoPantalla, gcAmbito,gcFondoPantalla, gcSiglas, gcModulo, gcValidaMonetizacion, gcTipo_Excel, gcRutaExporta, gcRutaImporta
 	
 
 	
@@ -432,6 +436,7 @@ PROCEDURE DeclaraTodo
 	gcModulo = '01'
 	gcValidaMonetizacion = .T.
 	gcTipo_Excel = 1   && 1- XLS  2- XLSX	gnflgExcel = 0	
+	STORE '' TO gcRutaExporta, gcRutaImporta
 	
 	TRY
 		oWord = CreateObject('Word.Application')

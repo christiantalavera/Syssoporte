@@ -1,0 +1,266 @@
+<?xml version = "1.0" encoding="UTF-8" standalone="yes"?>
+<VFPDataSet>
+	<xsd:schema id="VFPDataSet" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="VFPDataSet" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="cur_act_proy_nombre" minOccurs="0" maxOccurs="unbounded">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="ano_eje" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="5"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="act_proy" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="8"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="tipo_act_proy" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="1"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="nombre" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2147483647"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="estado" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="1"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="ambito" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="1"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="es_presupuestal" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="1"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="sector_snip" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="naturaleza_snip" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="intervencion_snip" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="tipo_proyecto" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="1"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="proyecto_snip" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="8"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="ambito_en" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="1"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="es_foniprel" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="1"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="ambito_programa" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="1"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="es_generico" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="1"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="costo_actual" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="19"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="costo_expediente" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="19"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="ind_viabilidad" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="costo_actualizado_pip" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="19"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+				<xsd:anyAttribute namespace="http://www.w3.org/XML/1998/namespace" processContents="lax"/>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<cur_act_proy_nombre>
+		<ano_eje>2025</ano_eje>
+		<act_proy>2325008</act_proy>
+		<tipo_act_proy>2</tipo_act_proy>
+		<nombre>GESTION DEL PROGRAMA Y OTROS: MODERNIZACION DE LA PRESTACION DE LOS SERVICIOS DE AGUA POTABLE Y SANEAMIENTO EN LAS EPS EMAPACOP, SEDACUSCO, SEDAPAR, SEMAPA BARRANCA, EMAPA HUACHO Y EMAPA HUARAL                                                                                                                                                                                                                                                                                                                   </nombre>
+		<estado>A</estado>
+		<ambito>N</ambito>
+		<es_presupuestal>S</es_presupuestal>
+		<tipo_proyecto>G</tipo_proyecto>
+		<proyecto_snip>361719</proyecto_snip>
+		<ambito_en>F</ambito_en>
+		<es_foniprel>N</es_foniprel>
+		<ambito_programa>A</ambito_programa>
+		<es_generico>N</es_generico>
+		<costo_actual>159971000.00</costo_actual>
+		<costo_expediente>0.00</costo_expediente>
+		<ind_viabilidad>2</ind_viabilidad>
+	</cur_act_proy_nombre>
+	<cur_act_proy_nombre>
+		<ano_eje>2025</ano_eje>
+		<act_proy>3000857</act_proy>
+		<tipo_act_proy>3</tipo_act_proy>
+		<nombre>PRESTADORES RECIBEN ASISTENCIA TECNICA Y FINANCIERA PARA LA PRESTACION DEL SERVICIO                                                                                                                                                                                                                                                                                                                                                                                                                                 </nombre>
+		<estado>A</estado>
+		<ambito>N</ambito>
+		<es_presupuestal>S</es_presupuestal>
+		<ambito_en>F</ambito_en>
+		<es_foniprel>N</es_foniprel>
+		<ambito_programa>A</ambito_programa>
+		<es_generico>N</es_generico>
+	</cur_act_proy_nombre>
+	<cur_act_proy_nombre>
+		<ano_eje>2025</ano_eje>
+		<act_proy>2001621</act_proy>
+		<tipo_act_proy>2</tipo_act_proy>
+		<nombre>ESTUDIOS DE PRE-INVERSION                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           </nombre>
+		<estado>A</estado>
+		<ambito>G</ambito>
+		<es_presupuestal>S</es_presupuestal>
+		<sector_snip>22</sector_snip>
+		<naturaleza_snip>02</naturaleza_snip>
+		<intervencion_snip>01</intervencion_snip>
+		<tipo_proyecto>4</tipo_proyecto>
+		<ambito_en>G</ambito_en>
+		<es_foniprel>S</es_foniprel>
+		<ambito_programa>P</ambito_programa>
+		<es_generico>S</es_generico>
+	</cur_act_proy_nombre>
+	<cur_act_proy_nombre>
+		<ano_eje>2025</ano_eje>
+		<act_proy>0000000</act_proy>
+		<tipo_act_proy>0</tipo_act_proy>
+		<nombre>ACTIVIDAD PROYECTO GENERICO                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         </nombre>
+		<estado>A</estado>
+		<ambito>G</ambito>
+		<es_presupuestal>N</es_presupuestal>
+		<ambito_en>F</ambito_en>
+		<es_foniprel>N</es_foniprel>
+		<ambito_programa>P</ambito_programa>
+		<es_generico>N</es_generico>
+	</cur_act_proy_nombre>
+	<cur_act_proy_nombre>
+		<ano_eje>2025</ano_eje>
+		<act_proy>3000859</act_proy>
+		<tipo_act_proy>3</tipo_act_proy>
+		<nombre>USUARIOS INFORMADOS                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 </nombre>
+		<estado>A</estado>
+		<ambito>N</ambito>
+		<es_presupuestal>S</es_presupuestal>
+		<ambito_en>F</ambito_en>
+		<es_foniprel>N</es_foniprel>
+		<ambito_programa>A</ambito_programa>
+		<es_generico>N</es_generico>
+	</cur_act_proy_nombre>
+	<cur_act_proy_nombre>
+		<ano_eje>2025</ano_eje>
+		<act_proy>3999999</act_proy>
+		<tipo_act_proy>3</tipo_act_proy>
+		<nombre>SIN PRODUCTO                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </nombre>
+		<estado>A</estado>
+		<ambito>G</ambito>
+		<es_presupuestal>S</es_presupuestal>
+		<ambito_en>F</ambito_en>
+		<es_foniprel>N</es_foniprel>
+		<ambito_programa>J</ambito_programa>
+		<es_generico>S</es_generico>
+	</cur_act_proy_nombre>
+	<cur_act_proy_nombre>
+		<ano_eje>2025</ano_eje>
+		<act_proy>2648842</act_proy>
+		<tipo_act_proy>2</tipo_act_proy>
+		<nombre>ADQUISICION DE SISTEMA DE SUMINISTRO ELECTRICO; EN EL(LA) PTAP EL MILAGRO, DISTRITO DE TUMBES, PROVINCIA TUMBES, DEPARTAMENTO TUMBES                                                                                                                                                                                                                                                                                                                                                                                </nombre>
+		<estado>A</estado>
+		<ambito>N</ambito>
+		<es_presupuestal>S</es_presupuestal>
+		<tipo_proyecto>N</tipo_proyecto>
+		<proyecto_snip>2648842</proyecto_snip>
+		<ambito_en>F</ambito_en>
+		<es_foniprel>N</es_foniprel>
+		<ambito_programa>K</ambito_programa>
+		<es_generico>N</es_generico>
+		<costo_actual>599668.42</costo_actual>
+		<costo_expediente>623734.81</costo_expediente>
+		<ind_viabilidad>3</ind_viabilidad>
+	</cur_act_proy_nombre>
+</VFPDataSet>

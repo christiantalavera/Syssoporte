@@ -73,6 +73,8 @@ xRutaCert = gcRutaCert+'syssoporte'
 gcRuta_app = xRutaActual
 GCRUTACLI = xRutaActual
 gcArchivoLOG = 'syssoporte.log'
+gcRutaExporta = gcRuta_app +"Exporta\"
+gcRutaImporta = gcRuta_app +"Importa\"
 
 *!*	SET SYSMENU OFF
 *!*	ON SHUTDOWN DO SalirSistema IN inicio.prg
@@ -119,7 +121,7 @@ PUBLIC gcAno_Eje,gcSec_Ejec, gcTipo_Unidad,GCTIPO_UE, gcOldCaption,gcOldClassLib
 gcOldPath,gcOldTalk,gcMonto,gcFileIni  ,gcSession , gcOpcRpt, gcFiltroPca, gcMes, gcRutaSiaf, gcRutaCert, glmuestra_fuente_agregada, gcnom_fuente ,gcnom_fuente_abrev,;
 gcCab_mod, gcId_rep, gcVersion ,gcTipo_reporte, gcclaveusr, gcuserid, gcEncriptaDesencripta, gcLlave, gces_supervisor,;
 gcSubNivel01, gcSubNivel02, gcAbrevSubNivel01, gcAbrevSubNivel02, gcmes_apertura , gcmes_cierre, gcfuncion_entidad, GCES_SUPERVISOR, gcigv, lcmes,;
-gcRutaInterfase, gcSEC_EJEC_pliego, gcversion_office, gccaja, gcversion_office, gctipo_rendicion, gcCarpetalistado , gcRuta_app, gcArchivoLOG, GCRUTACLI, glEs_ETEEPS, glEs_ETEOPD
+gcRutaInterfase, gcSEC_EJEC_pliego, gcversion_office, gccaja, gcversion_office, gctipo_rendicion, gcCarpetalistado , gcRuta_app, gcArchivoLOG, GCRUTACLI, glEs_ETEEPS, glEs_ETEOPD, gcrutaimporta, gcrutaexporta
 #include ..\include\CERT.h
 
 *-- Instrucciones DECLARE DLL para leer/escribir en archivos INI privados

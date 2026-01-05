@@ -1,0 +1,4 @@
+00GOBIERNO PERUANO                                            GOB            A
+01BANCO INTERNACIONAL DE RECONSTRUCCION Y FOMENTO             BIRF           A
+02BANCO INTERAMERICANO DE DESARROLLO                          BID            A
+99BENEFICIARIOS                                               BENEFICIARIOS  A

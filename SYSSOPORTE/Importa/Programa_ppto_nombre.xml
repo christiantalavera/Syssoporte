@@ -1,0 +1,115 @@
+<?xml version = "1.0" encoding="UTF-8" standalone="yes"?>
+<VFPDataSet>
+	<xsd:schema id="VFPDataSet" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="VFPDataSet" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="cur_programa_ppto_nombre" minOccurs="0" maxOccurs="unbounded">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="ano_eje" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="5"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="programa_ppto" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="5"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="nombre" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="250"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="tipo_programa_ppto" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="2"/>
+											<xsd:fractionDigits value="0"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="ambito" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="1"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="estado" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="1"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="ambito_en" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="1"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="finalidad_fija" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="1"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+				<xsd:anyAttribute namespace="http://www.w3.org/XML/1998/namespace" processContents="lax"/>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<cur_programa_ppto_nombre>
+		<ano_eje>2025</ano_eje>
+		<programa_ppto>9002</programa_ppto>
+		<nombre>ASIGNACIONES PRESUPUESTARIAS QUE NO RESULTAN EN PRODUCTOS</nombre>
+		<tipo_programa_ppto>3</tipo_programa_ppto>
+		<ambito>G</ambito>
+		<estado>A</estado>
+		<ambito_en>E</ambito_en>
+		<finalidad_fija>N</finalidad_fija>
+	</cur_programa_ppto_nombre>
+	<cur_programa_ppto_nombre>
+		<ano_eje>2025</ano_eje>
+		<programa_ppto>0000</programa_ppto>
+		<nombre>SIN PROGRAMA</nombre>
+		<tipo_programa_ppto>0</tipo_programa_ppto>
+		<ambito>G</ambito>
+		<estado>I</estado>
+		<ambito_en>F</ambito_en>
+		<finalidad_fija>N</finalidad_fija>
+	</cur_programa_ppto_nombre>
+	<cur_programa_ppto_nombre>
+		<ano_eje>2025</ano_eje>
+		<programa_ppto>0082</programa_ppto>
+		<nombre>PROGRAMA NACIONAL DE SANEAMIENTO URBANO</nombre>
+		<tipo_programa_ppto>1</tipo_programa_ppto>
+		<ambito>M</ambito>
+		<estado>A</estado>
+		<ambito_en>E</ambito_en>
+		<finalidad_fija>S</finalidad_fija>
+	</cur_programa_ppto_nombre>
+	<cur_programa_ppto_nombre>
+		<ano_eje>2025</ano_eje>
+		<programa_ppto>9001</programa_ppto>
+		<nombre>ACCIONES CENTRALES</nombre>
+		<tipo_programa_ppto>2</tipo_programa_ppto>
+		<ambito>G</ambito>
+		<estado>A</estado>
+		<ambito_en>E</ambito_en>
+		<finalidad_fija>N</finalidad_fija>
+	</cur_programa_ppto_nombre>
+</VFPDataSet>

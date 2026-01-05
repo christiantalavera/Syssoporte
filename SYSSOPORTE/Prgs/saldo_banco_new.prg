@@ -293,49 +293,119 @@ PROCEDURE proceso_general
 					ENDIF
 				ENDIF
 			CASE ls_ciclo+ls_fase == "GP"
-				lorden_ciclo = "2"
-				* Pagado FF 00 **
-				lcondicion01 = "(EXP_FASE.origen+EXP_FASE.fuente_financ $ '100/114/116' .and. EXP_FASE.sec_ejec <> '000047' )"
-				lcondicion02 = "EXP_FASE.sec_ejec = '000047' "
-				lcondicion03 = "INLIST(EXP_FASE.origen+EXP_FASE.fuente_financ+EXP_FASE.tipo_recurso,'1121 ','1127 ','1128 ')"
-				lcondicion04 = "INLIST(EXP_FASE.origen+EXP_FASE.fuente_financ+EXP_FASE.tipo_recurso,'113S ','1131 ','1132 ','1133 ','113N ')"
-				lcondicion05 = "gctipo_unidad+EXP_FASE.origen+EXP_FASE.fuente_financ+EXP_FASE.tipo_recurso = 'M113J '"
-				lcondicion06 = "EXP_FASE.origen+EXP_FASE.fuente_financ+EXP_FASE.tipo_recurso = '1151 '"
-				lcondicion07 = "(EXP_FASE.origen+EXP_FASE.fuente_financ = '117' AND EXP_FASE.tipo_recurso != '0 ')"
-				* cambio solicitado por EM 10/02/2011. realizado por PC
-				lcondicion08 = "INLIST(exp_fase.fuente_financ+exp_fase.tipo_recurso,'18D ','18E ','18H ','18I ','18J ','18K ','18L ','18M ','18N ','18Ñ ')"
-				lcondicion09 = "INLIST(exp_fase.fuente_financ+exp_fase.tipo_recurso,'18O ','18P ','18Q ','18R ','18S ','18T ','18U ','18V ','18W ','18Y ','00D ','00I ')"
-				lcondicion10 = "inlist(EXP_FASE.fuente_financ+EXP_FASE.tipo_recurso,'07A ','19A ','1311','1315','1316','1314','19H ','19G ','041 ')"
-				lcondicion11 = "inlist(EXP_FASE.fuente_financ+EXP_FASE.tipo_recurso,'1810','1811','1812','1813','1814','1815','1816', '1817','1819','1820','1821','19F ','19G ')" && Solicitado por Maguiña
-				lcondicion12 = "inlist(EXP_FASE.fuente_financ+EXP_FASE.tipo_recurso,'13O ','13P ','0010','1310','1818','198','087 ','083 ','1911','1912','1913','1915','0014','1824','18L ')"  && LGM 23052014 (RB 00,13,18 y TR 10 y 18)
-				lcondicion13 = "inlist(EXP_FASE.fuente_financ+EXP_FASE.tipo_recurso,'097 ','1318', '1317','1323','1318')"   &&& Por sugerencia de Karina Diaz en acuerdo con Mario Holgado hecho por talavera
-				lcondicion14 = "inlist(EXP_FASE.fuente_financ+EXP_FASE.tipo_recurso,'073 ','083 ')"   &&& Por sugerencia de Karina Dia - 21012016				&&& Se agrego 1820,1821,19F Agricultura 08012016
-				IF &lcondicion01. OR ;
-						&lcondicion02. OR ;
-						&lcondicion03. OR ;
-						&lcondicion04. OR ;
-						&lcondicion05. OR ;
-						&lcondicion06. OR ;
-						&lcondicion07. OR ;
-						&lcondicion08. OR ;
-						&lcondicion09. OR ;
-						&lcondicion10. OR ;
-						&lcondicion11. OR ;
-						&lcondicion12. OR ;
-						&lcondicion13. OR ;
-						&lcondicion14. THEN
-					SELECT exp_doc
-					SEEK lano_eje+lsec_ejec+ls_expediente+ls_ciclo+ls_fase+ls_secuencia+ls_correlativo
-					IF FOUND() THEN
-						=procesa_gp_n()		&& pagados normales
+			lorden_ciclo = "2"
+			* Pagado FF 00 *
+			CREATE CURSOR curTipoRecurso (fuente_financ  		c(2),;
+										  tipo_recurso			c(2))
+			SELECT curTipoRecurso
+			INDEX on fuente_financ+tipo_recurso TAG inx1
+			INSERT INTO curTipoRecurso VALUES ('00','D ')				  
+			INSERT INTO curTipoRecurso VALUES ('00','I ')	
+			INSERT INTO curTipoRecurso VALUES ('00','10')	
+
+			INSERT INTO curTipoRecurso VALUES ('07','3 ')	
+			INSERT INTO curTipoRecurso VALUES ('09','0 ')				
+			INSERT INTO curTipoRecurso VALUES ('09','1 ')				
+			INSERT INTO curTipoRecurso VALUES ('09','7 ')	
+							
+			INSERT INTO curTipoRecurso VALUES ('04','1 ')					
+			INSERT INTO curTipoRecurso VALUES ('07','A ')				  
+			INSERT INTO curTipoRecurso VALUES ('13','N ')																  
+			INSERT INTO curTipoRecurso VALUES ('12','1 ')
+			INSERT INTO curTipoRecurso VALUES ('12','7 ')
+			INSERT INTO curTipoRecurso VALUES ('12','8 ')
+			INSERT INTO curTipoRecurso VALUES ('13','S ')
+			INSERT INTO curTipoRecurso VALUES ('13','1 ')
+			INSERT INTO curTipoRecurso VALUES ('13','2 ')
+			INSERT INTO curTipoRecurso VALUES ('13','3 ')																  
+			INSERT INTO curTipoRecurso VALUES ('13','N ')																  
+			INSERT INTO curTipoRecurso VALUES ('13','J ')	
+			INSERT INTO curTipoRecurso VALUES ('13','O ')
+			INSERT INTO curTipoRecurso VALUES ('13','P ')								
+
+			INSERT INTO curTipoRecurso VALUES ('13','10')							
+			INSERT INTO curTipoRecurso VALUES ('13','11')				
+			INSERT INTO curTipoRecurso VALUES ('13','14')							
+			INSERT INTO curTipoRecurso VALUES ('13','15')							
+			INSERT INTO curTipoRecurso VALUES ('13','16')							
+			INSERT INTO curTipoRecurso VALUES ('13','18')										
+			
+			INSERT INTO curTipoRecurso VALUES ('18','D ')				  
+			INSERT INTO curTipoRecurso VALUES ('18','E ')				  
+			INSERT INTO curTipoRecurso VALUES ('18','H ')				  
+			INSERT INTO curTipoRecurso VALUES ('18','I ')			  									
+			INSERT INTO curTipoRecurso VALUES ('18','J ')				  
+			INSERT INTO curTipoRecurso VALUES ('18','K ')				  			
+			INSERT INTO curTipoRecurso VALUES ('18','L ')				  
+			INSERT INTO curTipoRecurso VALUES ('18','M ')				  
+			INSERT INTO curTipoRecurso VALUES ('18','N ')				  			
+			INSERT INTO curTipoRecurso VALUES ('18','Ñ ')				  			
+			INSERT INTO curTipoRecurso VALUES ('18','Q ')				  			
+			INSERT INTO curTipoRecurso VALUES ('18','P ')				  			
+			INSERT INTO curTipoRecurso VALUES ('18','R ')				  			
+			INSERT INTO curTipoRecurso VALUES ('18','S ')				  			
+			INSERT INTO curTipoRecurso VALUES ('18','T ')				  			
+			INSERT INTO curTipoRecurso VALUES ('18','U ')				  			
+			INSERT INTO curTipoRecurso VALUES ('18','V ')				  
+			INSERT INTO curTipoRecurso VALUES ('18','W ')
+			INSERT INTO curTipoRecurso VALUES ('18','10')			
+			INSERT INTO curTipoRecurso VALUES ('18','11')						
+			INSERT INTO curTipoRecurso VALUES ('18','12')									
+			INSERT INTO curTipoRecurso VALUES ('18','13')									
+			INSERT INTO curTipoRecurso VALUES ('18','14')									
+			INSERT INTO curTipoRecurso VALUES ('18','15')									
+			INSERT INTO curTipoRecurso VALUES ('18','16')	
+			INSERT INTO curTipoRecurso VALUES ('18','17')																	
+			INSERT INTO curTipoRecurso VALUES ('18','18')									
+			INSERT INTO curTipoRecurso VALUES ('18','19')									
+			INSERT INTO curTipoRecurso VALUES ('18','20')									
+			INSERT INTO curTipoRecurso VALUES ('18','21')									
+			INSERT INTO curTipoRecurso VALUES ('18','24')									
+			INSERT INTO curTipoRecurso VALUES ('19','A ')				  
+			INSERT INTO curTipoRecurso VALUES ('19','H ')				  			
+			INSERT INTO curTipoRecurso VALUES ('19','G ')				  						
+			INSERT INTO curTipoRecurso VALUES ('19','F ')
+			INSERT INTO curTipoRecurso VALUES ('19','8 ')							  									
+			INSERT INTO curTipoRecurso VALUES ('88','0 ')							  									
+			
+			
+
+			
+						
+			lcondicion01 = "(EXP_FASE.origen+EXP_FASE.fuente_financ $ '100/114/116' .and. EXP_FASE.sec_ejec <> '000047' )"
+			lcondicion02 = "EXP_FASE.sec_ejec = '000047' "
+*!*				lcondicion03 = "INLIST(EXP_FASE.origen+EXP_FASE.fuente_financ+EXP_FASE.tipo_recurso,'1121 ','1127 ','1128 ')"
+*!*				lcondicion04 = "INLIST(EXP_FASE.origen+EXP_FASE.fuente_financ+EXP_FASE.tipo_recurso,'113S ','1131 ','1132 ','1133 ','113N ')"
+*!*				lcondicion05 = "gctipo_unidad+EXP_FASE.origen+EXP_FASE.fuente_financ+EXP_FASE.tipo_recurso = 'M113J '"
+*!*				lcondicion06 = "EXP_FASE.origen+EXP_FASE.fuente_financ+EXP_FASE.tipo_recurso = '1151 '"
+			lcondicion03 = "(EXP_FASE.origen+EXP_FASE.fuente_financ = '117' AND EXP_FASE.tipo_recurso != '0 ')"
+			* cambio solicitado por EM 10/02/2011. realizado por PC
+*!*				lcondicion08 = "INLIST(exp_fase.fuente_financ+exp_fase.tipo_recurso,'18D ','18E ','18H ','18I ','18J ','18K ','18L ','18M ','18N ','18Ñ ')"
+*!*				lcondicion09 = "INLIST(exp_fase.fuente_financ+exp_fase.tipo_recurso,'18O ','18P ','18Q ','18R ','18S ','18T ','18U ','18V ','18W ','18Y ','00D ','00I ')"
+*!*				lcondicion10 = "inlist(EXP_FASE.fuente_financ+EXP_FASE.tipo_recurso,'07A ','19A ','1311','1315','1316','1314','19H ','19G ','041 ')"
+*!*				lcondicion11 = "inlist(EXP_FASE.fuente_financ+EXP_FASE.tipo_recurso,'1810','1811','1812','1813','1814','1815','1816', '1817','1819','1820','1821','1824','19F ','19G ')" && Solicitado por Maguiña
+*!*				lcondicion12 = "inlist(EXP_FASE.fuente_financ+EXP_FASE.tipo_recurso,'13O ','13P ','0010','1310','1818','198')"  && LGM 23052014 (RB 00,13,18 y TR 10 y 18)
+*!*				lcondicion13 = "inlist(EXP_FASE.fuente_financ+EXP_FASE.tipo_recurso,'097 ','1318')"   &&& Por sugerencia de Karina Diaz en acuerdo con Mario Holgado hecho por talavera
+*!*				lcondicion14 = "inlist(EXP_FASE.fuente_financ+EXP_FASE.tipo_recurso,'073 ')"   &&& Por sugerencia de Karina Dia - 21012016
+*!*				lcondicion15 = "inlist(EXP_FASE.fuente_financ+EXP_FASE.tipo_recurso,'1824')"   
+			&&& Se agrego 1820,1821,19F Agricultura 08012016
+			IF &lcondicion01. OR ;
+					&lcondicion02. OR ;
+					&lcondicion03. OR SEEK(exp_fase.fuente_financ+exp_fase.tipo_recurso,'curTipoRecurso','inx1') THEN
+					
+				SELECT exp_doc
+				SEEK lano_eje+lsec_ejec+ls_expediente+ls_ciclo+ls_fase+ls_secuencia+ls_correlativo
+				IF FOUND() THEN
+					=procesa_gp_n()		&& pagados normales
+				ELSE
+					IF exp_sec.estado = 'O' THEN
+						=procesa_gp_extorno()	&& extorno de pagados
 					ELSE
-						IF exp_sec.estado = 'O' THEN
-							=procesa_gp_extorno()	&& Extorno de Pagados
-						ELSE
-							=procesa_gp_reas()	&& pagados reasignados
-						ENDIF
+						=procesa_gp_reas()	&& pagados reasignados
 					ENDIF
 				ENDIF
+			ENDIF
+			USE IN curTipoRecurso
 		ENDCASE
 	ENDSCAN
 
@@ -356,7 +426,7 @@ FUNCTION procesa_ir_d
 		ENDIF
 		* documentos permitidos *
 		IF !INLIST(exp_doc.cod_doc, '020', '025', '026', '033', '044', '049', ;
-				'061', '064', '065', '066', '068', '089', '095') THEN
+				'061', '064', '065', '066', '068', '089', '095','096','139') THEN
 			LOOP
 		ENDIF
 		****
@@ -486,7 +556,7 @@ FUNCTION procesa_ir_yv
 			lano_eje+lsec_ejec+ls_expediente+ls_ciclo+ls_fase+ls_secuencia+"0001"
 		* Documentos Permitidos *
 		IF INLIST(exp_doc.cod_doc, '000', '020', '025', '026', '033', '044', '049', ;
-				'061', '064', '065', '066', '068', '081', '087', '088', '089', '095') THEN
+				'061', '064', '065', '066', '068', '081', '087', '088', '089', '095','096','139') THEN
 			IF exp_sec.monto > 00 .AND. exp_sec.estado == "A"
 				ls_mes_eje = PADL(MONTH(exp_sec.fecha_doc),2,'0')
 			ELSE
@@ -763,7 +833,7 @@ FUNCTION procesa_ir_tr_an
 			lano_eje+lsec_ejec+ls_expediente+ls_ciclo+ls_fase+ls_secuencia+"0001"
 		* Documentos Permitidos *
 		IF INLIST(exp_doc.cod_doc, '000', '020', '025', '026', '033', '044', '049', ;
-				'061', '064', '065', '066', '068', '089', '095') THEN
+				'061', '064', '065', '066', '068', '089', '095','096','139') THEN
 			ls_num_doc = exp_doc.num_doc
 			ls_nombre = exp_doc.nombre
 			IF SEEK(lano_eje+			;
@@ -881,7 +951,7 @@ FUNCTION procesa_ir_tr
 					lano_eje+lsec_ejec+ls_expediente+ls_ciclo+ls_fase+ls_secuencia+ls_correlativo
 				* Documentos Permitidos *
 				IF INLIST(exp_doc.cod_doc, '000', '020', '025', '026', '033', '044', '049', ;
-						'061', '064', '065', '066', '068', '089', '095') THEN
+						'061', '064', '065', '066', '068', '089', '095','096','139') THEN
 					ls_num_doc = exp_doc.num_doc
 					ls_nombre = exp_doc.nombre
 					* ingreso por transferencia *
@@ -1012,7 +1082,7 @@ FUNCTION procesa_gg_otros
 			ano_eje+sec_ejec+expediente+ciclo+fase+secuencia+correlativo
 		* documentos permitidos *
 		IF !INLIST(exp_doc.cod_doc, '025', '026', '033', '044', '049', '061', ;
-				'064', '065', '066', '068', '077', '081', '084', '087', '088', '089', '095') THEN
+				'064', '065', '066', '068', '077', '081', '084', '087', '088', '089', '095','096','139') THEN
 			LOOP
 		ENDIF
 		* no fecha vacia o año diferente a año de ejecucion *

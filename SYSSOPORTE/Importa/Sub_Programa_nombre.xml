@@ -1,0 +1,130 @@
+<?xml version = "1.0" encoding="UTF-8" standalone="yes"?>
+<VFPDataSet>
+	<xsd:schema id="VFPDataSet" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="VFPDataSet" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="cur_sub_programa_nombre" minOccurs="0" maxOccurs="unbounded">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="ano_eje" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="5"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="sub_programa" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="5"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="nombre" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="150"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="estado" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="1"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="ambito" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="1"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="es_presupuestal" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="1"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="ambito_en" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="1"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+				<xsd:anyAttribute namespace="http://www.w3.org/XML/1998/namespace" processContents="lax"/>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<cur_sub_programa_nombre>
+		<ano_eje>2025</ano_eje>
+		<sub_programa>0005</sub_programa>
+		<nombre>PLANEAMIENTO INSTITUCIONAL</nombre>
+		<estado>A</estado>
+		<ambito>G</ambito>
+		<es_presupuestal>S</es_presupuestal>
+		<ambito_en>F</ambito_en>
+	</cur_sub_programa_nombre>
+	<cur_sub_programa_nombre>
+		<ano_eje>2025</ano_eje>
+		<sub_programa>0011</sub_programa>
+		<nombre>PREPARACION Y PERFECCIONAMIENTO DE RECURSOS HUMANOS</nombre>
+		<estado>A</estado>
+		<ambito>G</ambito>
+		<es_presupuestal>S</es_presupuestal>
+		<ambito_en>F</ambito_en>
+	</cur_sub_programa_nombre>
+	<cur_sub_programa_nombre>
+		<ano_eje>2025</ano_eje>
+		<sub_programa>0012</sub_programa>
+		<nombre>CONTROL INTERNO</nombre>
+		<estado>A</estado>
+		<ambito>G</ambito>
+		<es_presupuestal>S</es_presupuestal>
+		<ambito_en>F</ambito_en>
+	</cur_sub_programa_nombre>
+	<cur_sub_programa_nombre>
+		<ano_eje>2025</ano_eje>
+		<sub_programa>0000</sub_programa>
+		<nombre>SUB PROGRAMA GENERICO</nombre>
+		<estado>A</estado>
+		<ambito>G</ambito>
+		<es_presupuestal>N</es_presupuestal>
+		<ambito_en>F</ambito_en>
+	</cur_sub_programa_nombre>
+	<cur_sub_programa_nombre>
+		<ano_eje>2025</ano_eje>
+		<sub_programa>0088</sub_programa>
+		<nombre>SANEAMIENTO URBANO</nombre>
+		<estado>A</estado>
+		<ambito>G</ambito>
+		<es_presupuestal>S</es_presupuestal>
+		<ambito_en>F</ambito_en>
+	</cur_sub_programa_nombre>
+	<cur_sub_programa_nombre>
+		<ano_eje>2025</ano_eje>
+		<sub_programa>0008</sub_programa>
+		<nombre>ASESORAMIENTO Y APOYO</nombre>
+		<estado>A</estado>
+		<ambito>G</ambito>
+		<es_presupuestal>S</es_presupuestal>
+		<ambito_en>F</ambito_en>
+	</cur_sub_programa_nombre>
+	<cur_sub_programa_nombre>
+		<ano_eje>2025</ano_eje>
+		<sub_programa>0007</sub_programa>
+		<nombre>DIRECCION Y SUPERVISION SUPERIOR</nombre>
+		<estado>A</estado>
+		<ambito>G</ambito>
+		<es_presupuestal>S</es_presupuestal>
+		<ambito_en>F</ambito_en>
+	</cur_sub_programa_nombre>
+</VFPDataSet>

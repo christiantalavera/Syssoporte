@@ -208,8 +208,7 @@
   Comments:</cerrorinfo>
 	</log_app>
 	<log_app>
-		<dfecha>2025-11-11T22:29:12</dfecha>
-		<cerrorinfo>Exception Object 0:  ErrorNo: 1  LineNo: 0  Message: El archivo 'c:\siaf\siaf_1698\data\siaf.dbc' no existe.  Procedure: inicio  Detalles: c:\siaf\siaf_1698\data\siaf.dbc  StackLevel: 1  LineContents: DO d:\proyectospropios\vfp\syssoporte\syssoporte\syssoporte.exe
-  Comments: </cerrorinfo>
+		<dfecha>2025-12-03T23:59:33</dfecha>
+		<cerrorinfo>Exception Object 0:  ErrorNo: 13  LineNo: 0  Message: No se encuentra el alias 'TMP_CUR_CTA'.  Procedure: saldo_banco_new  Detalles: TMP_CUR_CTA  StackLevel: 3  LineContents: __ri_delete_maestro_documento()  Comments: </cerrorinfo>
 	</log_app>
 </VFPData>

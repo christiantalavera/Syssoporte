@@ -1,6 +1,26 @@
 PARAMETERS parmAnoEje,parmSecEjec
 lcRutaImporta = gcRutaImporta
 
+DO carga_funcion
+DO carga_programa
+DO carga_programa_nombre
+DO carga_sub_programa
+DO carga_sub_programa_nombre
+DO carga_act_proy_nombre
+DO carga_componente_nombre
+DO carga_finalidad
+DO carga_meta
+
+DO inserta_funcion
+DO inserta_programa
+DO inserta_programa_nombre
+DO inserta_sub_programa
+DO inserta_sub_programa_nombre
+DO inserta_act_proy_nombre
+DO inserta_componente_nombre
+DO inserta_finalidad
+DO inserta_meta
+
 
 DO carga_certificado
 DO carga_certificado_fase
@@ -45,6 +65,108 @@ DO inserta_expediente_secuencia_pagado
 DO inserta_expediente_clasif_pagado	
 DO inserta_expediente_meta_pagado
 
+
+DO carga_nota_modificatoria_cab
+DO carga_nota_modificatoria_sec
+DO carga_nota_modificatoria_det
+DO carga_nota_modificatoria_doc
+DO carga_nota_modificatoria_doc_sec
+DO carga_nota_modificatoria_fte
+DO carga_nota_modificatoria_ing
+
+DO inserta_nota_modificatoria_cab
+DO inserta_nota_modificatoria_sec
+DO inserta_nota_modificatoria_det
+DO inserta_nota_modificatoria_doc
+DO inserta_nota_modificatoria_doc_sec
+DO inserta_nota_modificatoria_fte
+DO inserta_nota_modificatoria_ing
+
+DO carga_mpp_pca_x_generica
+DO carga_mpp_pca_x_especifica
+
+DO inserta_mpp_pca_x_generica
+DO inserta_mpp_pca_x_especifica
+
+
+
+PROCEDURE carga_funcion
+	lcArchivoXML = lcRutaImporta+'funcion.xml'
+	IF FILE(lcArchivoXML) THEN 
+		importarxml_adapter(lcArchivoXML, "cur_funcion")
+	ENDIF 
+ENDPROC 
+
+PROCEDURE carga_programa
+	lcArchivoXML = lcRutaImporta+'programa.xml'
+	IF FILE(lcArchivoXML) THEN 
+		importarxml_adapter(lcArchivoXML, "cur_programa")
+	ENDIF 
+ENDPROC 
+
+PROCEDURE carga_programa_nombre
+	lcArchivoXML = lcRutaImporta+'programa_nombre.xml'
+	IF FILE(lcArchivoXML) THEN 
+		importarxml_adapter(lcArchivoXML, "cur_programa_nombre")
+	ENDIF 
+ENDPROC 
+
+PROCEDURE carga_sub_programa
+	lcArchivoXML = lcRutaImporta+'sub_programa.xml'
+	IF FILE(lcArchivoXML) THEN 
+		importarxml_adapter(lcArchivoXML, "cur_sub_programa")
+	ENDIF 
+ENDPROC 
+
+PROCEDURE carga_sub_programa_nombre
+	lcArchivoXML = lcRutaImporta+'sub_programa_nombre.xml'
+	IF FILE(lcArchivoXML) THEN 
+		importarxml_adapter(lcArchivoXML, "cur_sub_programa_nombre")
+	ENDIF 
+ENDPROC
+ 
+PROCEDURE carga_act_proy_nombre
+	lcArchivoXML = lcRutaImporta+'act_proy_nombre.xml'
+	IF FILE(lcArchivoXML) THEN 
+		importarxml_adapter(lcArchivoXML, "cur_act_proy_nombre")
+	ENDIF 
+ENDPROC
+
+
+PROCEDURE carga_componente_nombre
+	lcArchivoXML = lcRutaImporta+'componente_nombre.xml'
+	IF FILE(lcArchivoXML) THEN 
+		importarxml_adapter(lcArchivoXML, "cur_componente_nombre")
+	ENDIF 
+ENDPROC
+
+PROCEDURE carga_programa_ppto
+	lcArchivoXML = lcRutaImporta+'programa_ppto.xml'
+	IF FILE(lcArchivoXML) THEN 
+		importarxml_adapter(lcArchivoXML, "cur_programa_ppto")
+	ENDIF 
+ENDPROC
+
+PROCEDURE carga_programa_ppto_nombre
+	lcArchivoXML = lcRutaImporta+'programa_ppto_nombre.xml'
+	IF FILE(lcArchivoXML) THEN 
+		importarxml_adapter(lcArchivoXML, "cur_programa_ppto_nombre")
+	ENDIF 
+ENDPROC
+
+PROCEDURE carga_finalidad
+	lcArchivoXML = lcRutaImporta+'finalidad.xml'
+	IF FILE(lcArchivoXML) THEN 
+		importarxml_adapter(lcArchivoXML, "cur_finalidad")
+	ENDIF 
+ENDPROC 
+
+PROCEDURE carga_meta
+	lcArchivoXML = lcRutaImporta+'meta.xml'
+	IF FILE(lcArchivoXML) THEN 
+		importarxml_adapter(lcArchivoXML, "cur_meta")
+	ENDIF 
+ENDPROC 
 
 PROCEDURE carga_certificado
 	lcArchivoXML = lcRutaImporta+'certificado.xml'
@@ -292,6 +414,87 @@ PROCEDURE carga_expediente_meta_pagado
 ENDPROC
 
 
+PROCEDURE carga_nota_modificatoria_cab
+	lcArchivoXML = lcRutaImporta+'nota_modificatoria_cab.xml'
+	IF FILE(lcArchivoXML) THEN 
+		importarxml_adapter(lcArchivoXML, "cur_nota_modificatoria_cab")
+	ENDIF 
+ENDPROC 
+
+PROCEDURE carga_nota_modificatoria_sec
+	lcArchivoXML = lcRutaImporta+'nota_modificatoria_sec.xml'
+	IF FILE(lcArchivoXML) THEN 
+		importarxml_adapter(lcArchivoXML, "cur_nota_modificatoria_sec")
+	ENDIF 
+ENDPROC 
+
+PROCEDURE carga_nota_modificatoria_det
+	lcArchivoXML = lcRutaImporta+'nota_modificatoria_det.xml'
+	IF FILE(lcArchivoXML) THEN 
+		importarxml_adapter(lcArchivoXML, "cur_nota_modificatoria_det")
+	ENDIF 
+ENDPROC 
+
+PROCEDURE carga_nota_modificatoria_doc
+	lcArchivoXML = lcRutaImporta+'nota_modificatoria_doc.xml'
+	IF FILE(lcArchivoXML) THEN 
+		importarxml_adapter(lcArchivoXML, "cur_nota_modificatoria_doc")
+	ENDIF 
+ENDPROC 
+
+PROCEDURE carga_nota_modificatoria_doc_sec
+	lcArchivoXML = lcRutaImporta+'nota_modificatoria_doc_sec.xml'
+	IF FILE(lcArchivoXML) THEN 
+		importarxml_adapter(lcArchivoXML, "cur_nota_modificatoria_doc_sec")
+	ENDIF 
+ENDPROC 
+
+
+PROCEDURE carga_nota_modificatoria_fte
+	lcArchivoXML = lcRutaImporta+'nota_modificatoria_fte.xml'
+	IF FILE(lcArchivoXML) THEN 
+		importarxml_adapter(lcArchivoXML, "cur_nota_modificatoria_fte")
+	ENDIF 
+ENDPROC 
+
+PROCEDURE carga_nota_modificatoria_ing
+	lcArchivoXML = lcRutaImporta+'nota_modificatoria_ing.xml'
+	IF FILE(lcArchivoXML) THEN 
+		importarxml_adapter(lcArchivoXML, "cur_nota_modificatoria_ing")
+	ENDIF 
+ENDPROC 
+
+PROCEDURE carga_mpp_pca_x_generica
+	lcArchivoXML = lcRutaImporta+'mpp_pca_x_generica.xml'
+	IF FILE(lcArchivoXML) THEN 
+		importarxml_adapter(lcArchivoXML, "cur_mpp_pca_x_generica")
+	ENDIF 
+ENDPROC 
+
+PROCEDURE carga_mpp_pca_x_especifica
+	lcArchivoXML = lcRutaImporta+'mpp_pca_x_especifica.xml'
+	IF FILE(lcArchivoXML) THEN 
+		importarxml_adapter(lcArchivoXML, "cur_mpp_pca_x_especifica")
+	ENDIF 
+ENDPROC 
+
+PROCEDURE carga_mpp_distribucion_pca_cab
+	lcArchivoXML = lcRutaImporta+'mpp_distribucion_pca_cab.xml'
+	IF FILE(lcArchivoXML) THEN 
+		importarxml_adapter(lcArchivoXML, "cur_mpp_distribucion_pca_cab")
+	ENDIF 
+ENDPROC 
+
+PROCEDURE carga_mpp_distribucion_pca_det
+	lcArchivoXML = lcRutaImporta+'mpp_distribucion_pca_det.xml'
+	IF FILE(lcArchivoXML) THEN 
+		importarxml_adapter(lcArchivoXML, "cur_mpp_distribucion_pca_det")
+	ENDIF 
+ENDPROC 
+
+
+
+
 
 
 
@@ -317,7 +520,7 @@ PROCEDURE inserta_certificado
 		m.tipo_certificado  = padl(m.tipo_certificado,1,'0')
 		m.estado_envio = 'T'		
 		m.estado_registro = 'A'
-
+		m.tipo_operacion = IIF(ISNULL(m.tipo_operacion),'',m.tipo_operacion)
 		IF !SEEK(m.ano_eje+m.sec_ejec+m.certificado,'certificado','CERTI') THEN 
 			lnContador = lnContador + 1
 			WAIT WINDOW 'Insertando en Tabla Certificado -->>'+m.ano_eje+"-"+m.certificado NOWAIT 
@@ -1189,7 +1392,6 @@ PROCEDURE inserta_expediente_fase_pagado
 		m.secuencia_padre = ALLTRIM(m.secuencia_padre)
 		m.secuencia_anterior = ALLTRIM(m.secuencia_anterior)
 		m.monto_saldo = 0
-*		m.ruc = STR(m.ruc,11,0)
 		m.proyecto = '000'
 		m.certificado = RTRIM(IIF(ISNULL(m.certificado),'',m.certificado))
 		m.certificado_secuencia = RTRIM(IIF(ISNULL(m.certificado_secuencia),'',m.certificado_secuencia))
@@ -1403,3 +1605,749 @@ ENDPROC
 
 
 
+
+PROCEDURE inserta_funcion
+	USE siaf!funcion IN 0 ORDER tag funcion AGAIN 
+	llOk = .T.
+	lcArchivoXML = lcRutaImporta+'funcion.xml' 
+	IF !FILE(lcArchivoXML) THEN 
+		llOk = .F.
+	ENDIF 
+	IF !lloK THEN 
+		RETURN 
+	ENDIF 
+	SET DELETED OFF 
+	SELECT cur_funcion
+	GO TOP 
+	lnContador = 0
+	SCAN ALL 
+		SCATTER MEMVAR 
+		m.ano_eje= ALLTRIM(m.ano_eje)
+		m.funcion = ALLTRIM(m.funcion)
+		IF !SEEK(m.ano_eje+m.funcion,'funcion','funcion') THEN 
+			lnContador = lnContador + 1
+			WAIT WINDOW 'Insertando en Tabla Función -->>'+m.ano_eje+"-"+m.funcion NOWAIT 
+			INSERT INTO funcion FROM MEMVAR 
+		ENDIF 
+	
+	ENDSCAN 
+
+	USE IN funcion
+	USE IN cur_funcion
+	SET DELETED ON 
+
+ENDPROC 
+
+PROCEDURE inserta_programa
+	USE siaf!programa IN 0 ORDER tag programa AGAIN 
+	llOk = .T.
+	lcArchivoXML = lcRutaImporta+'programa.xml' 
+	IF !FILE(lcArchivoXML) THEN 
+		llOk = .F.
+	ENDIF 
+	IF !lloK THEN 
+		RETURN 
+	ENDIF 
+	SET DELETED OFF 
+	SELECT cur_programa
+	GO TOP 
+	lnContador = 0
+	SCAN ALL 
+		SCATTER MEMVAR 
+		m.ano_eje= ALLTRIM(m.ano_eje)
+		m.funcion = ALLTRIM(m.funcion)
+		m.programa =ALLTRIM(m.programa)		
+		IF !SEEK(m.ano_eje+m.funcion+m.programa,'programa','programa') THEN 
+			lnContador = lnContador + 1
+			WAIT WINDOW 'Insertando en Tabla Programa -->>'+m.ano_eje+"-"+m.funcion+"-"+m.programa NOWAIT 
+			INSERT INTO programa FROM MEMVAR 
+		ENDIF 
+	
+	ENDSCAN 
+
+	USE IN programa
+	USE IN cur_programa
+	SET DELETED ON 
+
+ENDPROC 
+
+PROCEDURE inserta_programa_nombre
+	USE siaf!programa_nombre IN 0 ORDER tag programa  AGAIN 
+	llOk = .T.
+	lcArchivoXML = lcRutaImporta+'programa_nombre.xml' 
+	IF !FILE(lcArchivoXML) THEN 
+		llOk = .F.
+	ENDIF 
+	IF !lloK THEN 
+		RETURN 
+	ENDIF 
+	SET DELETED OFF 
+	SELECT cur_programa_nombre
+	GO TOP 
+	lnContador = 0
+	SCAN ALL 
+		SCATTER MEMVAR 
+		m.ano_eje= ALLTRIM(m.ano_eje)
+		m.programa =ALLTRIM(m.programa)		
+		IF !SEEK(m.ano_eje+m.programa,'programa_nombre','programa') THEN 
+			lnContador = lnContador + 1
+			WAIT WINDOW 'Insertando en Tabla Programa_nombre -->>'+m.ano_eje+"-"+m.programa NOWAIT 
+			INSERT INTO programa_nombre FROM MEMVAR 
+		ENDIF 
+	
+	ENDSCAN 
+
+	USE IN programa_nombre
+	USE IN cur_programa_nombre
+	SET DELETED ON 
+
+ENDPROC 
+
+
+
+
+PROCEDURE inserta_sub_programa
+	USE siaf!sub_programa IN 0 ORDER tag sub_prog AGAIN 
+	llOk = .T.
+	lcArchivoXML = lcRutaImporta+'sub_programa.xml' 
+	IF !FILE(lcArchivoXML) THEN 
+		llOk = .F.
+	ENDIF 
+	IF !lloK THEN 
+		RETURN 
+	ENDIF 
+	SET DELETED OFF 
+	SELECT cur_sub_programa
+	GO TOP 
+	lnContador = 0
+	SCAN ALL 
+		SCATTER MEMVAR 
+		m.ano_eje= ALLTRIM(m.ano_eje)
+		m.funcion = ALLTRIM(m.funcion)
+		m.programa =ALLTRIM(m.programa)
+		m.sub_programa =ALLTRIM(m.sub_programa)
+		IF !SEEK(m.ano_eje+m.funcion+m.programa+m.sub_programa,'sub_programa','sub_prog') THEN 
+			lnContador = lnContador + 1
+			WAIT WINDOW 'Insertando en Tabla Sub_Programa -->>'+m.ano_eje+"-"+m.funcion+"-"+m.programa+"-"+m.sub_programa NOWAIT 
+			INSERT INTO sub_programa FROM MEMVAR 
+		ENDIF 
+	
+	ENDSCAN 
+
+	USE IN sub_programa
+	USE IN cur_sub_programa
+	SET DELETED ON 
+
+ENDPROC 
+
+
+PROCEDURE inserta_sub_programa_nombre
+	USE siaf!sub_programa_nombre IN 0 ORDER tag sub_prog AGAIN 
+	llOk = .T.
+	lcArchivoXML = lcRutaImporta+'sub_programa_nombre.xml' 
+	IF !FILE(lcArchivoXML) THEN 
+		llOk = .F.
+	ENDIF 
+	IF !lloK THEN 
+		RETURN 
+	ENDIF 
+	SET DELETED OFF 
+	SELECT cur_sub_programa_nombre
+	GO TOP 
+	lnContador = 0
+	SCAN ALL 
+		SCATTER MEMVAR 
+		m.ano_eje= ALLTRIM(m.ano_eje)
+		m.sub_programa =ALLTRIM(m.sub_programa)
+		IF !SEEK(m.ano_eje+m.sub_programa,'sub_programa_nombre','sub_prog') THEN 
+			lnContador = lnContador + 1
+			WAIT WINDOW 'Insertando en Tabla Sub_Programa Nombre -->>'+m.ano_eje+"-"+m.sub_programa NOWAIT 
+			INSERT INTO sub_programa_nombre FROM MEMVAR 
+		ENDIF 
+	
+	ENDSCAN 
+
+	USE IN sub_programa_nombre
+	USE IN cur_sub_programa_nombre
+	SET DELETED ON 
+
+ENDPROC
+
+
+PROCEDURE inserta_act_proy_nombre
+	USE siaf!act_proy_nombre IN 0 ORDER tag act_proy AGAIN 
+	llOk = .T.
+	lcArchivoXML = lcRutaImporta+'act_proy_nombre.xml' 
+	IF !FILE(lcArchivoXML) THEN 
+		llOk = .F.
+	ENDIF 
+	IF !lloK THEN 
+		RETURN 
+	ENDIF 
+	SET DELETED OFF 
+	SELECT cur_act_proy_nombre
+	GO TOP 
+	lnContador = 0
+	SCAN ALL 
+		SCATTER MEMVAR 
+		m.ano_eje= ALLTRIM(m.ano_eje)
+		m.act_proy = ALLTRIM(m.act_proy)
+		m.costo_actual = IIF(ISNULL(m.costo_actual),0,m.costo_actual)
+		m.costo_actualizado_pip= IIF(ISNULL(m.costo_actualizado_pip),0,m.costo_actualizado_pip)		
+		m.costo_expediente = IIF(ISNULL(m.costo_expediente),0,m.costo_expediente)
+		m.ind_viabilidad = IIF(ISNULL(m.ind_viabilidad),'',m.ind_viabilidad)
+		IF !SEEK(m.ano_eje+m.act_proy,'act_proy_nombre','act_proy') THEN 
+			lnContador = lnContador + 1
+			WAIT WINDOW 'Insertando en Tabla Act_proy Nombre -->>'+m.ano_eje+"-"+m.act_proy NOWAIT 
+			INSERT INTO act_proy_nombre FROM MEMVAR 
+		ENDIF 
+	
+	ENDSCAN 
+
+	USE IN act_proy_nombre
+	USE IN cur_act_proy_nombre
+	SET DELETED ON 
+
+ENDPROC
+
+
+PROCEDURE inserta_componente_nombre
+	USE siaf!componente_nombre IN 0 ORDER tag COMPONENTE AGAIN 
+	llOk = .T.
+	lcArchivoXML = lcRutaImporta+'componente_nombre.xml' 
+	IF !FILE(lcArchivoXML) THEN 
+		llOk = .F.
+	ENDIF 
+	IF !lloK THEN 
+		RETURN 
+	ENDIF 
+	SET DELETED OFF 
+	SELECT cur_componente_nombre
+	GO TOP 
+	lnContador = 0
+	SCAN ALL 
+		SCATTER MEMVAR 
+		m.ano_eje = ALLTRIM(m.ano_eje)
+		m.componente = ALLTRIM(m.componente)
+		IF !SEEK(m.ano_eje+m.componente,'componente_nombre','COMPONENTE') THEN 
+			lnContador = lnContador + 1
+			WAIT WINDOW 'Insertando en Tabla Componente_Nombre -->>'+m.ano_eje+"-"+m.componente NOWAIT 
+			INSERT INTO componente_nombre FROM MEMVAR 
+		ENDIF 
+	
+	ENDSCAN 
+
+	USE IN componente_nombre
+	USE IN cur_componente_nombre
+	SET DELETED ON 
+
+ENDPROC
+
+
+PROCEDURE inserta_programa_ppto
+	USE siaf!programa_ppto IN 0 ORDER tag progppto AGAIN 
+	llOk = .T.
+	lcArchivoXML = lcRutaImporta+'programa_ppto.xml' 
+	IF !FILE(lcArchivoXML) THEN 
+		llOk = .F.
+	ENDIF 
+	IF !lloK THEN 
+		RETURN 
+	ENDIF 
+	SET DELETED OFF 
+	SELECT cur_programa_ppto
+	GO TOP 
+	lnContador = 0
+	SCAN ALL 
+		SCATTER MEMVAR 
+		m.ano_eje = ALLTRIM(m.ano_eje)
+		m.funcion = ALLTRIM(m.funcion)
+		m.programa = ALLTRIM(m.programa)
+		m.sub_programa = ALLTRIM(m.sub_programa)
+		m.act_proy = ALLTRIM(m.act_proy)
+		m.componente = ALLTRIM(m.componente)
+		m.programa_ppto = ALLTRIM(m.programa_ppto)		
+		IF !SEEK(m.ano_eje+m.funcion+m.programa+m.sub_programa+m.programa_ppto+m.act_proy+m.componente,'programa_ppto','progppto') THEN 
+			lnContador = lnContador + 1
+			WAIT WINDOW 'Insertando en Tabla Programa_ppto -->>'+m.ano_eje+"-"+m.programa_ppto NOWAIT 
+			INSERT INTO programa_ppto FROM MEMVAR 
+		ENDIF 
+	
+	ENDSCAN 
+
+	USE IN programa_ppto
+	USE IN cur_programa_ppto
+	SET DELETED ON 
+
+ENDPROC
+
+
+
+PROCEDURE inserta_programa_ppto_nombre
+	USE siaf!programa_ppto_nombre IN 0 ORDER tag PROGPPTO_N AGAIN 
+	llOk = .T.
+	lcArchivoXML = lcRutaImporta+'programa_ppto_nombre.xml' 
+	IF !FILE(lcArchivoXML) THEN 
+		llOk = .F.
+	ENDIF 
+	IF !lloK THEN 
+		RETURN 
+	ENDIF 
+	SET DELETED OFF 
+	SELECT cur_programa_ppto_nombre
+	GO TOP 
+	lnContador = 0
+	SCAN ALL 
+		SCATTER MEMVAR 
+		m.ano_eje = ALLTRIM(m.ano_eje)
+		m.programa_ppto = ALLTRIM(m.programa_ppto)		
+		
+		IF !SEEK(m.ano_eje+m.programa_ppto,'programa_ppto_nombre','PROGPPTO_N') THEN 
+			lnContador = lnContador + 1
+			WAIT WINDOW 'Insertando en Tabla Programa_ppto -->>'+m.ano_eje+"-"+m.programa_ppto NOWAIT 
+			INSERT INTO programa_ppto_nombre FROM MEMVAR 
+		ENDIF 
+	
+	ENDSCAN 
+
+	USE IN programa_ppto_nombre
+	USE IN cur_programa_ppto_nombre
+	SET DELETED ON 
+
+ENDPROC
+
+
+
+PROCEDURE inserta_finalidad
+	USE siaf!finalidad IN 0 ORDER tag finalidad AGAIN 
+	llOk = .T.
+	lcArchivoXML = lcRutaImporta+'finalidad.xml' 
+	IF !FILE(lcArchivoXML) THEN 
+		llOk = .F.
+	ENDIF 
+	IF !lloK THEN 
+		RETURN 
+	ENDIF 
+	SET DELETED OFF 
+	SELECT cur_finalidad
+	GO TOP 
+	lnContador = 0
+	SCAN ALL 
+		SCATTER MEMVAR 
+		m.ano_eje = ALLTRIM(m.ano_eje)
+		m.finalidad = ALLTRIM(m.finalidad)
+		
+		IF !SEEK(m.ano_eje+m.finalidad,'finalidad','finalidad') THEN 
+			lnContador = lnContador + 1
+			WAIT WINDOW 'Insertando en Tabla Finalidad -->>'+m.ano_eje+"-"+m.finalidad NOWAIT 
+			INSERT INTO finalidad FROM MEMVAR 
+		ENDIF 
+	
+	ENDSCAN 
+
+	USE IN finalidad
+	USE IN cur_finalidad
+	SET DELETED ON 
+
+ENDPROC
+
+
+PROCEDURE inserta_meta
+	USE siaf!meta IN 0 ORDER tag meta AGAIN 
+	llOk = .T.
+	lcArchivoXML = lcRutaImporta+'meta.xml' 
+	IF !FILE(lcArchivoXML) THEN 
+		llOk = .F.
+	ENDIF 
+	IF !lloK THEN 
+		RETURN 
+	ENDIF 
+	SET DELETED OFF 
+	SELECT cur_meta
+	GO TOP 
+	lnContador = 0
+	SCAN ALL 
+		SCATTER MEMVAR 
+		m.ano_eje = ALLTRIM(m.ano_eje)
+		m.sec_ejec = ALLTRIM(m.sec_ejec)
+		m.sec_func = ALLTRIM(m.sec_func)
+		m.funcion = ALLTRIM(m.funcion)
+		m.programa = ALLTRIM(m.programa)
+		m.sub_programa = ALLTRIM(m.sub_programa)
+		m.act_proy = ALLTRIM(m.act_proy)
+		m.componente = ALLTRIM(m.componente)
+		m.programa_ppto = ALLTRIM(m.programa_ppto)
+		m.finalidad = ALLTRIM(m.finalidad)
+		m.fecha_ing = CTOD(m.fecha_ing)
+		IF !SEEK(m.ano_eje+m.sec_ejec+m.sec_func,'meta','meta') THEN 
+			lnContador = lnContador + 1
+			WAIT WINDOW 'Insertando en Tabla Meta -->>'+m.ano_eje+"-"+m.sec_ejec+"-"+m.sec_func NOWAIT 
+			INSERT INTO meta FROM MEMVAR 
+		ENDIF 
+	
+	ENDSCAN 
+
+	USE IN meta
+	USE IN cur_meta
+	SET DELETED ON 
+
+ENDPROC
+
+
+
+
+PROCEDURE inserta_nota_modificatoria_cab
+	USE siaf!nota_modificatoria_cab IN 0 ORDER tag mp_notacab AGAIN 
+	llOk = .T.
+	lcArchivoXML = lcRutaImporta+'nota_modificatoria_cab.xml' 
+	IF !FILE(lcArchivoXML) THEN 
+		llOk = .F.
+	ENDIF 
+	IF !lloK THEN 
+		RETURN 
+	ENDIF 
+	SET DELETED OFF 
+	SELECT cur_nota_modificatoria_cab
+	GO TOP 
+	SCAN ALL 
+		SCATTER MEMVAR 
+		m.ano_eje = ALLTRIM(m.ano_eje)
+		m.sec_ejec = ALLTRIM(m.sec_ejec)
+		m.sec_ejec2 = ALLTRIM(m.sec_ejec2)
+		m.sec_nota = ALLTRIM(m.sec_nota)
+		m.dispositivo_legal = IIF(ISNULL(m.dispositivo_legal),'',m.dispositivo_legal)
+		IF !SEEK(m.ano_eje+m.sec_ejec+m.sec_ejec2+m.sec_nota,'nota_modificatoria_cab','mp_notacab') THEN 
+			WAIT WINDOW 'Insertando en Tabla Nota_modificatoria_cab -->>'+m.ano_eje+"-"+m.sec_nota NOWAIT 
+			INSERT INTO nota_modificatoria_cab FROM MEMVAR 
+		ENDIF 
+	
+	ENDSCAN 
+
+	USE IN nota_modificatoria_cab
+	USE IN cur_nota_modificatoria_cab
+	SET DELETED ON 
+*!*		SELECT curProceso
+*!*		IF SEEK(parmSecEjec+parmAnoEje+'01','curProceso','inx1') THEN 
+*!*			REPLACE curProceso.IndicadorInserta WITH 1
+*!*		ENDIF 	
+	
+ENDPROC 
+
+
+PROCEDURE inserta_nota_modificatoria_sec
+	USE siaf!nota_modificatoria_sec IN 0 ORDER tag mp_notasec AGAIN 
+	llOk = .T.
+	lcArchivoXML = lcRutaImporta+'nota_modificatoria_sec.xml' 
+	IF !FILE(lcArchivoXML) THEN 
+		llOk = .F.
+	ENDIF 
+	IF !lloK THEN 
+		RETURN 
+	ENDIF 
+	SET DELETED OFF 
+	SELECT cur_nota_modificatoria_sec
+	GO TOP 
+	SCAN ALL 
+		SCATTER MEMVAR 
+		m.ano_eje = ALLTRIM(m.ano_eje)
+		m.sec_ejec = ALLTRIM(m.sec_ejec)
+		m.sec_ejec2 = ALLTRIM(m.sec_ejec2)
+		m.sec_nota = ALLTRIM(m.sec_nota)
+		m.secuencia = ALLTRIM(m.secuencia)	
+		m.fecha = CTOD(m.fecha)
+		m.fecha_doc = CTOD(m.fecha_doc)
+		m.fecha_doc2 = CTOD(m.fecha_doc2)
+			
+		IF !SEEK(m.ano_eje+m.sec_ejec+m.sec_ejec2+m.sec_nota+m.secuencia,'nota_modificatoria_sec','mp_notasec') THEN 
+			WAIT WINDOW 'Insertando en Tabla Nota_modificatoria_sec -->>'+m.ano_eje+"-"+m.sec_nota+"-"+m.secuencia NOWAIT 
+			INSERT INTO nota_modificatoria_sec FROM MEMVAR 
+		ENDIF 
+	
+	ENDSCAN 
+
+	USE IN nota_modificatoria_sec
+	USE IN cur_nota_modificatoria_sec
+	SET DELETED ON 
+*!*		SELECT curProceso
+*!*		IF SEEK(parmSecEjec+parmAnoEje+'01','curProceso','inx1') THEN 
+*!*			REPLACE curProceso.IndicadorInserta WITH 1
+*!*		ENDIF 	
+	
+ENDPROC 
+
+
+
+PROCEDURE inserta_nota_modificatoria_det
+	USE siaf!nota_modificatoria_det IN 0 ORDER tag mpnotadetp AGAIN 
+	llOk = .T.
+	lcArchivoXML = lcRutaImporta+'nota_modificatoria_det.xml' 
+	IF !FILE(lcArchivoXML) THEN 
+		llOk = .F.
+	ENDIF 
+	IF !lloK THEN 
+		RETURN 
+	ENDIF 
+	SET DELETED OFF 
+	SELECT cur_nota_modificatoria_det
+	GO TOP 
+	SCAN ALL 
+		SCATTER MEMVAR 
+		m.ano_eje = ALLTRIM(m.ano_eje)
+		m.sec_ejec = ALLTRIM(m.sec_ejec)
+		m.sec_ejec2 = ALLTRIM(m.sec_ejec2)
+		m.sec_nota = ALLTRIM(m.sec_nota)
+		m.origen = ALLTRIM(m.origen)
+		m.fuente_financ = ALLTRIM(m.fuente_financ)
+*		m.tipo_recurso = alltrim(m.tipo_recurso)
+		m.sec_func = ALLTRIM(m.sec_func)	
+		m.id_clasificador = ALLTRIM(m.id_clasificador)	
+		SELECT nota_modificatoria_det 
+		IF !SEEK(m.ano_eje+m.sec_ejec+m.sec_ejec2+m.sec_nota+m.origen+m.fuente_financ+m.tipo_recurso+m.sec_func+m.id_clasificador,'nota_modificatoria_det','mpnotadetp') THEN 
+			WAIT WINDOW 'Insertando en Tabla Nota_modificatoria_det -->>'+m.ano_eje+"-"+m.sec_nota+"-"+m.origen+"-"+m.fuente_financ+"-"+m.tipo_recurso+"-"+m.sec_func+"-"+m.id_clasificador NOWAIT 
+			INSERT INTO nota_modificatoria_det FROM MEMVAR 
+		ENDIF 
+	
+	ENDSCAN 
+
+	USE IN nota_modificatoria_det
+	USE IN cur_nota_modificatoria_det
+	SET DELETED ON 
+*!*		SELECT curProceso
+*!*		IF SEEK(parmSecEjec+parmAnoEje+'01','curProceso','inx1') THEN 
+*!*			REPLACE curProceso.IndicadorInserta WITH 1
+*!*		ENDIF 	
+	
+ENDPROC 
+
+
+
+PROCEDURE inserta_nota_modificatoria_doc
+	USE siaf!nota_modificatoria_doc IN 0 ORDER tag mp_notadoc AGAIN 
+	llOk = .T.
+	lcArchivoXML = lcRutaImporta+'nota_modificatoria_doc.xml' 
+	IF !FILE(lcArchivoXML) THEN 
+		llOk = .F.
+	ENDIF 
+	IF !lloK THEN 
+		RETURN 
+	ENDIF 
+	SET DELETED OFF 
+	SELECT cur_nota_modificatoria_doc
+	GO TOP 
+	SCAN ALL 
+		SCATTER MEMVAR 
+		m.ano_eje = ALLTRIM(m.ano_eje)
+		m.sec_ejec = ALLTRIM(m.sec_ejec)
+		m.sec_doc = ALLTRIM(m.sec_doc)
+		
+		IF !SEEK(m.ano_eje+m.sec_ejec+m.sec_doc,'nota_modificatoria_doc','mp_notadoc') THEN 
+			WAIT WINDOW 'Insertando en Tabla Nota_modificatoria_doc -->>'+m.ano_eje+"-"+m.sec_doc NOWAIT 
+			INSERT INTO nota_modificatoria_doc FROM MEMVAR 
+		ENDIF 
+	
+	ENDSCAN 
+
+	USE IN nota_modificatoria_doc
+	USE IN cur_nota_modificatoria_doc
+	SET DELETED ON 
+*!*		SELECT curProceso
+*!*		IF SEEK(parmSecEjec+parmAnoEje+'01','curProceso','inx1') THEN 
+*!*			REPLACE curProceso.IndicadorInserta WITH 1
+*!*		ENDIF 	
+	
+ENDPROC
+
+
+PROCEDURE inserta_nota_modificatoria_doc_sec
+	USE siaf!nota_modificatoria_doc_sec IN 0 ORDER tag mp_notados AGAIN 
+	llOk = .T.
+	lcArchivoXML = lcRutaImporta+'nota_modificatoria_doc_sec.xml' 
+	IF !FILE(lcArchivoXML) THEN 
+		llOk = .F.
+	ENDIF 
+	IF !lloK THEN 
+		RETURN 
+	ENDIF 
+	SET DELETED OFF 
+	SELECT cur_nota_modificatoria_doc_sec
+	GO TOP 
+	SCAN ALL 
+		SCATTER MEMVAR 
+		m.ano_eje = ALLTRIM(m.ano_eje)
+		m.sec_ejec = ALLTRIM(m.sec_ejec)
+		m.sec_ejec2 = ALLTRIM(m.sec_ejec2)
+		m.sec_doc = ALLTRIM(m.sec_doc)
+		m.sec_nota = ALLTRIM(m.sec_nota)		
+		m.secuencia = ALLTRIM(m.secuencia)
+		IF !SEEK(m.ano_eje+m.sec_ejec+m.sec_doc+m.sec_ejec2+m.sec_nota+m.secuencia,'nota_modificatoria_doc_sec','mp_notados') THEN 
+			WAIT WINDOW 'Insertando en Tabla Nota_modificatoria_doc_sec -->>'+m.ano_eje+m.sec_ejec+m.sec_doc+m.sec_ejec2+m.sec_nota+m.secuencia NOWAIT 
+			INSERT INTO nota_modificatoria_doc_sec FROM MEMVAR 
+		ENDIF 
+	
+	ENDSCAN 
+
+	USE IN nota_modificatoria_doc_sec
+	USE IN cur_nota_modificatoria_doc_sec
+	SET DELETED ON 
+*!*		SELECT curProceso
+*!*		IF SEEK(parmSecEjec+parmAnoEje+'01','curProceso','inx1') THEN 
+*!*			REPLACE curProceso.IndicadorInserta WITH 1
+*!*		ENDIF 	
+	
+ENDPROC
+
+PROCEDURE inserta_nota_modificatoria_fte
+	USE siaf!nota_modificatoria_fte IN 0 ORDER tag MP_NOTAFTE AGAIN 
+	llOk = .T.
+	lcArchivoXML = lcRutaImporta+'nota_modificatoria_fte.xml' 
+	IF !FILE(lcArchivoXML) THEN 
+		llOk = .F.
+	ENDIF 
+	IF !lloK THEN 
+		RETURN 
+	ENDIF 
+	SET DELETED OFF 
+	SELECT cur_nota_modificatoria_fte
+	GO TOP 
+	SCAN ALL 
+		SCATTER MEMVAR 
+		m.ano_eje = ALLTRIM(m.ano_eje)
+		m.sec_ejec = ALLTRIM(m.sec_ejec)
+		m.sec_ejec2 = ALLTRIM(m.sec_ejec2)
+		m.sec_nota = ALLTRIM(m.sec_nota)
+		m.origen = ALLTRIM(m.origen)
+		m.fuente_financ = ALLTRIM(m.fuente_financ)
+				
+		IF !SEEK(m.ano_eje+m.sec_ejec+m.sec_ejec2+m.sec_nota+m.origen+m.fuente_financ,'nota_modificatoria_fte','MP_NOTAFTE') THEN 
+			WAIT WINDOW 'Insertando en Tabla Nota_modificatoria_fte -->>'+m.ano_eje+m.sec_ejec+m.sec_ejec2+m.sec_nota+m.origen+m.fuente_financ NOWAIT 
+			INSERT INTO nota_modificatoria_fte FROM MEMVAR 
+		ENDIF 
+	
+	ENDSCAN 
+
+	USE IN nota_modificatoria_fte
+	USE IN cur_nota_modificatoria_fte
+	SET DELETED ON 
+*!*		SELECT curProceso
+*!*		IF SEEK(parmSecEjec+parmAnoEje+'01','curProceso','inx1') THEN 
+*!*			REPLACE curProceso.IndicadorInserta WITH 1
+*!*		ENDIF 	
+	
+ENDPROC
+
+PROCEDURE inserta_nota_modificatoria_ing
+	USE siaf!nota_modificatoria_ing IN 0 ORDER tag mpnotaingp AGAIN 
+	llOk = .T.
+	lcArchivoXML = lcRutaImporta+'nota_modificatoria_ing.xml' 
+	IF !FILE(lcArchivoXML) THEN 
+		llOk = .F.
+	ENDIF 
+	IF !lloK THEN 
+		RETURN 
+	ENDIF 
+	SET DELETED OFF 
+	SELECT cur_nota_modificatoria_ing
+	GO TOP 
+	SCAN ALL 
+		SCATTER MEMVAR 
+		m.ano_eje = ALLTRIM(m.ano_eje)
+		m.sec_ejec = ALLTRIM(m.sec_ejec)
+		m.sec_ejec2 = ALLTRIM(m.sec_ejec2)
+		m.sec_nota = ALLTRIM(m.sec_nota)
+		m.origen = ALLTRIM(m.origen)
+		m.fuente_financ = ALLTRIM(m.fuente_financ)
+*		m.tipo_recurso = RTRIM(m.tipo_recurso)
+		m.id_clasificador = ALLTRIM(m.id_clasificador)		
+		IF !SEEK(m.ano_eje+m.sec_ejec+m.sec_ejec2+m.sec_nota+m.origen+m.fuente_financ+m.tipo_recurso+m.id_clasificador,'nota_modificatoria_ing','mpnotaingp') THEN 
+			WAIT WINDOW 'Insertando en Tabla Nota_modificatoria_ing -->>'+m.ano_eje+m.sec_ejec+m.sec_ejec2+m.sec_nota+m.origen+m.fuente_financ+m.tipo_recurso+m.id_clasificador NOWAIT 
+			INSERT INTO nota_modificatoria_ing FROM MEMVAR 
+		ENDIF 
+	
+	ENDSCAN 
+
+	USE IN nota_modificatoria_ing
+	USE IN cur_nota_modificatoria_ing
+	SET DELETED ON 
+*!*		SELECT curProceso
+*!*		IF SEEK(parmSecEjec+parmAnoEje+'01','curProceso','inx1') THEN 
+*!*			REPLACE curProceso.IndicadorInserta WITH 1
+*!*		ENDIF 	
+	
+ENDPROC
+
+
+PROCEDURE inserta_mpp_pca_x_generica
+	USE siaf!mpp_pca_x_generica IN 0 ORDER tag pca_ge AGAIN 
+	llOk = .T.
+	lcArchivoXML = lcRutaImporta+'mpp_pca_x_generica.xml' 
+	IF !FILE(lcArchivoXML) THEN 
+		llOk = .F.
+	ENDIF 
+	IF !lloK THEN 
+		RETURN 
+	ENDIF 
+	SET DELETED OFF 
+	SELECT cur_mpp_pca_x_generica
+	GO TOP 
+	SCAN ALL 
+		SCATTER MEMVAR 
+		m.ano_eje = ALLTRIM(m.ano_eje)
+		m.sec_ejec = ALLTRIM(m.sec_ejec)
+		m.fuente_financ = ALLTRIM(m.fuente_financ)
+		m.categoria_gasto = ALLTRIM(m.categoria_gasto)
+		m.tipo_transaccion = ALLTRIM(m.tipo_transaccion)
+		m.generica = ALLTRIM(m.generica)
+		IF !SEEK(m.ano_eje+m.sec_ejec+m.fuente_financ+m.categoria_gasto+m.tipo_transaccion+m.generica,'mpp_pca_x_generica','pca_ge') THEN 
+			WAIT WINDOW 'Insertando en Tabla Mpp_pca_x_generica -->>'+m.ano_eje+m.sec_ejec+m.fuente_financ+m.categoria_gasto+m.tipo_transaccion+m.generica NOWAIT 
+			INSERT INTO mpp_pca_x_generica FROM MEMVAR 
+		ENDIF 
+	ENDSCAN 
+
+	USE IN mpp_pca_x_generica
+	USE IN cur_mpp_pca_x_generica
+	SET DELETED ON 
+*!*		SELECT curProceso
+*!*		IF SEEK(parmSecEjec+parmAnoEje+'01','curProceso','inx1') THEN 
+*!*			REPLACE curProceso.IndicadorInserta WITH 1
+*!*		ENDIF 	
+	
+ENDPROC
+
+
+PROCEDURE inserta_mpp_pca_x_especifica
+	USE siaf!mpp_pca_x_especifica IN 0 ORDER tag pcadet AGAIN 
+	llOk = .T.
+	lcArchivoXML = lcRutaImporta+'mpp_pca_x_especifica.xml' 
+	IF !FILE(lcArchivoXML) THEN 
+		llOk = .F.
+	ENDIF 
+	IF !lloK THEN 
+		RETURN 
+	ENDIF 
+	SET DELETED OFF 
+	SELECT cur_mpp_pca_x_especifica
+	GO TOP 
+	SCAN ALL 
+		SCATTER MEMVAR 
+		m.ano_eje = ALLTRIM(m.ano_eje)
+		m.sec_ejec = ALLTRIM(m.sec_ejec)
+		m.fuente_financ = ALLTRIM(m.fuente_financ)
+		m.categoria_gasto = ALLTRIM(m.categoria_gasto)
+		m.tipo_transaccion = ALLTRIM(m.tipo_transaccion)
+		m.generica = ALLTRIM(m.generica)
+		m.id_clasificador = ALLTRIM(m.id_clasificador)		
+		IF !SEEK(m.ano_eje+m.sec_ejec+m.fuente_financ+m.categoria_gasto+m.tipo_transaccion+m.generica+m.id_clasificador,'mpp_pca_x_especifica','pcadet') THEN 
+			WAIT WINDOW 'Insertando en Tabla Mpp_pca_x_especifica -->>'+m.ano_eje+m.sec_ejec+m.fuente_financ+m.categoria_gasto+m.tipo_transaccion+m.generica+m.id_clasificador NOWAIT 
+			INSERT INTO mpp_pca_x_especifica FROM MEMVAR 
+		ENDIF 
+	ENDSCAN 
+
+	USE IN mpp_pca_x_especifica
+	USE IN cur_mpp_pca_x_especifica
+	SET DELETED ON 
+*!*		SELECT curProceso
+*!*		IF SEEK(parmSecEjec+parmAnoEje+'01','curProceso','inx1') THEN 
+*!*			REPLACE curProceso.IndicadorInserta WITH 1
+*!*		ENDIF 	
+	
+ENDPROC

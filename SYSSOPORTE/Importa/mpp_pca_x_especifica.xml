@@ -1,0 +1,302 @@
+<?xml version = "1.0" encoding="UTF-8" standalone="yes"?>
+<VFPDataSet>
+	<xsd:schema id="VFPDataSet" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="VFPDataSet" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="cur_mpp_pca_x_especifica" minOccurs="0" maxOccurs="unbounded">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="ano_eje" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="5"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="sec_ejec" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="7"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="fuente_financ" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="categoria_gasto" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="1"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="tipo_transaccion" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="1"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="generica" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="1"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="id_clasificador" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="7"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="monto_asignado" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="19"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="monto_precertificado" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="19"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="monto_certificado" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="19"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="monto_comprometido_anual" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:decimal">
+											<xsd:totalDigits value="19"/>
+											<xsd:fractionDigits value="2"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="estado_registro" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="1"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+				<xsd:anyAttribute namespace="http://www.w3.org/XML/1998/namespace" processContents="lax"/>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<cur_mpp_pca_x_especifica>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<fuente_financ>00</fuente_financ>
+		<categoria_gasto>6</categoria_gasto>
+		<tipo_transaccion>2</tipo_transaccion>
+		<generica>6</generica>
+		<id_clasificador>ACbJu9G</id_clasificador>
+		<monto_asignado>410.00</monto_asignado>
+		<monto_precertificado>410.00</monto_precertificado>
+		<monto_certificado>410.00</monto_certificado>
+		<monto_comprometido_anual>410.00</monto_comprometido_anual>
+		<estado_registro>A</estado_registro>
+	</cur_mpp_pca_x_especifica>
+	<cur_mpp_pca_x_especifica>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<fuente_financ>00</fuente_financ>
+		<categoria_gasto>6</categoria_gasto>
+		<tipo_transaccion>2</tipo_transaccion>
+		<generica>6</generica>
+		<id_clasificador>ACbJvAN</id_clasificador>
+		<monto_asignado>29627.00</monto_asignado>
+		<monto_precertificado>29627.00</monto_precertificado>
+		<monto_certificado>29627.00</monto_certificado>
+		<monto_comprometido_anual>29627.00</monto_comprometido_anual>
+		<estado_registro>A</estado_registro>
+	</cur_mpp_pca_x_especifica>
+	<cur_mpp_pca_x_especifica>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<fuente_financ>19</fuente_financ>
+		<categoria_gasto>6</categoria_gasto>
+		<tipo_transaccion>2</tipo_transaccion>
+		<generica>6</generica>
+		<id_clasificador>ACbcxSj</id_clasificador>
+		<monto_asignado>30087520.66</monto_asignado>
+		<monto_precertificado>30087520.66</monto_precertificado>
+		<monto_certificado>30087520.66</monto_certificado>
+		<monto_comprometido_anual>27350813.36</monto_comprometido_anual>
+		<estado_registro>A</estado_registro>
+	</cur_mpp_pca_x_especifica>
+	<cur_mpp_pca_x_especifica>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<fuente_financ>00</fuente_financ>
+		<categoria_gasto>6</categoria_gasto>
+		<tipo_transaccion>2</tipo_transaccion>
+		<generica>6</generica>
+		<id_clasificador>ACbJvAP</id_clasificador>
+		<monto_asignado>60041.00</monto_asignado>
+		<monto_precertificado>60041.00</monto_precertificado>
+		<monto_certificado>60041.00</monto_certificado>
+		<monto_comprometido_anual>17890.90</monto_comprometido_anual>
+		<estado_registro>A</estado_registro>
+	</cur_mpp_pca_x_especifica>
+	<cur_mpp_pca_x_especifica>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<fuente_financ>00</fuente_financ>
+		<categoria_gasto>6</categoria_gasto>
+		<tipo_transaccion>2</tipo_transaccion>
+		<generica>6</generica>
+		<id_clasificador>ACbVI++</id_clasificador>
+		<monto_asignado>22666.10</monto_asignado>
+		<monto_precertificado>22666.10</monto_precertificado>
+		<monto_certificado>22666.10</monto_certificado>
+		<monto_comprometido_anual>22666.10</monto_comprometido_anual>
+		<estado_registro>A</estado_registro>
+	</cur_mpp_pca_x_especifica>
+	<cur_mpp_pca_x_especifica>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<fuente_financ>00</fuente_financ>
+		<categoria_gasto>6</categoria_gasto>
+		<tipo_transaccion>2</tipo_transaccion>
+		<generica>6</generica>
+		<id_clasificador>ACbJvJp</id_clasificador>
+		<monto_asignado>6931.59</monto_asignado>
+		<monto_precertificado>6931.59</monto_precertificado>
+		<monto_certificado>6931.59</monto_certificado>
+		<monto_comprometido_anual>4745.59</monto_comprometido_anual>
+		<estado_registro>A</estado_registro>
+	</cur_mpp_pca_x_especifica>
+	<cur_mpp_pca_x_especifica>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<fuente_financ>00</fuente_financ>
+		<categoria_gasto>6</categoria_gasto>
+		<tipo_transaccion>2</tipo_transaccion>
+		<generica>6</generica>
+		<id_clasificador>ACbJvLH</id_clasificador>
+		<monto_asignado>20484.32</monto_asignado>
+		<monto_precertificado>20484.32</monto_precertificado>
+		<monto_certificado>20484.32</monto_certificado>
+		<monto_comprometido_anual>0.00</monto_comprometido_anual>
+		<estado_registro>A</estado_registro>
+	</cur_mpp_pca_x_especifica>
+	<cur_mpp_pca_x_especifica>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<fuente_financ>00</fuente_financ>
+		<categoria_gasto>6</categoria_gasto>
+		<tipo_transaccion>2</tipo_transaccion>
+		<generica>6</generica>
+		<id_clasificador>ACbcxSi</id_clasificador>
+		<monto_asignado>39156.70</monto_asignado>
+		<monto_precertificado>39052.70</monto_precertificado>
+		<monto_certificado>39052.70</monto_certificado>
+		<monto_comprometido_anual>39052.70</monto_comprometido_anual>
+		<estado_registro>A</estado_registro>
+	</cur_mpp_pca_x_especifica>
+	<cur_mpp_pca_x_especifica>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<fuente_financ>00</fuente_financ>
+		<categoria_gasto>6</categoria_gasto>
+		<tipo_transaccion>2</tipo_transaccion>
+		<generica>6</generica>
+		<id_clasificador>ACbcxSj</id_clasificador>
+		<monto_asignado>11162207.46</monto_asignado>
+		<monto_precertificado>11023340.84</monto_precertificado>
+		<monto_certificado>11023340.84</monto_certificado>
+		<monto_comprometido_anual>10852271.74</monto_comprometido_anual>
+		<estado_registro>A</estado_registro>
+	</cur_mpp_pca_x_especifica>
+	<cur_mpp_pca_x_especifica>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<fuente_financ>19</fuente_financ>
+		<categoria_gasto>6</categoria_gasto>
+		<tipo_transaccion>2</tipo_transaccion>
+		<generica>6</generica>
+		<id_clasificador>ACbJvAN</id_clasificador>
+		<monto_asignado>80270.00</monto_asignado>
+		<monto_precertificado>80270.00</monto_precertificado>
+		<monto_certificado>80270.00</monto_certificado>
+		<monto_comprometido_anual>80270.00</monto_comprometido_anual>
+		<estado_registro>A</estado_registro>
+	</cur_mpp_pca_x_especifica>
+	<cur_mpp_pca_x_especifica>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<fuente_financ>19</fuente_financ>
+		<categoria_gasto>6</categoria_gasto>
+		<tipo_transaccion>2</tipo_transaccion>
+		<generica>6</generica>
+		<id_clasificador>ACbJvAP</id_clasificador>
+		<monto_asignado>187860.40</monto_asignado>
+		<monto_precertificado>187860.40</monto_precertificado>
+		<monto_certificado>187860.40</monto_certificado>
+		<monto_comprometido_anual>160106.37</monto_comprometido_anual>
+		<estado_registro>A</estado_registro>
+	</cur_mpp_pca_x_especifica>
+	<cur_mpp_pca_x_especifica>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<fuente_financ>19</fuente_financ>
+		<categoria_gasto>6</categoria_gasto>
+		<tipo_transaccion>2</tipo_transaccion>
+		<generica>6</generica>
+		<id_clasificador>ACbJvJp</id_clasificador>
+		<monto_asignado>222333.41</monto_asignado>
+		<monto_precertificado>222333.41</monto_precertificado>
+		<monto_certificado>222333.41</monto_certificado>
+		<monto_comprometido_anual>201700.41</monto_comprometido_anual>
+		<estado_registro>A</estado_registro>
+	</cur_mpp_pca_x_especifica>
+	<cur_mpp_pca_x_especifica>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<fuente_financ>19</fuente_financ>
+		<categoria_gasto>6</categoria_gasto>
+		<tipo_transaccion>2</tipo_transaccion>
+		<generica>6</generica>
+		<id_clasificador>ACbJvLH</id_clasificador>
+		<monto_asignado>228755.88</monto_asignado>
+		<monto_precertificado>228755.88</monto_precertificado>
+		<monto_certificado>228755.88</monto_certificado>
+		<monto_comprometido_anual>144340.80</monto_comprometido_anual>
+		<estado_registro>A</estado_registro>
+	</cur_mpp_pca_x_especifica>
+	<cur_mpp_pca_x_especifica>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<fuente_financ>19</fuente_financ>
+		<categoria_gasto>6</categoria_gasto>
+		<tipo_transaccion>2</tipo_transaccion>
+		<generica>6</generica>
+		<id_clasificador>ACbVI++</id_clasificador>
+		<monto_asignado>41010.00</monto_asignado>
+		<monto_precertificado>41010.00</monto_precertificado>
+		<monto_certificado>41010.00</monto_certificado>
+		<monto_comprometido_anual>41010.00</monto_comprometido_anual>
+		<estado_registro>A</estado_registro>
+	</cur_mpp_pca_x_especifica>
+</VFPDataSet>

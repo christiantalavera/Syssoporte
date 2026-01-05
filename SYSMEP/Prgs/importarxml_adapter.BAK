@@ -1,0 +1,84 @@
+*-------------------------------------------------------------------------
+* PROGRAMA: ImportarXML.prg
+* DESCRIPCIÓN: Convierte un XML con Esquema (XSD) a un Cursor con nombre personalizado
+* PARÁMETROS:
+* tcArchivoXML (String): Ruta completa del archivo .xml
+* tcNombreCursor (String): El nombre (Alias) que quieres darle al cursor
+*-------------------------------------------------------------------------
+LPARAMETERS tcArchivoXML, tcNombreCursor
+
+* 1. VALIDACIÓN DE PARÁMETROS
+IF PCOUNT() < 2
+    MESSAGEBOX("Error de uso." + CHR(13) + ;
+               "Sintaxis: DO ImportarXML WITH 'c:\ruta\archivo.xml', 'mi_cursor'", 16, "Parámetros Faltantes")
+    RETURN .F.
+ENDIF
+
+* Validación del archivo
+IF !FILE(tcArchivoXML)
+    MESSAGEBOX("El archivo XML no existe en la ruta indicada:" + CHR(13) + tcArchivoXML, 16, "Archivo No Encontrado")
+    RETURN .F.
+ENDIF
+
+* Limpieza: Si el cursor ya existe, lo cerramos para evitar errores de "Alias en uso"
+tcNombreCursor = ALLTRIM(tcNombreCursor)
+IF USED(tcNombreCursor)
+    USE IN (tcNombreCursor)
+ENDIF
+
+LOCAL loAdapter as XMLAdapter
+LOCAL loTabla as XMLTable
+LOCAL llExito
+
+llExito = .F.
+
+TRY
+    WAIT WINDOW "Leyendo XML y Esquema..." NOWAIT
+    
+    loAdapter = CREATEOBJECT("XMLAdapter")
+    
+    * Configuración para máxima compatibilidad
+    loAdapter.RespectNesting = .T.
+    loAdapter.UTF8Encoded = .T.
+    
+    * Cargar el XML (El .T. indica que es un archivo físico)
+    loAdapter.LoadXML(tcArchivoXML, .T.)
+    
+    * Validar que haya tablas dentro
+    IF loAdapter.Tables.Count > 0
+        
+        * Tomamos la primera tabla encontrada en el XML
+        loTabla = loAdapter.Tables(1)
+        
+        * --- PUNTO CLAVE ---
+        * El método ToCursor acepta dos parámetros opcionales:
+        * 1. lAppend (.F. = Crea nuevo cursor / .T. = Agrega a existente)
+        * 2. cAlias (El nombre que tú quieres darle)
+        loTabla.ToCursor(.F., tcNombreCursor)
+        
+        llExito = .T.
+    ELSE
+        MESSAGEBOX("El archivo XML es válido pero no contiene datos estructurados.", 48, "Sin Datos")
+    ENDIF
+
+CATCH TO loEx
+    WAIT CLEAR
+    MESSAGEBOX("Ocurrió un error técnico al importar:" + CHR(13) + loEx.Message, 16, "Excepción")
+ENDTRY
+
+WAIT CLEAR
+
+IF llExito
+    * Seleccionamos el cursor recién creado para dejarlo activo
+    IF USED(tcNombreCursor)
+        SELECT (tcNombreCursor)
+        MESSAGEBOX("Proceso terminado exitosamente." + CHR(13) + ;
+                   "Cursor generado: " + UPPER(tcNombreCursor) + CHR(13) + ;
+                   "Registros: " + TRANSFORM(RECCOUNT()), 64, "Éxito")
+        
+        * Opcional: Mostrar resultado
+        BROWSE NORMAL NOWAIT
+    ENDIF
+ENDIF
+
+RETURN llExito

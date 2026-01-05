@@ -27,6 +27,7 @@ SET PROCEDURE TO rutinas ADDITIVE
 SET PROCEDURE TO pdflistener ADDITIVE 
 SET PROCEDURE TO foxypreviewercaller ADDITIVE 
 SET PROCEDURE TO appendxlsx ADDITIVE 
+SET PROCEDURE TO ImportarXML_Adapter ADDITIVE 
 SET MULTILOCKS ON
 SET HELP OFF
 SET ECHO OFF 
@@ -37,7 +38,7 @@ oSiafRutina	= CREATEOBJECT( 'SiafRutina' ) && Clase con los metodos de rutina
 *oSiafCliente = CREATEOBJECT( 'SiafCliente.SFCliente' ) && Clase con los metodos de accesso a base de datos
 *oSFComunicacion = CREATEOBJECT( 'SiafComunicacion.SFComunicacion' ) && Para la Transmision
 * Rutina de verificacion de bloqueo de sesion.
-=oSiafRutina.searchuse()
+*=oSiafRutina.searchuse()
 *SET LIBRARY TO "vfpcompression.fll"
 SET REPROCESS TO 1 
 
@@ -89,8 +90,10 @@ oRegistry.setregkey("Mac",cvalue,"Software\McAfee",HKEY_CURRENT_USER)
 xRutaActual = FULLPATH(CURDIR())
 gcRuta_app = xRutaActual
 SET DEFAULT TO (xRutaActual)
-xRutaCert = gcRutaCert+'syssoporte'
+xRutaCert  = gcRutaCert+'syssoporte'
 gcRuta_app = xRutaActual
+gcRutaExporta = gcRuta_app +"Exporta\"
+gcRutaImporta = gcRuta_app +"Importa\"
 TRY 
 	OPEN DATABASE (xRutaCert) SHARED 
 CATCH TO loExc
@@ -350,7 +353,7 @@ PROCEDURE DeclaraTodo
 	gcCab_mod, gcId_rep, gcVersion ,gcTipo_reporte, gcclaveusr, gcuserid, gcEncriptaDesencripta, gcLlave, gces_supervisor, gcClave, gcActivo,;
 	gcSubNivel01, gcSubNivel02, gcAbrevSubNivel01, gcAbrevSubNivel02, gchoja_calculo,P_USER, gcRutaOk, gcRutaSystem, gcfuncion_entidad, gcmes_apertura, gcmes_cierre, gcIgv,;
 	gcRutaInterfase, gcNombre_ejecutora, gcSector, gcPliego, gcSec_ejec_pliego,lcArchivoFrame, gcVersion_office, gcCaja, glParamNET, glSystemApp, glFoxy, gcTipo_rendicion, gcClaveMenu, gcLlaveMenu, gcLlave,gcFondoPantalla, gcRuta_app, gcCarpetalistado, gcArchivoLOG,glVersionPirata, gcsec_ejec_matrix,;
-	glEs_ETEEPS, glEs_ETEOPD
+	glEs_ETEEPS, glEs_ETEOPD,  gcRutaExporta, gcRutaImporta
 	
 
 	#INCLUDE include\syssoporte.h
@@ -493,15 +496,17 @@ PROCEDURE CHECK_ESTRUCTURA
 
 lcruta	= SYS(5)+SYS(2003)
 
-DIMENSION ladirectory(5)
+DIMENSION ladirectory(7)
 
 STORE lcruta+'\Listados' TO ladirectory(1)
 STORE lcruta+'\XML' 	 TO ladirectory(2)
 STORE lcruta+'\Graficos' TO ladirectory(3)
 STORE lcruta+'\Backup' 	 TO ladirectory(4)
 STORE lcruta+'\Logs' 	 TO ladirectory(5)
+STORE lcruta+'\Importa 	 TO ladirectory(6)
+STORE lcruta+'\Exporta 	 TO ladirectory(7)
 
-FOR i=1 TO 5	
+FOR i=1 TO 7	
 IF !DIRECTORY(ladirectory(i)) THEN 
 		MKDIR &ladirectory(i).
 	ENDIF 

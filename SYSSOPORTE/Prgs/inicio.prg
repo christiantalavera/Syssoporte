@@ -503,8 +503,8 @@ STORE lcruta+'\XML' 	 TO ladirectory(2)
 STORE lcruta+'\Graficos' TO ladirectory(3)
 STORE lcruta+'\Backup' 	 TO ladirectory(4)
 STORE lcruta+'\Logs' 	 TO ladirectory(5)
-STORE lcruta+'\Importa 	 TO ladirectory(6)
-STORE lcruta+'\Exporta 	 TO ladirectory(7)
+STORE lcruta+'\Importa'	 TO ladirectory(6)
+STORE lcruta+'\Exporta'	 TO ladirectory(7)
 
 FOR i=1 TO 7	
 IF !DIRECTORY(ladirectory(i)) THEN 

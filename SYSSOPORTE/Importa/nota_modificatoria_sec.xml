@@ -1,0 +1,422 @@
+<?xml version = "1.0" encoding="UTF-8" standalone="yes"?>
+<VFPDataSet>
+	<xsd:schema id="VFPDataSet" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="VFPDataSet" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="cur_nota_modificatoria_sec" minOccurs="0" maxOccurs="unbounded">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="ano_eje" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="5"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="sec_ejec" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="7"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="sec_ejec2" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="7"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="sec_nota" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="11"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="secuencia" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="5"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="fecha" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="10"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="cod_doc" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="3"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="num_doc" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="20"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="fecha_doc" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="10"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="cod_doc2" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="3"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="num_doc2" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="20"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="fecha_doc2" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="10"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="notas" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="150"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="observacion" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="150"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="estado" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="1"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="estado_envio" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="1"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="sec_doc" minOccurs="0">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:maxLength value="11"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+				<xsd:anyAttribute namespace="http://www.w3.org/XML/1998/namespace" processContents="lax"/>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<cur_nota_modificatoria_sec>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<sec_ejec2>005000</sec_ejec2>
+		<sec_nota>0000000001</sec_nota>
+		<secuencia>0001</secuencia>
+		<fecha>03/01/2025</fecha>
+		<cod_doc>131</cod_doc>
+		<num_doc>INFORME Nº 001-UE003</num_doc>
+		<fecha_doc>06/01/2025</fecha_doc>
+		<notas>ADECUACIÓN DEL PRESUPUESTO SEGÚN NECESIDADES DEL POA 2025 DEL PROGRAMA</notas>
+		<estado>A</estado>
+		<estado_envio>A</estado_envio>
+		<sec_doc>0000000001</sec_doc>
+	</cur_nota_modificatoria_sec>
+	<cur_nota_modificatoria_sec>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<sec_ejec2>005000</sec_ejec2>
+		<sec_nota>0000000002</sec_nota>
+		<secuencia>0001</secuencia>
+		<fecha>03/01/2025</fecha>
+		<cod_doc>131</cod_doc>
+		<num_doc>INFORME Nº 001-UE003</num_doc>
+		<fecha_doc>06/01/2025</fecha_doc>
+		<notas>ADECUACIÓN DEL PRESUPUESTO SEGÚN NECESIDADES DEL POA 2025 DEL PROGRAMA</notas>
+		<estado>A</estado>
+		<estado_envio>A</estado_envio>
+		<sec_doc>0000000001</sec_doc>
+	</cur_nota_modificatoria_sec>
+	<cur_nota_modificatoria_sec>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<sec_ejec2>005000</sec_ejec2>
+		<sec_nota>0000000019</sec_nota>
+		<secuencia>0001</secuencia>
+		<fecha>11/11/2025</fecha>
+		<cod_doc>131</cod_doc>
+		<num_doc>OFICIO N° 357-UE003</num_doc>
+		<fecha_doc>12/11/2025</fecha_doc>
+		<notas>ADECUACIÓN DEL PRESUPUESTO DE LA UE 003 MODERNIZACIÓN</notas>
+		<estado>A</estado>
+		<estado_envio>A</estado_envio>
+		<sec_doc>0000000545</sec_doc>
+	</cur_nota_modificatoria_sec>
+	<cur_nota_modificatoria_sec>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<sec_ejec2>005000</sec_ejec2>
+		<sec_nota>0000000003</sec_nota>
+		<secuencia>0001</secuencia>
+		<fecha>24/02/2025</fecha>
+		<cod_doc>131</cod_doc>
+		<num_doc>OFICIO N° 054-UE003</num_doc>
+		<fecha_doc>25/02/2025</fecha_doc>
+		<notas>ADECUACIÓN DEL PRESUPUESTO DEL COMPONENTE 3 - GASTOS DE GESTIÓN</notas>
+		<estado>A</estado>
+		<estado_envio>A</estado_envio>
+		<sec_doc>0000000073</sec_doc>
+	</cur_nota_modificatoria_sec>
+	<cur_nota_modificatoria_sec>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<sec_ejec2>005000</sec_ejec2>
+		<sec_nota>0000000004</sec_nota>
+		<secuencia>0001</secuencia>
+		<fecha>03/03/2025</fecha>
+		<cod_doc>112</cod_doc>
+		<num_doc>012-2025-OTASS-PE</num_doc>
+		<fecha_doc>03/03/2025</fecha_doc>
+		<notas>INCORPORACIÓN DE MAYORES INGRESOS PÚBLICOS EN EL PRESUPUESTO INSTITUCIONAL DE LA UE003, AUTORIZADO CON RESOLUCION DE PRESIDENC N° 000012-2025-OTASS-PE</notas>
+		<estado>A</estado>
+		<estado_envio>A</estado_envio>
+		<sec_doc>0000000085</sec_doc>
+	</cur_nota_modificatoria_sec>
+	<cur_nota_modificatoria_sec>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<sec_ejec2>005000</sec_ejec2>
+		<sec_nota>0000000005</sec_nota>
+		<secuencia>0001</secuencia>
+		<fecha>13/03/2025</fecha>
+		<cod_doc>131</cod_doc>
+		<num_doc>OFICIO N° 105-UE003</num_doc>
+		<fecha_doc>14/03/2025</fecha_doc>
+		<notas>ADECUACIÓN DEL PRESUPUESTO CORRESPONDIENTE AL COMPONENTE 1 DEL PROGRAMA DE MODERNIZACIÓN DE ACUERDO A LAS NECESIDADES DE PROGRAMACIÓN</notas>
+		<estado>A</estado>
+		<estado_envio>A</estado_envio>
+		<sec_doc>0000000108</sec_doc>
+	</cur_nota_modificatoria_sec>
+	<cur_nota_modificatoria_sec>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<sec_ejec2>005000</sec_ejec2>
+		<sec_nota>0000000006</sec_nota>
+		<secuencia>0001</secuencia>
+		<fecha>13/03/2025</fecha>
+		<cod_doc>131</cod_doc>
+		<num_doc>OFICIO N° 105-UE003</num_doc>
+		<fecha_doc>14/03/2025</fecha_doc>
+		<notas>ADECUACIÓN DEL PRESUPUESTO CORRESPONDIENTE AL COMPONENTE 1 DEL PROGRAMA DE MODERNIZACIÓN DE ACUERDO A LAS NECESIDADES DE PROGRAMACIÓN</notas>
+		<estado>A</estado>
+		<estado_envio>A</estado_envio>
+		<sec_doc>0000000108</sec_doc>
+	</cur_nota_modificatoria_sec>
+	<cur_nota_modificatoria_sec>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<sec_ejec2>005000</sec_ejec2>
+		<sec_nota>0000000007</sec_nota>
+		<secuencia>0001</secuencia>
+		<fecha>08/04/2025</fecha>
+		<cod_doc>131</cod_doc>
+		<num_doc>OFICIO N° 127-UE003</num_doc>
+		<fecha_doc>09/04/2025</fecha_doc>
+		<notas>HABILITACIÓN DE RECURSOS PARA LA COMPRA DE MOBILIARIO</notas>
+		<estado>A</estado>
+		<estado_envio>A</estado_envio>
+		<sec_doc>0000000135</sec_doc>
+	</cur_nota_modificatoria_sec>
+	<cur_nota_modificatoria_sec>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<sec_ejec2>005000</sec_ejec2>
+		<sec_nota>0000000008</sec_nota>
+		<secuencia>0001</secuencia>
+		<fecha>15/05/2025</fecha>
+		<cod_doc>131</cod_doc>
+		<num_doc>OFICIO N° 154-UE003</num_doc>
+		<fecha_doc>19/05/2025</fecha_doc>
+		<notas>ADECUACIÓN DEL PRESUPUESTO CORRESPONDIENTE AL COMPONENTE 1 DEL PROGRAMA DE MODERNIZACIÓN DE ACUERDO A LAS NECESIDADES DE PROGRAMACIÓN</notas>
+		<estado>A</estado>
+		<estado_envio>A</estado_envio>
+		<sec_doc>0000000195</sec_doc>
+	</cur_nota_modificatoria_sec>
+	<cur_nota_modificatoria_sec>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<sec_ejec2>005000</sec_ejec2>
+		<sec_nota>0000000009</sec_nota>
+		<secuencia>0001</secuencia>
+		<fecha>15/05/2025</fecha>
+		<cod_doc>131</cod_doc>
+		<num_doc>OFICIO N° 154-UE003</num_doc>
+		<fecha_doc>19/05/2025</fecha_doc>
+		<notas>ADECUACIÓN DEL PRESUPUESTO CORRESPONDIENTE AL COMPONENTE 1 DEL PROGRAMA DE MODERNIZACIÓN DE ACUERDO A LAS NECESIDADES DE PROGRAMACIÓN</notas>
+		<estado>A</estado>
+		<estado_envio>A</estado_envio>
+		<sec_doc>0000000195</sec_doc>
+	</cur_nota_modificatoria_sec>
+	<cur_nota_modificatoria_sec>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<sec_ejec2>005000</sec_ejec2>
+		<sec_nota>0000000010</sec_nota>
+		<secuencia>0001</secuencia>
+		<fecha>19/06/2025</fecha>
+		<cod_doc>112</cod_doc>
+		<num_doc>042-2025-OTASS-PE</num_doc>
+		<fecha_doc>19/06/2025</fecha_doc>
+		<notas>TRANSFERENCIA DE PARTIDAS EN EL PRESUPUESTO DEL SECTOR PÚBLICO PARA EL AÑO FISCAL 2025 AUTORIZADO MEDIANTE RPE N° 000042-2025-OTASS-PE</notas>
+		<estado>A</estado>
+		<estado_envio>A</estado_envio>
+		<sec_doc>0000000256</sec_doc>
+	</cur_nota_modificatoria_sec>
+	<cur_nota_modificatoria_sec>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<sec_ejec2>005000</sec_ejec2>
+		<sec_nota>0000000011</sec_nota>
+		<secuencia>0001</secuencia>
+		<fecha>27/06/2025</fecha>
+		<cod_doc>131</cod_doc>
+		<num_doc>OFICIO N° 190-003</num_doc>
+		<fecha_doc>30/06/2025</fecha_doc>
+		<notas>ADECUACIÓN DEL PRESUPUESTO DEL COMPONENTE 1, PARA LA ADQUISICIÓN DE BIENES CORRESPONDIENTE A LAS ASISTENCIAS TÉCNICAS DE 04 EPS</notas>
+		<estado>A</estado>
+		<estado_envio>A</estado_envio>
+		<sec_doc>0000000275</sec_doc>
+	</cur_nota_modificatoria_sec>
+	<cur_nota_modificatoria_sec>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<sec_ejec2>005000</sec_ejec2>
+		<sec_nota>0000000012</sec_nota>
+		<secuencia>0001</secuencia>
+		<fecha>21/07/2025</fecha>
+		<cod_doc>131</cod_doc>
+		<num_doc>INFORME N° 056-UE003</num_doc>
+		<fecha_doc>22/07/2025</fecha_doc>
+		<notas>ADECUACIÓN DEL PRESUPUESTO DEL C1, PARA LA ADQUISICIÓN DE BIENES (2DO GRUPO) EN EL MARCO DE LO ESTABLECIDO EN LOS SERVICIOS DE AT EMAPACOP Y SEDACUSCO</notas>
+		<estado>A</estado>
+		<estado_envio>A</estado_envio>
+		<sec_doc>0000000324</sec_doc>
+	</cur_nota_modificatoria_sec>
+	<cur_nota_modificatoria_sec>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<sec_ejec2>005000</sec_ejec2>
+		<sec_nota>0000000013</sec_nota>
+		<secuencia>0001</secuencia>
+		<fecha>07/08/2025</fecha>
+		<cod_doc>112</cod_doc>
+		<num_doc>0060-2025-OTASS-PE</num_doc>
+		<fecha_doc>07/08/2025</fecha_doc>
+		<notas>TRANSFERENCIA DE PARTIDAS EN EL PRESUPUESTO DEL SECTOR PÚBLICO PARA EL AÑO FISCAL 2025 AUTORIZADO MEDIANTE RPE N° 000060-2025-OTASS-PE</notas>
+		<estado>A</estado>
+		<estado_envio>A</estado_envio>
+		<sec_doc>0000000341</sec_doc>
+	</cur_nota_modificatoria_sec>
+	<cur_nota_modificatoria_sec>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<sec_ejec2>005000</sec_ejec2>
+		<sec_nota>0000000014</sec_nota>
+		<secuencia>0001</secuencia>
+		<fecha>13/08/2025</fecha>
+		<cod_doc>131</cod_doc>
+		<num_doc>OFICIO N° 256-UE003</num_doc>
+		<fecha_doc>15/08/2025</fecha_doc>
+		<notas>ADECUACIÓN DEL PRESUPUESTO DEL COMPONENTE 1 PARA LA ADQUISICIÓN DE EQUIPOS PARA LA DETECCIÓN DE FUGAS NO VISIBLES PARA EPS HUARAL Y BARRANCA</notas>
+		<estado>A</estado>
+		<estado_envio>A</estado_envio>
+		<sec_doc>0000000357</sec_doc>
+	</cur_nota_modificatoria_sec>
+	<cur_nota_modificatoria_sec>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<sec_ejec2>005000</sec_ejec2>
+		<sec_nota>0000000015</sec_nota>
+		<secuencia>0001</secuencia>
+		<fecha>18/08/2025</fecha>
+		<cod_doc>131</cod_doc>
+		<num_doc>OFICIO N° 253-UE003</num_doc>
+		<fecha_doc>21/08/2025</fecha_doc>
+		<notas>ADECUACIÓN DEL PRESUPUESTO DEL COMPONENTE 1 PARA LA ADQUISICIÓN DE EQUIPOS PARA LA DETECCIÓN DE FUGAS NO VISIBLES PARA EPS HUARAL Y BARRANCA</notas>
+		<estado>A</estado>
+		<estado_envio>A</estado_envio>
+		<sec_doc>0000000362</sec_doc>
+	</cur_nota_modificatoria_sec>
+	<cur_nota_modificatoria_sec>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<sec_ejec2>005000</sec_ejec2>
+		<sec_nota>0000000016</sec_nota>
+		<secuencia>0001</secuencia>
+		<fecha>10/09/2025</fecha>
+		<cod_doc>131</cod_doc>
+		<num_doc>OFICIO 270-UE 003</num_doc>
+		<fecha_doc>12/09/2025</fecha_doc>
+		<notas>ADECUACIÓN DEL PRESUPUESTO DEL COMPONENTE 3 - GASTOS DE GESTIÓN</notas>
+		<estado>A</estado>
+		<estado_envio>A</estado_envio>
+		<sec_doc>0000000408</sec_doc>
+	</cur_nota_modificatoria_sec>
+	<cur_nota_modificatoria_sec>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<sec_ejec2>005000</sec_ejec2>
+		<sec_nota>0000000017</sec_nota>
+		<secuencia>0001</secuencia>
+		<fecha>23/09/2025</fecha>
+		<cod_doc>131</cod_doc>
+		<num_doc>OFICIO 314-UE 003</num_doc>
+		<fecha_doc>26/09/2025</fecha_doc>
+		<notas>ADECUACIÓN DEL PRESUPUESTO DEL COMPONENTE 1</notas>
+		<estado>A</estado>
+		<estado_envio>A</estado_envio>
+		<sec_doc>0000000440</sec_doc>
+	</cur_nota_modificatoria_sec>
+	<cur_nota_modificatoria_sec>
+		<ano_eje>2025</ano_eje>
+		<sec_ejec>001719</sec_ejec>
+		<sec_ejec2>005000</sec_ejec2>
+		<sec_nota>0000000018</sec_nota>
+		<secuencia>0001</secuencia>
+		<fecha>07/11/2025</fecha>
+		<cod_doc>131</cod_doc>
+		<num_doc>OFICIO N° 354-UE003</num_doc>
+		<fecha_doc>10/11/2025</fecha_doc>
+		<notas>ADECUACIÓN DEL PRESUPUESTO DEL COMPONENTE 1, ACTIVIDAD 1.3.6</notas>
+		<estado>A</estado>
+		<estado_envio>A</estado_envio>
+		<sec_doc>0000000536</sec_doc>
+	</cur_nota_modificatoria_sec>
+</VFPDataSet>
